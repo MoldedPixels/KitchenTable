@@ -1,8 +1,8 @@
-package com.gennelloa0.project1.data;
+package com.project2.kitchentable.data;
 
 import java.util.List;
 
-import com.gennelloa0.project1.beans.User;
+import com.project2.kitchentable.beans.User;
 
 public interface UserDao {
 	List<User> getUsers();

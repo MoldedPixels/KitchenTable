@@ -1,4 +1,4 @@
-package com.gennelloa0.project1.utils;
+package com.project2.kitchentable.utils;
 
 import java.io.InputStream;
 

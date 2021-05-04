@@ -1,4 +1,4 @@
-package com.gennelloa0.project1.beans;
+package com.project2.kitchentable.beans;
 
 public class User{
 	private int userID;

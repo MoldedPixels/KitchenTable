@@ -1,14 +1,14 @@
-package com.gennelloa0.project1.controllers;
+package com.project2.kitchentable.controllers;
 
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.gennelloa0.project1.beans.User;
-import com.gennelloa0.project1.factory.BeanFactory;
-import com.gennelloa0.project1.services.UserService;
-import com.gennelloa0.project1.services.UserServiceImpl;
+import com.project2.kitchentable.beans.User;
+import com.project2.kitchentable.factory.BeanFactory;
+import com.project2.kitchentable.services.UserService;
+import com.project2.kitchentable.services.UserServiceImpl;
 
 import io.javalin.http.Context;
 

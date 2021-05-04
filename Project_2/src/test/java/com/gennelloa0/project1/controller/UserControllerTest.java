@@ -6,8 +6,8 @@ import static org.mockito.Mockito.when;
 
 import org.junit.Test;
 
-import com.gennelloa0.project1.controllers.UserController;
-import com.gennelloa0.project1.services.UserService;
+import com.project2.kitchentable.controllers.UserController;
+import com.project2.kitchentable.services.UserService;
 
 import io.javalin.http.Context;
 

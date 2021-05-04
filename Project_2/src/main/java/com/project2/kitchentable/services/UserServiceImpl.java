@@ -1,15 +1,15 @@
-package com.gennelloa0.project1.services;
+package com.project2.kitchentable.services;
 
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.gennelloa0.project1.beans.User;
-import com.gennelloa0.project1.data.UserDao;
-import com.gennelloa0.project1.data.cass.UserDaoCass;
-import com.gennelloa0.project1.factory.BeanFactory;
-import com.gennelloa0.project1.factory.Log;
+import com.project2.kitchentable.beans.User;
+import com.project2.kitchentable.data.UserDao;
+import com.project2.kitchentable.data.cass.UserDaoCass;
+import com.project2.kitchentable.factory.BeanFactory;
+import com.project2.kitchentable.factory.Log;
 
 // The service layer allows us to do more complicated actions that strict data access
 // Even if you don't do anything more important, the reason we need a service layer

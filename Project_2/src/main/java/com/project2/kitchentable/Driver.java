@@ -1,4 +1,4 @@
-package com.gennelloa0.project1;
+package com.project2.kitchentable;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -9,8 +9,8 @@ import com.datastax.oss.driver.api.core.config.DriverConfigLoader;
 import com.datastax.oss.driver.api.core.cql.BoundStatement;
 import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 import com.datastax.oss.driver.api.core.cql.SimpleStatementBuilder;
-import com.gennelloa0.project1.controllers.UserController;
-import com.gennelloa0.project1.utils.CassandraUtil;
+import com.project2.kitchentable.controllers.UserController;
+import com.project2.kitchentable.utils.CassandraUtil;
 
 import io.javalin.Javalin;
 

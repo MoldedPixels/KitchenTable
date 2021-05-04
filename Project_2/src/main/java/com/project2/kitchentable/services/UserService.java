@@ -1,8 +1,8 @@
-package com.gennelloa0.project1.services;
+package com.project2.kitchentable.services;
 
 import java.util.List;
 
-import com.gennelloa0.project1.beans.User;
+import com.project2.kitchentable.beans.User;
 
 public interface UserService {
 

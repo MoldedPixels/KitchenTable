@@ -1,4 +1,4 @@
-package com.gennelloa0.project1.factory;
+package com.project2.kitchentable.factory;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Proxy;

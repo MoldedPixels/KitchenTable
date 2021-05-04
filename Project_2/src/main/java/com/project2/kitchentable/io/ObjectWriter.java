@@ -1,4 +1,4 @@
-package com.gennelloa0.project1.io;
+package com.project2.kitchentable.io;
 
 import java.io.File;
 import java.io.FileInputStream;

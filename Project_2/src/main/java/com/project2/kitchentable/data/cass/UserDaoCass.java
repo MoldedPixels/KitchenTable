@@ -1,4 +1,4 @@
-package com.gennelloa0.project1.data.cass;
+package com.project2.kitchentable.data.cass;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,10 +10,10 @@ import com.datastax.oss.driver.api.core.cql.ResultSet;
 import com.datastax.oss.driver.api.core.cql.Row;
 import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 import com.datastax.oss.driver.api.core.cql.SimpleStatementBuilder;
-import com.gennelloa0.project1.beans.User;
-import com.gennelloa0.project1.data.UserDao;
-import com.gennelloa0.project1.factory.Log;
-import com.gennelloa0.project1.utils.CassandraUtil;
+import com.project2.kitchentable.beans.User;
+import com.project2.kitchentable.data.UserDao;
+import com.project2.kitchentable.factory.Log;
+import com.project2.kitchentable.utils.CassandraUtil;
 
 @Log
 public class UserDaoCass implements UserDao{
