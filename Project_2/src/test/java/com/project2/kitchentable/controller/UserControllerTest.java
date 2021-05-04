@@ -1,4 +1,4 @@
-package com.gennelloa0.project1.controller;
+package com.project2.kitchentable.controller;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
