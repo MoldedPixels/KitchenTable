@@ -5,7 +5,7 @@
 
 	<!-- Project Coordinates -->
 	<groupId>com.revature</groupId> <!-- organization's package structure -->
-	<artifactId>YouDontKnowJava</artifactId> <!-- Actual name of the project -->
+	<artifactId>KitchenTable</artifactId> <!-- Actual name of the project -->
 	<version>0.0.1-SNAPSHOT</version> <!-- What version of the project this is -->
 	<packaging>jar</packaging> <!-- What kind of artifact gets built? -->
 
