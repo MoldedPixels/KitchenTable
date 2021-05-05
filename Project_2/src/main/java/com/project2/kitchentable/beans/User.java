@@ -4,10 +4,9 @@ public class User{
 	private int userID;
 	private String firstname;
 	private String lastname;
-	private int roleID;
-	private int directSupID;
-	private int deptHeadID;
-	private double availableBal;
+	private int familyID;
+	private int kitchenID;
+	private int userTypeID;
 	
 	public User() {
 		super();
@@ -43,17 +42,13 @@ public class User{
 			return false;
 		if (userID != other.userID)
 			return false;
-		if (directSupID != other.directSupID)
-			return false;
-		if (deptHeadID != other.deptHeadID)
-			return false;
-		if (availableBal != other.availableBal)
+		if (userTypeID != other.userTypeID)
 			return false;
 		return true;
 	}
 	@Override
 	public String toString() {
-		return "Player [name=" + firstname + lastname + ", role=" + roleID + ", userID=" + userID + "]";
+		return "Player [name=" + firstname + lastname + ", type" + userTypeID + ", userID=" + userID + "]";
 	}
 	public int getUserID() {
 		return userID;
@@ -61,29 +56,17 @@ public class User{
 	public void setUserID(int userID) {
 		this.userID = userID;
 	}
-	public int getRoleID() {
-		return roleID;
+	public int getKitchenID() {
+		return kitchenID;
 	}
-	public void setRoleID(int roleID) {
-		this.roleID = roleID;
+	public void setKitchenID(int kitchenID) {
+		this.kitchenID = kitchenID;
 	}
-	public int getDirectSupID() {
-		return directSupID;
+	public int getUserTypeID() {
+		return userTypeID;
 	}
-	public void setDirectSupID(int directSupID) {
-		this.directSupID = directSupID;
-	}
-	public int getDeptHeadID() {
-		return deptHeadID;
-	}
-	public void setDeptHeadID(int deptHeadID) {
-		this.deptHeadID = deptHeadID;
-	}
-	public double getAvailableBal() {
-		return availableBal;
-	}
-	public void setAvailableBal(double d) {
-		this.availableBal = d;
+	public void setUserTypeID(int userTypeID) {
+		this.userTypeID = userTypeID;
 	}
 	public String getFirstName() {
 		return firstname;
@@ -96,5 +79,13 @@ public class User{
 	}
 	public void setLastName(String lname) {
 		this.lastname = lname;
+	}
+
+	public int getFamilyID() {
+		return familyID;
+	}
+
+	public void setFamilyID(int familyID) {
+		this.familyID = familyID;
 	}
 }
