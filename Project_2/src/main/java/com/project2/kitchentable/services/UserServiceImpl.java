@@ -1,53 +1,50 @@
 package com.project2.kitchentable.services;
 
-import java.util.List;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.stereotype.Service;
 
 import com.project2.kitchentable.beans.User;
 import com.project2.kitchentable.data.UserDao;
-import com.project2.kitchentable.data.cass.UserDaoCass;
 import com.project2.kitchentable.factory.BeanFactory;
 import com.project2.kitchentable.factory.Log;
+
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 // The service layer allows us to do more complicated actions that strict data access
 // Even if you don't do anything more important, the reason we need a service layer
 // is to loosely couple our business layer from our data layer
-@Log
+@Service
 public class UserServiceImpl implements UserService {
 	private static Logger log = LogManager.getLogger(UserServiceImpl.class);
-	private UserDao ud = (UserDao) BeanFactory.getFactory().get(UserDao.class, UserDaoCass.class);
-
+	private UserDao ud;
+	
+	
+	
 	@Override
-	public User getUser(String fname, String lname) {
-		return ud.getUserByName(fname, lname);
+	public Mono<User> getUser(String fname, String lname) {
+		// TODO Auto-generated method stub
+		return null;
 	}
-
 	@Override
-	public boolean addUser(User u) {
-		try {
-			ud.addUser(u);
-			return true;
-		} catch (Exception e) {
-			e.printStackTrace();
-			log.warn("User already exists " + u.getFirstName() + u.getLastName());
-			return false;
-		}
+	public Mono<User> addUser(User u) {
+		// TODO Auto-generated method stub
+		return null;
 	}
-
 	@Override
-	public List<User> getUsers() {
-		return ud.getUsers();
+	public Mono<User> updateUser(User u) {
+		// TODO Auto-generated method stub
+		return null;
 	}
-
 	@Override
-	public void updateUser(User u) {
-		ud.updateUser(u);
+	public Flux<User> getUsers() {
+		// TODO Auto-generated method stub
+		return null;
 	}
-
 	@Override
-	public User getUserByID(int userID) {
-		return ud.getUserByID(userID);
+	public Mono<User> getUserByID(int userID) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
