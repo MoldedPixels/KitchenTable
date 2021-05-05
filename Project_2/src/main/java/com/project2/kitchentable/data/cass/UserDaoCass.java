@@ -52,7 +52,7 @@ public class UserDaoCass implements UserDao{
 			u = new User();
 			u.setFirstName(data.getString("firstname"));
 			u.setLastName(data.getString("lastname"));
-			u.setRoleID(data.getInt("role"));
+			u.setUserTypeID(data.getInt("user_type_id"));
 			u.setUserID(data.getInt("user_id"));
 			u.setAvailableBal(data.getDouble("available_balance"));
 			u.setDirectSupID(data.getInt("direct_sup"));
