@@ -68,7 +68,7 @@ public class KitchenController {
 	public static void cook(Context ctx) {
 
 		User u = (User) ctx.sessionAttribute("User");
-		if (u == null || u.getRoleID() != 3) {
+		if (u == null || u.getUserTypeID() != 3) {
 			ctx.status(403);
 			ctx.result("Well that didn't work.");
 			return;
