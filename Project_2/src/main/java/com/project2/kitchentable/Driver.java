@@ -9,6 +9,7 @@ import com.datastax.oss.driver.api.core.config.DriverConfigLoader;
 import com.datastax.oss.driver.api.core.cql.BoundStatement;
 import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 import com.datastax.oss.driver.api.core.cql.SimpleStatementBuilder;
+import com.project2.kitchentable.controllers.KitchenController;
 import com.project2.kitchentable.controllers.UserController;
 import com.project2.kitchentable.utils.CassandraUtil;
 
@@ -23,13 +24,13 @@ public class Driver {
 		javalin();
 		dbtest(); // created my keyspace
 		log.trace("Checking for UserTable");
-		userTable(); // created usertable
+		//userTable(); // created usertable
 		log.trace("Checking for FormTable");
-		formsTable(); //created formsTable
+		//formsTable(); //created formsTable
 		log.trace("Checking for LogsTable");
-		logsTable(); //created logsTable
+		//logsTable(); //created logsTable
 		log.trace("Checking for AttachmentsTable");
-		attachmentsTable(); //created attachmentsTable
+		//attachmentsTable(); //created attachmentsTable
 		//log.trace("Adding to Roles");
 		//addRoles();
 		//log.trace("Adding to Status");
@@ -76,7 +77,8 @@ public class Driver {
 		// Recipe Controller
 		
 		// Kitchen Controller
-		
+		app.get("/kitchen/removefood/", KitchenController::removeFood);
+		app.get("/kitchen/:recipe/cook", KitchenController::cook);
 		// Family Controller
 		
 		// Review Controller
