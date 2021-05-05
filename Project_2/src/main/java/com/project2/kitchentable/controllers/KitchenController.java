@@ -10,9 +10,6 @@ import com.project2.kitchentable.beans.User;
 import com.project2.kitchentable.factory.BeanFactory;
 import com.project2.kitchentable.services.KitchenService;
 import com.project2.kitchentable.services.KitchenServiceImpl;
-import com.project2.kitchentable.services.UserService;
-import com.project2.kitchentable.services.UserServiceImpl;
-
 import io.javalin.http.Context;
 
 public class KitchenController {
@@ -21,16 +18,17 @@ public class KitchenController {
 
 	private static final Logger log = LogManager.getLogger(KitchenController.class);
 
-	public static void removeFood(Context ctx) {
+	public static void removeFood(Context ctx) throws Exception {
 		String result = "";
 		double amount = Integer.parseInt(ctx.formParam("amount"));
+		int kitchen = Integer.parseInt(ctx.formParam("kitchenID"));
 		User u = (User) ctx.sessionAttribute("User");
 		if (u == null) {
 			ctx.status(403);
 			ctx.result("Not Logged In");
 			return;
 		}
-		List<Ingredient> inv = ks.getShoppingList();
+		List<Ingredient> inv = ks.getKitchenInv(kitchen);
 
 		for (Ingredient item : inv) {
 			if (item.getID() == Integer.parseInt(ctx.formParam("itemID"))) {
@@ -48,15 +46,32 @@ public class KitchenController {
 		ctx.result(result);
 	}
 
+	public static List<Ingredient> getShoppingList(Context ctx) {
+		int kitchen = Integer.parseInt(ctx.formParam("kitchenID"));
+		User u = (User) ctx.sessionAttribute("User");
+		if (u == null) {
+			ctx.status(403);
+			ctx.result("Not Logged In");
+			return null;
+		}
+		try {
+			List<Ingredient> inv = ks.getShoppingList(kitchen);
+			return inv;
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.warn("Shopping List not found for Kitchen ID: " + kitchen);
+			return null;
+		}
+
+	}
+
 	public static void cook(Context ctx) {
-		String result = "";
+
 		User u = (User) ctx.sessionAttribute("User");
 		if (u == null || u.getRoleID() != 3) {
 			ctx.status(403);
 			ctx.result("Well that didn't work.");
 			return;
 		}
-		List<User> players = us.getUsers();
-		ctx.json(players);
 	}
 }

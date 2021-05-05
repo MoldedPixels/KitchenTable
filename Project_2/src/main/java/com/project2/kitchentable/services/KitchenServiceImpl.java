@@ -5,12 +5,10 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.project2.kitchentable.beans.Ingredient;
-import com.project2.kitchentable.beans.User;
 import com.project2.kitchentable.data.KitchenDao;
-import com.project2.kitchentable.data.UserDao;
 import com.project2.kitchentable.data.cass.KitchenDaoCass;
-import com.project2.kitchentable.data.cass.UserDaoCass;
 import com.project2.kitchentable.factory.BeanFactory;
 import com.project2.kitchentable.factory.Log;
 
@@ -31,9 +29,15 @@ public class KitchenServiceImpl implements KitchenService {
 		// TODO Auto-generated method stub
 		
 	}
+
 	@Override
-	public List<Ingredient> getShoppingList() {
-		List<Ingredient> list = kd.getShoppingList();
+	public List<Ingredient> getShoppingList(int kitchen) throws Exception {
+		List<Ingredient> list = kd.getShoppingList(kitchen);
+		return list;
+	}
+	@Override
+	public List<Ingredient> getKitchenInv(int kitchen) throws JsonParseException, Exception {
+		List<Ingredient> list = kd.getKitchenInv(kitchen);
 		return list;
 	}
 

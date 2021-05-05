@@ -44,7 +44,7 @@ public class Ingredient{
 	public int getID() {
 		return id;
 	}
-	public void setUserID(int newID) {
+	public void setID(int newID) {
 		this.id = newID;
 	}
 	public double getAmount() {
