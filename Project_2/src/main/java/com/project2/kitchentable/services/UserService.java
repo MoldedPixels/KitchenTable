@@ -1,18 +1,19 @@
 package com.project2.kitchentable.services;
 
-import java.util.List;
-
 import com.project2.kitchentable.beans.User;
+
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 public interface UserService {
 
-	User getUser(String fname, String lname);
+	Mono<User> getUser(String fname, String lname);
 	
-	boolean addUser(User u);
+	Mono<User> addUser(User u);
 	
-	void updateUser(User u);
+	Mono<User> updateUser(User u);
 	
-	List<User> getUsers();
+	Flux<User> getUsers();
 
-	User getUserByID(int userID);
+	Mono<User> getUserByID(int userID);
 }
