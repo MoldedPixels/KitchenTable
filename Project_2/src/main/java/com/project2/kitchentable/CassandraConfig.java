@@ -18,7 +18,7 @@ import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.config.DriverConfigLoader;
 
 @Configuration
-@EnableCassandraRepositories(basePackages = { "com.revature.data" })
+@EnableCassandraRepositories(basePackages = { "com.project2.kitchentable.data" })
 public class CassandraConfig {
 
 	@Bean

@@ -2,6 +2,7 @@ package com.project2.kitchentable.services;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.project2.kitchentable.beans.User;
@@ -20,7 +21,10 @@ public class UserServiceImpl implements UserService {
 	private static Logger log = LogManager.getLogger(UserServiceImpl.class);
 	private UserDao ud;
 	
-	
+	@Autowired
+	public void setUserDao(UserDao ud) {
+		this.ud = ud;
+	}
 	
 	@Override
 	public Mono<User> getUser(String fname, String lname) {
@@ -29,8 +33,7 @@ public class UserServiceImpl implements UserService {
 	}
 	@Override
 	public Mono<User> addUser(User u) {
-		// TODO Auto-generated method stub
-		return null;
+		return ud.insert(u);
 	}
 	@Override
 	public Mono<User> updateUser(User u) {
@@ -44,7 +47,6 @@ public class UserServiceImpl implements UserService {
 	}
 	@Override
 	public Mono<User> getUserByID(int userID) {
-		// TODO Auto-generated method stub
-		return null;
+		return ud.findById(Integer.toString(userID));
 	}
 }

@@ -2,13 +2,11 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.project2.kitchentable</groupId>
+	<artifactId>KitchenTable</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
 
-	<!-- Project Coordinates -->
-	<groupId>com.revature</groupId> <!-- organization's package structure -->
-	<artifactId>KitchenTable</artifactId> <!-- Actual name of the project -->
-	<version>0.0.1-SNAPSHOT</version> <!-- What version of the project this is -->
-	<packaging>jar</packaging> <!-- What kind of artifact gets built? -->
-
+	<!-- Make our project a child project of the Spring Boot project -->
 	<parent>
 		<!-- Spring Boot - Convention over Configuration Spring Boot configures 
 			your projects according to the widely adopted conventions and you do not 
@@ -18,34 +16,10 @@
 		<version>2.4.5</version>
 	</parent>
 
-
-	<!-- Store configuration as code. We don't want to have to leave a set of 
-		instructions for how to set up our application when our coworkers pull the 
-		code from git. Instead, we create this pom.xml file and let Maven set up 
-		the application for them. -->
 	<properties>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
+		<java.version>1.8</java.version>
 	</properties>
 
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>software.amazon.awssdk</groupId>
-				<artifactId>bom</artifactId>
-				<version>2.15.43</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-framework-bom</artifactId> <!-- Bill of Materials -->
-				<version>4.3.24.RELEASE</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
 	<build>
 		<plugins>
 			<!-- Plugin for Maven to build Spring Boot Projects -->
@@ -53,33 +27,9 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-shade-plugin</artifactId>
-				<version>3.0.0</version>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>shade</goal>
-						</goals>
-						<configuration>
-							<transformers>
-								<transformer
-									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-									<manifestEntries>
-										<Main-Class>com.revature.Driver</Main-Class>
-									</manifestEntries>
-								</transformer>
-							</transformers>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
 		</plugins>
-
 	</build>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -139,23 +89,6 @@
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt</artifactId>
 			<version>0.9.1</version>
-		</dependency>
-
-		<!-- AWS plugin for Cassandra authentication -->
-		<dependency>
-			<groupId>software.aws.mcs</groupId>
-			<artifactId>aws-sigv4-auth-cassandra-java-driver-plugin</artifactId>
-			<version>4.0.4</version>
-		</dependency>
-		<dependency>
-			<groupId>software.amazon.awssdk</groupId>
-			<artifactId>s3</artifactId>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-s3 -->
-		<dependency>
-			<groupId>com.amazonaws</groupId>
-			<artifactId>aws-java-sdk-s3</artifactId>
-			<version>1.11.1006</version>
 		</dependency>
 		<dependency>
 			<groupId>com.cedarsoftware</groupId>
