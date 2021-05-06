@@ -1,0 +1,84 @@
+2021-05-05 20:28:46 TRACE Driver:24 - Begin the application
+2021-05-05 20:28:46 TRACE Driver:27 - Checking for UserTable
+2021-05-05 20:28:46 TRACE Driver:29 - Checking for FormTable
+2021-05-05 20:28:46 TRACE Driver:31 - Checking for LogsTable
+2021-05-05 20:28:46 TRACE Driver:33 - Checking for AttachmentsTable
+2021-05-05 20:28:46 TRACE CassandraUtil:16 - Establishing connection with Cassandra
+2021-05-05 20:30:09 TRACE Driver:24 - Begin the application
+2021-05-05 20:30:09 TRACE Driver:27 - Checking for UserTable
+2021-05-05 20:30:09 TRACE Driver:29 - Checking for FormTable
+2021-05-05 20:30:09 TRACE Driver:31 - Checking for LogsTable
+2021-05-05 20:30:09 TRACE Driver:33 - Checking for AttachmentsTable
+2021-05-05 20:30:09 TRACE CassandraUtil:16 - Establishing connection with Cassandra
+2021-05-05 20:53:44 TRACE Driver:24 - Begin the application
+2021-05-05 20:53:44 TRACE Driver:27 - Checking for UserTable
+2021-05-05 20:53:44 TRACE Driver:29 - Checking for FormTable
+2021-05-05 20:53:44 TRACE Driver:31 - Checking for LogsTable
+2021-05-05 20:53:44 TRACE Driver:33 - Checking for AttachmentsTable
+2021-05-05 20:53:44 TRACE CassandraUtil:16 - Establishing connection with Cassandra
+2021-05-05 20:54:27 TRACE Driver:24 - Begin the application
+2021-05-05 20:54:27 TRACE Driver:27 - Checking for UserTable
+2021-05-05 20:54:27 TRACE Driver:29 - Checking for FormTable
+2021-05-05 20:54:27 TRACE Driver:31 - Checking for LogsTable
+2021-05-05 20:54:27 TRACE Driver:33 - Checking for AttachmentsTable
+2021-05-05 20:54:27 TRACE CassandraUtil:16 - Establishing connection with Cassandra
+2021-05-05 20:56:57 TRACE Driver:24 - Begin the application
+2021-05-05 20:56:57 TRACE Driver:27 - Checking for UserTable
+2021-05-05 20:56:57 TRACE Driver:29 - Checking for FormTable
+2021-05-05 20:56:57 TRACE Driver:31 - Checking for LogsTable
+2021-05-05 20:56:57 TRACE Driver:33 - Checking for AttachmentsTable
+2021-05-05 20:56:57 TRACE CassandraUtil:16 - Establishing connection with Cassandra
+2021-05-05 20:57:21 TRACE Driver:24 - Begin the application
+2021-05-05 20:57:21 TRACE Driver:27 - Checking for UserTable
+2021-05-05 20:57:21 TRACE Driver:29 - Checking for FormTable
+2021-05-05 20:57:21 TRACE Driver:31 - Checking for LogsTable
+2021-05-05 20:57:21 TRACE Driver:33 - Checking for AttachmentsTable
+2021-05-05 20:57:21 TRACE CassandraUtil:16 - Establishing connection with Cassandra
+2021-05-05 21:03:22 TRACE Driver:24 - Begin the application
+2021-05-05 21:03:22 TRACE Driver:27 - Checking for UserTable
+2021-05-05 21:03:22 TRACE Driver:29 - Checking for FormTable
+2021-05-05 21:03:22 TRACE Driver:31 - Checking for LogsTable
+2021-05-05 21:03:22 TRACE Driver:33 - Checking for AttachmentsTable
+2021-05-05 21:03:22 TRACE CassandraUtil:16 - Establishing connection with Cassandra
+2021-05-05 21:15:44 TRACE Driver:24 - Begin the application
+2021-05-05 21:15:44 TRACE Driver:27 - Checking for UserTable
+2021-05-05 21:15:44 TRACE Driver:29 - Checking for FormTable
+2021-05-05 21:15:44 TRACE Driver:31 - Checking for LogsTable
+2021-05-05 21:15:44 TRACE Driver:33 - Checking for AttachmentsTable
+2021-05-05 21:15:44 TRACE CassandraUtil:16 - Establishing connection with Cassandra
+2021-05-05 21:16:07 TRACE Driver:24 - Begin the application
+2021-05-05 21:16:07 TRACE Driver:27 - Checking for UserTable
+2021-05-05 21:16:07 TRACE Driver:29 - Checking for FormTable
+2021-05-05 21:16:07 TRACE Driver:31 - Checking for LogsTable
+2021-05-05 21:16:07 TRACE Driver:33 - Checking for AttachmentsTable
+2021-05-05 21:16:07 TRACE CassandraUtil:16 - Establishing connection with Cassandra
+2021-05-05 21:17:11 TRACE Driver:24 - Begin the application
+2021-05-05 21:17:11 TRACE Driver:27 - Checking for UserTable
+2021-05-05 21:17:11 TRACE Driver:29 - Checking for FormTable
+2021-05-05 21:17:11 TRACE Driver:31 - Checking for LogsTable
+2021-05-05 21:17:11 TRACE Driver:33 - Checking for AttachmentsTable
+2021-05-05 21:17:11 TRACE CassandraUtil:16 - Establishing connection with Cassandra
+2021-05-05 21:22:07 TRACE Driver:24 - Begin the application
+2021-05-05 21:22:07 TRACE Driver:27 - Checking for UserTable
+2021-05-05 21:22:07 TRACE Driver:29 - Checking for FormTable
+2021-05-05 21:22:07 TRACE Driver:31 - Checking for LogsTable
+2021-05-05 21:22:07 TRACE Driver:33 - Checking for AttachmentsTable
+2021-05-05 21:22:07 TRACE CassandraUtil:16 - Establishing connection with Cassandra
+2021-05-05 21:22:55 TRACE Driver:24 - Begin the application
+2021-05-05 21:22:55 TRACE Driver:27 - Checking for UserTable
+2021-05-05 21:22:55 TRACE Driver:29 - Checking for FormTable
+2021-05-05 21:22:55 TRACE Driver:31 - Checking for LogsTable
+2021-05-05 21:22:55 TRACE Driver:33 - Checking for AttachmentsTable
+2021-05-05 21:22:55 TRACE CassandraUtil:16 - Establishing connection with Cassandra
+2021-05-05 21:27:07 TRACE Driver:24 - Begin the application
+2021-05-05 21:27:07 TRACE Driver:27 - Checking for UserTable
+2021-05-05 21:27:07 TRACE Driver:29 - Checking for FormTable
+2021-05-05 21:27:07 TRACE Driver:31 - Checking for LogsTable
+2021-05-05 21:27:07 TRACE Driver:33 - Checking for AttachmentsTable
+2021-05-05 21:27:07 TRACE CassandraUtil:16 - Establishing connection with Cassandra
+2021-05-05 21:55:50 TRACE Driver:24 - Begin the application
+2021-05-05 21:55:50 TRACE Driver:27 - Checking for UserTable
+2021-05-05 21:55:50 TRACE Driver:29 - Checking for FormTable
+2021-05-05 21:55:50 TRACE Driver:31 - Checking for LogsTable
+2021-05-05 21:55:50 TRACE Driver:33 - Checking for AttachmentsTable
+2021-05-05 21:55:50 TRACE CassandraUtil:16 - Establishing connection with Cassandra

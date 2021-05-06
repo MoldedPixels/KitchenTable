@@ -10,8 +10,9 @@ import com.datastax.oss.driver.api.core.cql.BoundStatement;
 import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 import com.datastax.oss.driver.api.core.cql.SimpleStatementBuilder;
 import com.project2.kitchentable.controllers.KitchenController;
-import com.project2.kitchentable.controllers.UserController;
+//import com.project2.kitchentable.controllers.UserController;
 import com.project2.kitchentable.utils.CassandraUtil;
+import com.project2.kitchentable.utils.CreateCassObjects;
 
 import io.javalin.Javalin;
 
@@ -21,8 +22,8 @@ public class Driver {
 	public static void main(String[] args) {
 		// Trace the flow of an application
 		log.trace("Begin the application");
-		javalin();
-		dbtest(); // created my keyspace
+//		javalin();
+//		dbtest(); // created my keyspace
 		log.trace("Checking for UserTable");
 		//userTable(); // created usertable
 		log.trace("Checking for FormTable");
@@ -35,6 +36,7 @@ public class Driver {
 		//addRoles();
 		//log.trace("Adding to Status");
 		//addStatus();
+		
 	}
 	
 	/*
@@ -68,11 +70,11 @@ public class Driver {
 		// Map controller functions to specific methods and urls
 
 		// User Controller
-		app.get("/users", UserController::getUsers);
-		app.put("/users/register", UserController::register);
-		app.post("/users/login", UserController::login);
-		app.delete("/users/logout", UserController::logout);
-		app.put("/users/update/:uid", UserController::update);
+//		app.get("/users", UserController::getUsers);
+//		app.put("/users/register", UserController::register);
+//		app.post("/users/login", UserController::login);
+//		app.delete("/users/logout", UserController::logout);
+//		app.put("/users/update/:uid", UserController::update);
 
 		// Recipe Controller
 		
@@ -86,7 +88,5 @@ public class Driver {
 		// Notes Controller
 		
 		// File Controller
-
-		CassandraUtil.getInstance();
 	}
 }

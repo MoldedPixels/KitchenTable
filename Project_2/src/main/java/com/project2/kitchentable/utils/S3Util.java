@@ -22,7 +22,11 @@ import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 
 import java.net.URL;
 import java.util.Date;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
 
+
+@Component
 public class S3Util {
 	public static final Region region = Region.US_EAST_2;
 	public static final String BUCKET_NAME = "2103trms";

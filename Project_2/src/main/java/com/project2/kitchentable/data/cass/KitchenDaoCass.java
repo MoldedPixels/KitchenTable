@@ -3,6 +3,9 @@ package com.project2.kitchentable.data.cass;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.cql.BoundStatement;
 import com.datastax.oss.driver.api.core.cql.ResultSet;
@@ -16,9 +19,10 @@ import com.project2.kitchentable.factory.Log;
 import com.project2.kitchentable.utils.CassandraUtil;
 import com.project2.kitchentable.utils.JSONUtil;
 
-@Log
+@Service
 public class KitchenDaoCass implements KitchenDao {
-	private CqlSession session = CassandraUtil.getInstance().getSession();
+	@Autowired
+	private CqlSession session;
 	private JsonParser jp = null;
 
 	@Override

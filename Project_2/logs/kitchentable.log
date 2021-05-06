@@ -1,0 +1,5 @@
+2021-05-05 23:00:47 TRACE Driver:24 - Begin the application
+2021-05-05 23:00:47 TRACE Driver:27 - Checking for UserTable
+2021-05-05 23:00:47 TRACE Driver:29 - Checking for FormTable
+2021-05-05 23:00:47 TRACE Driver:31 - Checking for LogsTable
+2021-05-05 23:00:47 TRACE Driver:33 - Checking for AttachmentsTable

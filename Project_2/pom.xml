@@ -5,7 +5,7 @@
 
 	<!-- Project Coordinates -->
 	<groupId>com.revature</groupId> <!-- organization's package structure -->
-	<artifactId>YouDontKnowJava</artifactId> <!-- Actual name of the project -->
+	<artifactId>KitchenTable</artifactId> <!-- Actual name of the project -->
 	<version>0.0.1-SNAPSHOT</version> <!-- What version of the project this is -->
 	<packaging>jar</packaging> <!-- What kind of artifact gets built? -->
 
@@ -139,6 +139,35 @@
 			<groupId>com.cedarsoftware</groupId>
 			<artifactId>json-io</artifactId>
 			<version>4.12.0</version>
+		</dependency>
+		<!-- Spring Core Dependency. The IOC Container. Necessary for Spring -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+		</dependency>
+		<!-- Spring Beans. This module adds events to the Spring Bean Lifecycle -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-beans</artifactId>
+		</dependency>
+		<!-- Spring Context. This is the ApplicationContext (The successor of BeanFactory) -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+		</dependency>
+		<!-- Spring Context Support. A helper module for Spring Context -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-aspects</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-cassandra</artifactId>
+			<version>3.2.0</version>
 		</dependency>
 	</dependencies>
 </project>

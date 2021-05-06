@@ -2,21 +2,22 @@ package com.project2.kitchentable.utils;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
+import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Bean;
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.config.DriverConfigLoader;
 
+@Component
 public class CassandraUtil {
-	private static CassandraUtil instance = null;
 	private static final Logger log = LogManager.getLogger(CassandraUtil.class);
 	
-	private CqlSession session = null;
-	
-	private CassandraUtil() {
+	@Bean
+	public CqlSession getSession() {
 		log.trace("Establishing connection with Cassandra");
+		CqlSession session = null;
 		DriverConfigLoader loader = DriverConfigLoader.fromClasspath("application.conf");
 		try {
-			this.session = CqlSession.builder().withConfigLoader(loader).withKeyspace("Project_1").build();
+			session = CqlSession.builder().withConfigLoader(loader).withKeyspace("thekitchen").build();
 		} catch(Exception e) {
 			log.error("Method threw exception: "+e);
 			for(StackTraceElement s : e.getStackTrace()) {
@@ -24,16 +25,6 @@ public class CassandraUtil {
 			}
 			throw e;
 		}
-	}
-	
-	public static synchronized CassandraUtil getInstance() {
-		if(instance == null) {
-			instance = new CassandraUtil();
-		}
-		return instance;
-	}
-	
-	public CqlSession getSession() {
 		return session;
 	}
 }

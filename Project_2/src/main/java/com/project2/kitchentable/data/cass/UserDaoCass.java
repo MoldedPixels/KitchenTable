@@ -3,6 +3,9 @@ package com.project2.kitchentable.data.cass;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.DefaultConsistencyLevel;
 import com.datastax.oss.driver.api.core.cql.BoundStatement;
@@ -15,26 +18,26 @@ import com.project2.kitchentable.data.UserDao;
 import com.project2.kitchentable.factory.Log;
 import com.project2.kitchentable.utils.CassandraUtil;
 
-@Log
+@Service
 public class UserDaoCass implements UserDao{
-	private CqlSession session = CassandraUtil.getInstance().getSession();
+	@Autowired
+	private CqlSession session;
 	
 	@Override
 	public List<User> getUsers() {
 		List<User> users = new ArrayList<User>();
-		
-		String query = "select * from user";
+		String query = "select * from users";
 		ResultSet rs = session.execute(query);
 		
 		rs.forEach(data -> {
 			User u = new User();
 			u.setFirstName(data.getString("firstname"));
 			u.setLastName(data.getString("lastname"));
-			u.setRoleID(data.getInt("role"));
 			u.setUserID(data.getInt("user_id"));
-			u.setAvailableBal(data.getFloat("available_balance"));
-			u.setDirectSupID(data.getInt("direct_sup"));
-			u.setDeptHeadID(data.getInt("dept_head"));
+			u.setFamilyID(data.getInt("familyid"));
+			u.setKitchenID(data.getInt("kitchenid"));
+			u.setUserTypeID(data.getInt("usertype"));
+			
 			users.add(u);
 		});
 		
@@ -44,7 +47,7 @@ public class UserDaoCass implements UserDao{
 	@Override
 	public User getUserByName(String fname, String lname) {
 		User u = null;
-		String query = "Select * from user where firstname = ? AND lastname = ?;";
+		String query = "Select * from users where firstname = ? AND lastname = ?;";
 		BoundStatement bound = session.prepare(query).bind(fname, lname);
 		ResultSet rs = session.execute(bound);
 		Row data = rs.one();
@@ -52,37 +55,37 @@ public class UserDaoCass implements UserDao{
 			u = new User();
 			u.setFirstName(data.getString("firstname"));
 			u.setLastName(data.getString("lastname"));
-			u.setUserTypeID(data.getInt("user_type_id"));
-			u.setUserID(data.getInt("user_id"));
-			u.setAvailableBal(data.getDouble("available_balance"));
-			u.setDirectSupID(data.getInt("direct_sup"));
-			u.setDeptHeadID(data.getInt("dept_head"));
+			u.setUserTypeID(data.getInt("usertype"));
+			u.setUserID(data.getInt("userid"));
+			u.setFamilyID(data.getInt("familyid"));
+			u.setKitchenID(data.getInt("kitchenid"));
+			u.setUserTypeID(data.getInt("usertype"));
 		}
 		return u;
 	}
 
 	@Override
 	public void addUser(User u) throws Exception {
-		String query = "Insert into user (firstname, lastname, role, user_id, available_balance, direct_sup, dept_head) values (?,?,?,?,?,?,?); ";
+		String query = "Insert into users (firstname, lastname, kitchenid, usertype, userid) values (?,?,?,?,?); ";
 		SimpleStatement s = new SimpleStatementBuilder(query)
 				.setConsistencyLevel(DefaultConsistencyLevel.LOCAL_QUORUM).build();
-		BoundStatement bound = session.prepare(s).bind(u.getFirstName(), u.getLastName(), u.getRoleID(), u.getUserID(), u.getAvailableBal(), u.getDirectSupID(), u.getDeptHeadID());
+		BoundStatement bound = session.prepare(s).bind(u.getFirstName(), u.getLastName(), u.getKitchenID(), u.getUserTypeID(), u.getUserID());
 		session.execute(bound);
 	}
 
 	@Override
 	public void updateUser(User u) {
-		String query = "update user set firstname = ?, lastname = ?, role = ?, available_balance = ?, direct_sup = ?, dept_head = ? where user_id = ?";
+		String query = "update users set firstname = ?, lastname = ?, kitchenid = ?, usertype = ?, where userid = ?";
 		SimpleStatement s = new SimpleStatementBuilder(query)
 				.setConsistencyLevel(DefaultConsistencyLevel.LOCAL_QUORUM).build();
-		BoundStatement bound = session.prepare(s).bind(u.getFirstName(), u.getLastName(), u.getRoleID(), u.getAvailableBal(), u.getDirectSupID(), u.getDeptHeadID(), u.getUserID());
+		BoundStatement bound = session.prepare(s).bind(u.getFirstName(), u.getLastName(), u.getKitchenID(), u.getUserTypeID(), u.getUserID());
 		session.execute(bound);
 	}
 
 	@Override
 	public User getUserByID(int userID) {
 		User u = null;
-		String query = "Select * from user where user_id = ?;";
+		String query = "Select * from users where userid = ?;";
 		BoundStatement bound = session.prepare(query).bind(userID);
 		ResultSet rs = session.execute(bound);
 		Row data = rs.one();
@@ -90,11 +93,10 @@ public class UserDaoCass implements UserDao{
 			u = new User();
 			u.setFirstName(data.getString("firstname"));
 			u.setLastName(data.getString("lastname"));
-			u.setRoleID(data.getInt("role"));
 			u.setUserID(data.getInt("user_id"));
-			u.setAvailableBal(data.getDouble("available_balance"));
-			u.setDirectSupID(data.getInt("direct_sup"));
-			u.setDeptHeadID(data.getInt("dept_head"));
+			u.setFamilyID(data.getInt("familyid"));
+			u.setKitchenID(data.getInt("kitchenid"));
+			u.setUserTypeID(data.getInt("usertype"));
 		}
 		return u;
 	}
