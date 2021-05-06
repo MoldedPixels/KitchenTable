@@ -8,6 +8,7 @@ public class Recipe{
 	private String name;
 	private List<Ingredient> ingredients;
 	private double rating;
+	private int servings;
 	
 	public Recipe() {
 		super();
@@ -72,6 +73,14 @@ public class Recipe{
 
 	public void setRating(double rating) {
 		this.rating = rating;
+	}
+
+	public int getServings() {
+		return servings;
+	}
+
+	public void setServings(int servings) {
+		this.servings = servings;
 	}
 
 	
