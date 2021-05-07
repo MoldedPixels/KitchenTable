@@ -21,20 +21,8 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-/.metadata/
-*.conf
-Project_2/target/classes/cassandra_truststore.jks
-=======
-
-# Application configuration
-*.conf
->>>>>>> Stashed changes
-=======
 
 /.metadata/
 *.conf
 *.jks
 *.crt
->>>>>>> 80f1e3cf38dd3681e7d12eac635cda0a5dc615ac
