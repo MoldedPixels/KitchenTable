@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,7 +23,7 @@ public class KitchenController {
 		this.kitchenService = kitchenService;
 	}
 
-	@RequestMapping(value = "/kitchen/removeFood")
+	@GetMapping(value = "/kitchen/removeFood")
 	public void removeFood(@RequestParam(name = "list", required = false) String listname,
 			@RequestParam(name = "kitchen", required = false) UUID kID,
 			@RequestParam(name = "ingredient", required = false) UUID iID,
