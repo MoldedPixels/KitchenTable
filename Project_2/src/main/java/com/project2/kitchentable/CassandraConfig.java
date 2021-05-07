@@ -25,9 +25,8 @@ public class CassandraConfig {
 	public CqlSessionFactoryBean session() {
 		CqlSessionFactoryBean factory = new CqlSessionFactoryBean();
 		DriverConfigLoader loader = DriverConfigLoader.fromClasspath("application.conf");
-		factory.setSessionBuilderConfigurer(builder -> builder.withConfigLoader(loader).withKeyspace("kitchentable"));
-		factory.setKeyspaceName("kitchentable");
-
+		factory.setSessionBuilderConfigurer(builder -> builder.withConfigLoader(loader).withKeyspace("Project_2"));
+		factory.setKeyspaceName("Project_2");
 		return factory;
 	}
 
