@@ -1,5 +1,7 @@
 package com.project2.kitchentable.services;
 
+import java.util.UUID;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,22 +23,26 @@ public class UserServiceImpl implements UserService {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
 	@Override
 	public Mono<User> addUser(User u) {
 		return userRepo.insert(u);
 	}
+	
 	@Override
 	public Mono<User> updateUser(User u) {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
 	@Override
 	public Flux<User> getUsers() {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
 	@Override
-	public Mono<User> getUserByID(int userID) {
-		return userRepo.findById(Integer.toString(userID));
+	public Mono<User> getUserByID(UUID userID) {
+		return userRepo.findById(userID.toString());
 	}
 }
