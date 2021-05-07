@@ -10,5 +10,4 @@ import reactor.core.publisher.Flux;
 @Repository
 public interface ReactiveKitchenRepo extends ReactiveCassandraRepository<Kitchen, String>{
 	
-	Flux<Kitchen> findAllById(Integer id);
 }
