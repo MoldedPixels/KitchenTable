@@ -1,8 +1,25 @@
 package com.project2.kitchentable.beans;
+import java.io.Serializable;
 
-public class Ingredient{
+import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
+import org.springframework.data.cassandra.core.mapping.Column;
+import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
+import org.springframework.data.cassandra.core.mapping.Table;
+
+@Table("ingredient")
+public class Ingredient implements Serializable {
+	private static final long serialVersionUID = 468730651941425795L;
+	@PrimaryKeyColumn(
+			name="id",
+			ordinal=0,
+			type=PrimaryKeyType.PARTITIONED)
 	private int id;
+	@PrimaryKeyColumn(
+			name="name",
+			ordinal=1,
+			type=PrimaryKeyType.CLUSTERED)
 	private String name;
+	@Column
 	private double amount;
 	
 	public Ingredient() {

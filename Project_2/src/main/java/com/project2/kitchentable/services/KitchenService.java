@@ -4,6 +4,9 @@ import java.util.List;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.project2.kitchentable.beans.Ingredient;
+import com.project2.kitchentable.beans.Kitchen;
+
+import reactor.core.publisher.Mono;
 
 public interface KitchenService {
 
@@ -11,7 +14,9 @@ public interface KitchenService {
 	
 	void cook();
 
-	List<Ingredient> getShoppingList(int kitchen) throws Exception;
+	Mono<Kitchen> addKitchen(Kitchen k);
 
-	List<Ingredient> getKitchenInv(int kitchen) throws JsonParseException, Exception;
+	List<Ingredient> getShoppingList(String kitchenId) throws Exception;
+
+	List<Ingredient> getKitchenInv(String kitchen) throws JsonParseException, Exception;
 }

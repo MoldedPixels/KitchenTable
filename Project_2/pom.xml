@@ -20,25 +20,6 @@
 		<java.version>1.8</java.version>
 	</properties>
 
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>software.amazon.awssdk</groupId>
-				<artifactId>bom</artifactId>
-				<version>2.15.43</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-framework-bom</artifactId> <!-- Bill of Materials -->
-				<version>4.3.24.RELEASE</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
-
 	<build>
 		<plugins>
 			<!-- Plugin for Maven to build Spring Boot Projects -->
@@ -48,7 +29,6 @@
 			</plugin>
 		</plugins>
 	</build>
-
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -108,21 +88,6 @@
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt</artifactId>
 			<version>0.9.1</version>
-		</dependency>
-		<dependency>
-			<groupId>io.javalin</groupId>
-			<artifactId>javalin</artifactId>
-			<version>3.13.4</version>
-		</dependency>
-		<!-- AWS plugin for Cassandra authentication -->
-		<dependency>
-			<groupId>software.aws.mcs</groupId>
-			<artifactId>aws-sigv4-auth-cassandra-java-driver-plugin</artifactId>
-			<version>4.0.4</version>
-		</dependency>
-		<dependency>
-			<groupId>software.amazon.awssdk</groupId>
-			<artifactId>s3</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.cedarsoftware</groupId>

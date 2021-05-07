@@ -1,45 +1,43 @@
 package com.project2.kitchentable.beans;
 
-import java.util.List;
+import java.io.Serializable;
+import java.util.Map;
 
-public class Kitchen{
+import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
+import org.springframework.data.cassandra.core.mapping.Column;
+import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
+import org.springframework.data.cassandra.core.mapping.Table;
+
+@Table("kitchen")
+public class Kitchen implements Serializable{
+	private static final long serialVersionUID = 9003969767524051063L;
+	@PrimaryKeyColumn(
+			name="id",
+			ordinal=0,
+			type=PrimaryKeyType.PARTITIONED)
 	private int id;
+	@PrimaryKeyColumn(
+			name="headuser",
+			ordinal=1,
+			type=PrimaryKeyType.CLUSTERED)
 	private int headUser;
+	@Column
 	private int familyID;
-	private List<Ingredient> shoppingList;
-	private List<Ingredient> inventory;
+	@Column
+	private Map<Ingredient, Double> shoppingMap;
+	@Column
+	private Map<Ingredient, Double> inventoryMap;
 	
 	public Kitchen() {
 		super();
 	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + id;
-		return result;
-	}
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-
-		return true;
-	}
-	@Override
-	public String toString() {
-		return "Ingredient [family=" + familyID + ", head=" + headUser + ", ID=" + id + "]";
-	}
-	public int getID() {
+	public int getId() {
 		return id;
 	}
-	public void setID(int newID) {
-		this.id = newID;
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public int getHeadUser() {
@@ -58,20 +56,68 @@ public class Kitchen{
 		this.familyID = familyID;
 	}
 
-	public List<Ingredient> getShoppingList() {
-		return shoppingList;
+	public Map<Ingredient, Double> getShoppingMap() {
+		return shoppingMap;
 	}
 
-	public void setShoppingList(List<Ingredient> shoppingList) {
-		this.shoppingList = shoppingList;
+	public void setShoppingMap(Map<Ingredient, Double> shoppingMap) {
+		this.shoppingMap = shoppingMap;
 	}
 
-	public List<Ingredient> getInventory() {
-		return inventory;
+	public Map<Ingredient, Double> getInventoryMap() {
+		return inventoryMap;
 	}
 
-	public void setInventory(List<Ingredient> inventory) {
-		this.inventory = inventory;
+	public void setInventoryMap(Map<Ingredient, Double> inventoryMap) {
+		this.inventoryMap = inventoryMap;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + familyID;
+		result = prime * result + headUser;
+		result = prime * result + id;
+		result = prime * result + ((inventoryMap == null) ? 0 : inventoryMap.hashCode());
+		result = prime * result + ((shoppingMap == null) ? 0 : shoppingMap.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Kitchen other = (Kitchen) obj;
+		if (familyID != other.familyID)
+			return false;
+		if (headUser != other.headUser)
+			return false;
+		if (id != other.id)
+			return false;
+		if (inventoryMap == null) {
+			if (other.inventoryMap != null)
+				return false;
+		} else if (!inventoryMap.equals(other.inventoryMap))
+			return false;
+		if (shoppingMap == null) {
+			if (other.shoppingMap != null)
+				return false;
+		} else if (!shoppingMap.equals(other.shoppingMap))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Kitchen [id=" + id + ", headUser=" + headUser + ", familyID=" + familyID + ", shoppingMap="
+				+ shoppingMap + ", inventoryMap=" + inventoryMap + "]";
+	}
+
+
 	
 }

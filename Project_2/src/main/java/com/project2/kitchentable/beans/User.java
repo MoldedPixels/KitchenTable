@@ -1,11 +1,35 @@
 package com.project2.kitchentable.beans;
 
-public class User{
+import java.io.Serializable;
+
+import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
+import org.springframework.data.cassandra.core.mapping.Column;
+import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
+import org.springframework.data.cassandra.core.mapping.Table;
+
+@Table("user")
+public class User implements Serializable {
+	private static final long serialVersionUID = 9162925644169168189L;
+	@PrimaryKeyColumn(
+			name="id",
+			ordinal=0,
+			type=PrimaryKeyType.PARTITIONED)
 	private int userID;
+	@Column
 	private String firstname;
+	@Column
 	private String lastname;
+	@Column
 	private int familyID;
+	@PrimaryKeyColumn(
+			name="kitchenid",
+			ordinal=1,
+			type=PrimaryKeyType.CLUSTERED)
 	private int kitchenID;
+	@PrimaryKeyColumn(
+			name="usertype",
+			ordinal=2,
+			type=PrimaryKeyType.CLUSTERED)
 	private int userTypeID;
 	
 	public User() {

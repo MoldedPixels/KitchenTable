@@ -4,20 +4,19 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.project2.kitchentable.beans.User;
-import com.project2.kitchentable.data.UserDao;
-import com.project2.kitchentable.data.cass.UserDaoCass;
-import com.project2.kitchentable.factory.BeanFactory;
-import com.project2.kitchentable.factory.Log;
+import com.project2.kitchentable.data.ReactiveUserRepo;
 
-// The service layer allows us to do more complicated actions that strict data access
-// Even if you don't do anything more important, the reason we need a service layer
-// is to loosely couple our business layer from our data layer
-@Log
+//Left off here, thats why there are errors.
+@Service
 public class UserServiceImpl implements UserService {
 	private static Logger log = LogManager.getLogger(UserServiceImpl.class);
-	private UserDao ud = (UserDao) BeanFactory.getFactory().get(UserDao.class, UserDaoCass.class);
+	
+	@Autowired
+	private ReactiveUserRepo userRepo;
 
 	@Override
 	public User getUser(String fname, String lname) {
