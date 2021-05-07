@@ -9,5 +9,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ReactiveUserRepo extends ReactiveCassandraRepository<User, String> {
 	
-	Flux<User> findAllById(Integer id);
 }
