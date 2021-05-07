@@ -1,14 +1,5 @@
 package com.project2.kitchentable.controllers;
 
-<<<<<<< HEAD
-=======
-import java.util.List;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.reactivestreams.Publisher;
->>>>>>> 80f1e3cf38dd3681e7d12eac635cda0a5dc615ac
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,7 +8,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.project2.kitchentable.beans.User;
 import com.project2.kitchentable.services.UserService;
-import com.project2.kitchentable.services.UserServiceImpl;
 import com.project2.kitchentable.utils.JWTParser;
 
 @RestController
