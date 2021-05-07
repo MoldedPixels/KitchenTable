@@ -1,48 +1,27 @@
 package com.project2.kitchentable.services;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.project2.kitchentable.beans.Ingredient;
-import com.project2.kitchentable.beans.Kitchen;
-import com.project2.kitchentable.data.ReactiveKitchenRepo;
+import com.project2.kitchentable.data.KitchenDao;
+import com.project2.kitchentable.data.cass.KitchenDaoCass;
+import com.project2.kitchentable.factory.BeanFactory;
+import com.project2.kitchentable.factory.Log;
 
-
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-
-@Service
+// The service layer allows us to do more complicated actions that strict data access
+// Even if you don't do anything more important, the reason we need a service layer
+// is to loosely couple our business layer from our data layer
+@Log
 public class KitchenServiceImpl implements KitchenService {
 	private static Logger log = LogManager.getLogger(KitchenServiceImpl.class);
-	
-	@Autowired
-	private ReactiveKitchenRepo kitchenRepo;
-	
-	@Override
-	public Mono<Kitchen> addKitchen(Kitchen k){
-		return kitchenRepo.insert(k);
-	}
-	
-	public Flux<Kitchen> getKitchens() {
-		return kitchenRepo.findAll();
-	}
-	
-	public Mono<Kitchen> updateKitchen(Kitchen k){
-		return kitchenRepo.save(k);
-	}
-	
-	
+	private KitchenDao kd = (KitchenDao) BeanFactory.getFactory().get(KitchenDao.class, KitchenDaoCass.class);
 	@Override
 	public void removeFood() {
-		// Have to return the map of ingredients and then edit and save
+		// TODO Auto-generated method stub
 		
 	}
 	@Override
@@ -51,40 +30,16 @@ public class KitchenServiceImpl implements KitchenService {
 		
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public List<Ingredient> getShoppingList(String kitchenId) throws Exception {
-		Mono<Kitchen> userKitchen = kitchenRepo.findById(kitchenId);
-		List<Ingredient> list = new ArrayList<Ingredient>();
-		
-		try {
-			list = (List<Ingredient>) userKitchen.subscribe(Kitchen::getShoppingList);
-		}catch(Exception e) {
-			log.warn(e.getMessage());
-			for (StackTraceElement st : e.getStackTrace())
-				log.debug(st.toString());
-			return null;
-		}
-		
+	public List<Ingredient> getShoppingList(int kitchen) throws Exception {
+		List<Ingredient> list = kd.getShoppingList(kitchen);
+		return list;
+	}
+	@Override
+	public List<Ingredient> getKitchenInv(int kitchen) throws JsonParseException, Exception {
+		List<Ingredient> list = kd.getKitchenInv(kitchen);
 		return list;
 	}
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<Ingredient> getKitchenInv(String kitchenId) throws Exception {
-		Mono<Kitchen> userKitchen = kitchenRepo.findById(kitchenId);
-		List<Ingredient> list = new ArrayList<Ingredient>();
-		
-		try {
-			list = (List<Ingredient>) userKitchen.subscribe(Kitchen::getInventory);
-		}catch(Exception e) {
-			log.warn(e.getMessage());
-			for (StackTraceElement st : e.getStackTrace())
-				log.debug(st.toString());
-			return null;
-		}
-		
-		return list;
-	}
-
+	
 }

@@ -1,44 +1,45 @@
 package com.project2.kitchentable.beans;
 
-import java.io.Serializable;
 import java.util.List;
-import java.util.UUID;
 
-import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
-import org.springframework.data.cassandra.core.mapping.Column;
-import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
-import org.springframework.data.cassandra.core.mapping.Table;
-
-@Table("kitchen")
-public class Kitchen implements Serializable{
-	private static final long serialVersionUID = 9003969767524051063L;
-	@PrimaryKeyColumn(
-			name="id",
-			ordinal=0,
-			type=PrimaryKeyType.PARTITIONED)
-	private UUID id;
-	@PrimaryKeyColumn(
-			name="headuser",
-			ordinal=1,
-			type=PrimaryKeyType.CLUSTERED)
+public class Kitchen{
+	private int id;
 	private int headUser;
-	@Column
-	private UUID familyID;
-	@Column
+	private int familyID;
 	private List<Ingredient> shoppingList;
-	@Column
 	private List<Ingredient> inventory;
 	
 	public Kitchen() {
 		super();
 	}
 
-	public UUID getId() {
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + id;
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+
+		return true;
+	}
+	@Override
+	public String toString() {
+		return "Ingredient [family=" + familyID + ", head=" + headUser + ", ID=" + id + "]";
+	}
+	public int getID() {
 		return id;
 	}
-
-	public void setId(UUID id) {
-		this.id = id;
+	public void setID(int newID) {
+		this.id = newID;
 	}
 
 	public int getHeadUser() {
@@ -49,11 +50,11 @@ public class Kitchen implements Serializable{
 		this.headUser = headUser;
 	}
 
-	public UUID getFamilyID() {
+	public int getFamilyID() {
 		return familyID;
 	}
 
-	public void setFamilyID(UUID familyID) {
+	public void setFamilyID(int familyID) {
 		this.familyID = familyID;
 	}
 
@@ -72,62 +73,5 @@ public class Kitchen implements Serializable{
 	public void setInventory(List<Ingredient> inventory) {
 		this.inventory = inventory;
 	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((familyID == null) ? 0 : familyID.hashCode());
-		result = prime * result + headUser;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((inventory == null) ? 0 : inventory.hashCode());
-		result = prime * result + ((shoppingList == null) ? 0 : shoppingList.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Kitchen other = (Kitchen) obj;
-		if (familyID == null) {
-			if (other.familyID != null)
-				return false;
-		} else if (!familyID.equals(other.familyID))
-			return false;
-		if (headUser != other.headUser)
-			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		if (inventory == null) {
-			if (other.inventory != null)
-				return false;
-		} else if (!inventory.equals(other.inventory))
-			return false;
-		if (shoppingList == null) {
-			if (other.shoppingList != null)
-				return false;
-		} else if (!shoppingList.equals(other.shoppingList))
-			return false;
-		return true;
-	}
-
-	@Override
-	public String toString() {
-		return "Kitchen [id=" + id + ", headUser=" + headUser + ", familyID=" + familyID + ", shoppingList="
-				+ shoppingList + ", inventory=" + inventory + "]";
-	}
-	
 	
 }
