@@ -22,8 +22,7 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 
-#Application Confirmation
+/.metadata/
 *.conf
+Project_2/target/classes/cassandra_truststore.jks
 
-#Trust Store
-*.jks

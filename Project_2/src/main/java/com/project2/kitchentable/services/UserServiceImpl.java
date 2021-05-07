@@ -1,52 +1,42 @@
 package com.project2.kitchentable.services;
 
-import java.util.List;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import com.project2.kitchentable.beans.User;
 import com.project2.kitchentable.data.ReactiveUserRepo;
 
-//Left off here, thats why there are errors.
 @Service
 public class UserServiceImpl implements UserService {
 	private static Logger log = LogManager.getLogger(UserServiceImpl.class);
-	
 	@Autowired
 	private ReactiveUserRepo userRepo;
-
+	
 	@Override
-	public User getUser(String fname, String lname) {
-		return ud.getUserByName(fname, lname);
+	public Mono<User> getUser(String fname, String lname) {
+		// TODO Auto-generated method stub
+		return null;
 	}
-
 	@Override
-	public boolean addUser(User u) {
-		try {
-			ud.addUser(u);
-			return true;
-		} catch (Exception e) {
-			e.printStackTrace();
-			log.warn("User already exists " + u.getFirstName() + u.getLastName());
-			return false;
-		}
+	public Mono<User> addUser(User u) {
+		return ud.insert(u);
 	}
-
 	@Override
-	public List<User> getUsers() {
-		return ud.getUsers();
+	public Mono<User> updateUser(User u) {
+		// TODO Auto-generated method stub
+		return null;
 	}
-
 	@Override
-	public void updateUser(User u) {
-		ud.updateUser(u);
+	public Flux<User> getUsers() {
+		// TODO Auto-generated method stub
+		return null;
 	}
-
 	@Override
-	public User getUserByID(int userID) {
-		return ud.getUserByID(userID);
+	public Mono<User> getUserByID(int userID) {
+		return ud.findById(Integer.toString(userID));
 	}
 }
