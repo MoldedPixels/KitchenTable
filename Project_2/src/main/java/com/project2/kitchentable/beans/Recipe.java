@@ -1,7 +1,9 @@
 package com.project2.kitchentable.beans;
 
 import java.io.Serializable;
-import java.util.Map;
+import java.util.List;
+import java.util.UUID;
+
 import org.springframework.data.cassandra.core.cql.Ordering;
 import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
 import org.springframework.data.cassandra.core.mapping.Column;
@@ -12,7 +14,7 @@ import org.springframework.data.cassandra.core.mapping.Table;
 public class Recipe implements Serializable {
 	private static final long serialVersionUID = -5825156404073366871L;
 	@Column
-	private int id;
+	private UUID id;
 	@PrimaryKeyColumn(
 			name="cuisine",
 			ordinal=0,
@@ -21,7 +23,7 @@ public class Recipe implements Serializable {
 	@Column
 	private String name;
 	@Column
-	private Map<Ingredient, Double> ingredientsMap;
+	private List<Ingredient> ingredients;
 	@PrimaryKeyColumn(
 			name="rating",
 			ordinal=1,
@@ -33,11 +35,11 @@ public class Recipe implements Serializable {
 		super();
 	}
 
-	public int getId() {
+	public UUID getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(UUID id) {
 		this.id = id;
 	}
 
@@ -57,12 +59,12 @@ public class Recipe implements Serializable {
 		this.name = name;
 	}
 
-	public Map<Ingredient, Double> getIngredientsMap() {
-		return ingredientsMap;
+	public List<Ingredient> getIngredients() {
+		return ingredients;
 	}
 
-	public void setIngredientsMap(Map<Ingredient, Double> ingredientsMap) {
-		this.ingredientsMap = ingredientsMap;
+	public void setIngredients(List<Ingredient> ingredients) {
+		this.ingredients = ingredients;
 	}
 
 	public double getRating() {
@@ -82,8 +84,8 @@ public class Recipe implements Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + cuisine;
-		result = prime * result + id;
-		result = prime * result + ((ingredientsMap == null) ? 0 : ingredientsMap.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((ingredients == null) ? 0 : ingredients.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		long temp;
 		temp = Double.doubleToLongBits(rating);
@@ -102,12 +104,15 @@ public class Recipe implements Serializable {
 		Recipe other = (Recipe) obj;
 		if (cuisine != other.cuisine)
 			return false;
-		if (id != other.id)
-			return false;
-		if (ingredientsMap == null) {
-			if (other.ingredientsMap != null)
+		if (id == null) {
+			if (other.id != null)
 				return false;
-		} else if (!ingredientsMap.equals(other.ingredientsMap))
+		} else if (!id.equals(other.id))
+			return false;
+		if (ingredients == null) {
+			if (other.ingredients != null)
+				return false;
+		} else if (!ingredients.equals(other.ingredients))
 			return false;
 		if (name == null) {
 			if (other.name != null)
@@ -121,10 +126,9 @@ public class Recipe implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Recipe [id=" + id + ", cuisine=" + cuisine + ", name=" + name + ", ingredientsMap=" + ingredientsMap
+		return "Recipe [id=" + id + ", cuisine=" + cuisine + ", name=" + name + ", ingredients=" + ingredients
 				+ ", rating=" + rating + "]";
 	}
-
 
 	
 }

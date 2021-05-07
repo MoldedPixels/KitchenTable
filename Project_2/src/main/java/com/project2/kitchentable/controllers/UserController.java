@@ -41,7 +41,7 @@ public class UserController {
 	
 	@PostMapping("users")
 	public ResponseEntity<User> registerUser(@RequestBody User u) {
-		us.addUser(u);
+		userService.addUser(u);
 		return ResponseEntity.status(201).body(u);
 	}
 }

@@ -23,7 +23,7 @@ public class UserServiceImpl implements UserService {
 	}
 	@Override
 	public Mono<User> addUser(User u) {
-		return ud.insert(u);
+		return userRepo.insert(u);
 	}
 	@Override
 	public Mono<User> updateUser(User u) {
@@ -37,6 +37,6 @@ public class UserServiceImpl implements UserService {
 	}
 	@Override
 	public Mono<User> getUserByID(int userID) {
-		return ud.findById(Integer.toString(userID));
+		return userRepo.findById(Integer.toString(userID));
 	}
 }

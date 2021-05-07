@@ -47,7 +47,7 @@ public class KitchenServiceImpl implements KitchenService {
 	}
 	@Override
 	public void cook() {
-		// Isn't this still just removing food based on a recipe? 
+		// TODO Auto-generated method stub
 		
 	}
 
@@ -55,12 +55,10 @@ public class KitchenServiceImpl implements KitchenService {
 	@Override
 	public List<Ingredient> getShoppingList(String kitchenId) throws Exception {
 		Mono<Kitchen> userKitchen = kitchenRepo.findById(kitchenId);
-		Map<Ingredient, Double> ingredientMap;
 		List<Ingredient> list = new ArrayList<Ingredient>();
 		
 		try {
-			ingredientMap = (Map<Ingredient, Double>) userKitchen.subscribe(Kitchen::getShoppingMap);
-			list = ingredientMap.keySet().stream().collect(Collectors.toList());
+			list = (List<Ingredient>) userKitchen.subscribe(Kitchen::getShoppingList);
 		}catch(Exception e) {
 			log.warn(e.getMessage());
 			for (StackTraceElement st : e.getStackTrace())
@@ -75,12 +73,10 @@ public class KitchenServiceImpl implements KitchenService {
 	@Override
 	public List<Ingredient> getKitchenInv(String kitchenId) throws Exception {
 		Mono<Kitchen> userKitchen = kitchenRepo.findById(kitchenId);
-		Map<Ingredient, Double> ingredientMap;
 		List<Ingredient> list = new ArrayList<Ingredient>();
 		
 		try {
-			ingredientMap = (Map<Ingredient, Double>) userKitchen.subscribe(Kitchen::getInventoryMap);
-			list = ingredientMap.keySet().stream().collect(Collectors.toList());
+			list = (List<Ingredient>) userKitchen.subscribe(Kitchen::getInventory);
 		}catch(Exception e) {
 			log.warn(e.getMessage());
 			for (StackTraceElement st : e.getStackTrace())
@@ -91,6 +87,4 @@ public class KitchenServiceImpl implements KitchenService {
 		return list;
 	}
 
-
-	
 }

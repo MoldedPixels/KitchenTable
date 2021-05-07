@@ -24,5 +24,4 @@ hs_err_pid*
 
 /.metadata/
 *.conf
-Project_2/target/classes/cassandra_truststore.jks
-
+*.jks

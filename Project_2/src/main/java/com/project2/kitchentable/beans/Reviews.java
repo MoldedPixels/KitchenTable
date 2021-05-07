@@ -1,6 +1,7 @@
 package com.project2.kitchentable.beans;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
 import org.springframework.data.cassandra.core.mapping.Column;
@@ -15,17 +16,17 @@ public class Reviews implements Serializable {
 			name="reviewid",
 			ordinal=0,
 			type=PrimaryKeyType.PARTITIONED)
-	private int reviewId;
+	private UUID reviewId;
 	@PrimaryKeyColumn(
 			name="userid",
 			ordinal=1,
 			type=PrimaryKeyType.CLUSTERED)
-	private int userId;
+	private UUID userId;
 	@PrimaryKeyColumn(
 			name="recipeid",
 			ordinal=2,
 			type=PrimaryKeyType.CLUSTERED)
-	private int recipeId;
+	private UUID recipeId;
 	@Column
 	private double score;
 	@Column
@@ -35,27 +36,27 @@ public class Reviews implements Serializable {
 		super();
 	}
 
-	public int getReviewId() {
+	public UUID getReviewId() {
 		return reviewId;
 	}
 
-	public void setReviewId(int reviewId) {
+	public void setReviewId(UUID reviewId) {
 		this.reviewId = reviewId;
 	}
 
-	public int getUserId() {
+	public UUID getUserId() {
 		return userId;
 	}
 
-	public void setUserId(int userId) {
+	public void setUserId(UUID userId) {
 		this.userId = userId;
 	}
 
-	public int getRecipeId() {
+	public UUID getRecipeId() {
 		return recipeId;
 	}
 
-	public void setRecipeId(int recipeId) {
+	public void setRecipeId(UUID recipeId) {
 		this.recipeId = recipeId;
 	}
 
@@ -84,12 +85,12 @@ public class Reviews implements Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((body == null) ? 0 : body.hashCode());
-		result = prime * result + recipeId;
-		result = prime * result + reviewId;
+		result = prime * result + ((recipeId == null) ? 0 : recipeId.hashCode());
+		result = prime * result + ((reviewId == null) ? 0 : reviewId.hashCode());
 		long temp;
 		temp = Double.doubleToLongBits(score);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
-		result = prime * result + userId;
+		result = prime * result + ((userId == null) ? 0 : userId.hashCode());
 		return result;
 	}
 
@@ -107,13 +108,22 @@ public class Reviews implements Serializable {
 				return false;
 		} else if (!body.equals(other.body))
 			return false;
-		if (recipeId != other.recipeId)
+		if (recipeId == null) {
+			if (other.recipeId != null)
+				return false;
+		} else if (!recipeId.equals(other.recipeId))
 			return false;
-		if (reviewId != other.reviewId)
+		if (reviewId == null) {
+			if (other.reviewId != null)
+				return false;
+		} else if (!reviewId.equals(other.reviewId))
 			return false;
 		if (Double.doubleToLongBits(score) != Double.doubleToLongBits(other.score))
 			return false;
-		if (userId != other.userId)
+		if (userId == null) {
+			if (other.userId != null)
+				return false;
+		} else if (!userId.equals(other.userId))
 			return false;
 		return true;
 	}
@@ -123,5 +133,5 @@ public class Reviews implements Serializable {
 		return "Reviews [reviewId=" + reviewId + ", userId=" + userId + ", recipeId=" + recipeId + ", score=" + score
 				+ ", body=" + body + "]";
 	}
-	
+
 }

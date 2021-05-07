@@ -1,6 +1,7 @@
 package com.project2.kitchentable.beans;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
 import org.springframework.data.cassandra.core.mapping.Column;
@@ -12,20 +13,15 @@ public class Notes implements Serializable{
 	private static final long serialVersionUID = -5753279626984652956L;
 
 	@PrimaryKeyColumn(
-			name="reviewid",
-			ordinal=0,
-			type = PrimaryKeyType.PARTITIONED)
-	private int reviewId;
-	@PrimaryKeyColumn(
 			name="userid",
 			ordinal=1,
 			type = PrimaryKeyType.CLUSTERED)
-	private int userId;
+	private UUID userId;
 	@PrimaryKeyColumn(
 			name="recipeid",
-			ordinal=2,
-			type = PrimaryKeyType.CLUSTERED)
-	private int recipeId;
+			ordinal=0,
+			type = PrimaryKeyType.PARTITIONED)
+	private UUID recipeId;
 	@Column
 	private String body;
 	
@@ -33,27 +29,19 @@ public class Notes implements Serializable{
 		super();
 	}
 
-	public int getReviewId() {
-		return reviewId;
-	}
-
-	public void setReviewId(int reviewId) {
-		this.reviewId = reviewId;
-	}
-
-	public int getUserId() {
+	public UUID getUserId() {
 		return userId;
 	}
 
-	public void setUserId(int userId) {
+	public void setUserId(UUID userId) {
 		this.userId = userId;
 	}
 
-	public int getRecipeId() {
+	public UUID getRecipeId() {
 		return recipeId;
 	}
 
-	public void setRecipeId(int recipeId) {
+	public void setRecipeId(UUID recipeId) {
 		this.recipeId = recipeId;
 	}
 
@@ -74,9 +62,8 @@ public class Notes implements Serializable{
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((body == null) ? 0 : body.hashCode());
-		result = prime * result + recipeId;
-		result = prime * result + reviewId;
-		result = prime * result + userId;
+		result = prime * result + ((recipeId == null) ? 0 : recipeId.hashCode());
+		result = prime * result + ((userId == null) ? 0 : userId.hashCode());
 		return result;
 	}
 
@@ -94,20 +81,23 @@ public class Notes implements Serializable{
 				return false;
 		} else if (!body.equals(other.body))
 			return false;
-		if (recipeId != other.recipeId)
+		if (recipeId == null) {
+			if (other.recipeId != null)
+				return false;
+		} else if (!recipeId.equals(other.recipeId))
 			return false;
-		if (reviewId != other.reviewId)
-			return false;
-		if (userId != other.userId)
+		if (userId == null) {
+			if (other.userId != null)
+				return false;
+		} else if (!userId.equals(other.userId))
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "Notes [reviewId=" + reviewId + ", userId=" + userId + ", recipeId=" + recipeId + ", body=" + body + "]";
+		return "Notes [userId=" + userId + ", recipeId=" + recipeId + ", body=" + body + "]";
 	}
-	
-	
+
 	
 }

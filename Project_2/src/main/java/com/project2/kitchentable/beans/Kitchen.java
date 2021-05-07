@@ -1,7 +1,8 @@
 package com.project2.kitchentable.beans;
 
 import java.io.Serializable;
-import java.util.Map;
+import java.util.List;
+import java.util.UUID;
 
 import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
 import org.springframework.data.cassandra.core.mapping.Column;
@@ -15,28 +16,28 @@ public class Kitchen implements Serializable{
 			name="id",
 			ordinal=0,
 			type=PrimaryKeyType.PARTITIONED)
-	private int id;
+	private UUID id;
 	@PrimaryKeyColumn(
 			name="headuser",
 			ordinal=1,
 			type=PrimaryKeyType.CLUSTERED)
 	private int headUser;
 	@Column
-	private int familyID;
+	private UUID familyID;
 	@Column
-	private Map<Ingredient, Double> shoppingMap;
+	private List<Ingredient> shoppingList;
 	@Column
-	private Map<Ingredient, Double> inventoryMap;
+	private List<Ingredient> inventory;
 	
 	public Kitchen() {
 		super();
 	}
 
-	public int getId() {
+	public UUID getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(UUID id) {
 		this.id = id;
 	}
 
@@ -48,39 +49,43 @@ public class Kitchen implements Serializable{
 		this.headUser = headUser;
 	}
 
-	public int getFamilyID() {
+	public UUID getFamilyID() {
 		return familyID;
 	}
 
-	public void setFamilyID(int familyID) {
+	public void setFamilyID(UUID familyID) {
 		this.familyID = familyID;
 	}
 
-	public Map<Ingredient, Double> getShoppingMap() {
-		return shoppingMap;
+	public List<Ingredient> getShoppingList() {
+		return shoppingList;
 	}
 
-	public void setShoppingMap(Map<Ingredient, Double> shoppingMap) {
-		this.shoppingMap = shoppingMap;
+	public void setShoppingList(List<Ingredient> shoppingList) {
+		this.shoppingList = shoppingList;
 	}
 
-	public Map<Ingredient, Double> getInventoryMap() {
-		return inventoryMap;
+	public List<Ingredient> getInventory() {
+		return inventory;
 	}
 
-	public void setInventoryMap(Map<Ingredient, Double> inventoryMap) {
-		this.inventoryMap = inventoryMap;
+	public void setInventory(List<Ingredient> inventory) {
+		this.inventory = inventory;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + familyID;
+		result = prime * result + ((familyID == null) ? 0 : familyID.hashCode());
 		result = prime * result + headUser;
-		result = prime * result + id;
-		result = prime * result + ((inventoryMap == null) ? 0 : inventoryMap.hashCode());
-		result = prime * result + ((shoppingMap == null) ? 0 : shoppingMap.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((inventory == null) ? 0 : inventory.hashCode());
+		result = prime * result + ((shoppingList == null) ? 0 : shoppingList.hashCode());
 		return result;
 	}
 
@@ -93,31 +98,36 @@ public class Kitchen implements Serializable{
 		if (getClass() != obj.getClass())
 			return false;
 		Kitchen other = (Kitchen) obj;
-		if (familyID != other.familyID)
+		if (familyID == null) {
+			if (other.familyID != null)
+				return false;
+		} else if (!familyID.equals(other.familyID))
 			return false;
 		if (headUser != other.headUser)
 			return false;
-		if (id != other.id)
-			return false;
-		if (inventoryMap == null) {
-			if (other.inventoryMap != null)
+		if (id == null) {
+			if (other.id != null)
 				return false;
-		} else if (!inventoryMap.equals(other.inventoryMap))
+		} else if (!id.equals(other.id))
 			return false;
-		if (shoppingMap == null) {
-			if (other.shoppingMap != null)
+		if (inventory == null) {
+			if (other.inventory != null)
 				return false;
-		} else if (!shoppingMap.equals(other.shoppingMap))
+		} else if (!inventory.equals(other.inventory))
+			return false;
+		if (shoppingList == null) {
+			if (other.shoppingList != null)
+				return false;
+		} else if (!shoppingList.equals(other.shoppingList))
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "Kitchen [id=" + id + ", headUser=" + headUser + ", familyID=" + familyID + ", shoppingMap="
-				+ shoppingMap + ", inventoryMap=" + inventoryMap + "]";
+		return "Kitchen [id=" + id + ", headUser=" + headUser + ", familyID=" + familyID + ", shoppingList="
+				+ shoppingList + ", inventory=" + inventory + "]";
 	}
-
-
+	
 	
 }
