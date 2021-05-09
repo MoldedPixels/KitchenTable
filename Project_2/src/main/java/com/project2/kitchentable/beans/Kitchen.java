@@ -25,9 +25,9 @@ public class Kitchen implements Serializable{
 	@Column
 	private UUID familyID;
 	@Column
-	private List<Ingredient> shoppingList;
+	private String shoppingList;
 	@Column
-	private List<Ingredient> inventory;
+	private String inventory;
 	
 	public Kitchen() {
 		super();
@@ -57,19 +57,19 @@ public class Kitchen implements Serializable{
 		this.familyID = familyID;
 	}
 
-	public List<Ingredient> getShoppingList() {
+	public String getShoppingList() {
 		return shoppingList;
 	}
 
-	public void setShoppingList(List<Ingredient> shoppingList) {
+	public void setShoppingList(String shoppingList) {
 		this.shoppingList = shoppingList;
 	}
 
-	public List<Ingredient> getInventory() {
+	public String getInventory() {
 		return inventory;
 	}
 
-	public void setInventory(List<Ingredient> inventory) {
+	public void setInventory(String inventory) {
 		this.inventory = inventory;
 	}
 

@@ -9,15 +9,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.datastax.oss.driver.api.core.CqlSession;
+import com.fasterxml.jackson.core.JsonParser;
 import com.project2.kitchentable.beans.Ingredient;
+import com.project2.kitchentable.beans.Kitchen;
 import com.project2.kitchentable.services.KitchenService;
+import com.project2.kitchentable.utils.JSONUtil;
 
 @RestController
 @RequestMapping(value = "/kitchen")
 public class KitchenController {
 
 	private KitchenService kitchenService;
-
+	private JSONUtil jsonutil = JSONUtil.getInstance();
 	@Autowired
 	public void setKitchenService(KitchenService kitchenService) {
 		this.kitchenService = kitchenService;
@@ -28,15 +32,23 @@ public class KitchenController {
 			@RequestParam(name = "kitchen", required = false) UUID kID,
 			@RequestParam(name = "ingredient", required = false) UUID iID,
 			@RequestParam(name = "amount", required = false) Double amt) throws Exception {
+		Kitchen k = kitchenService.getKitchenByID(kID).block();
+		
 		List<Ingredient> list = null;
 		if (listname.equals("shopping")) {
-			list = kitchenService.getShoppingList(kID.toString());
+			list = jsonutil.readIngredients(k.getShoppingList());
+			list = kitchenService.removeFood(list, iID, amt);
+			String result = jsonutil.writeIngredients(list);
+			k.setShoppingList(result);
 		} else if (listname.equals("inventory")) {
-			list = kitchenService.getKitchenInv(kID.toString());
+			list = jsonutil.readIngredients(k.getInventory());
+			list = kitchenService.removeFood(list, iID, amt);
+			String result = jsonutil.writeIngredients(list);
+			k.setInventory(result);
 		} else {
 			return;
 		}
-		kitchenService.removeFood(list, iID, amt);
+		kitchenService.updateKitchen(k);
 	}
 
 }
