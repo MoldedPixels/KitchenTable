@@ -12,11 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.datastax.oss.driver.api.core.uuid.Uuids;
 import com.project2.kitchentable.beans.Ingredient;
 import com.project2.kitchentable.beans.Kitchen;
 import com.project2.kitchentable.services.KitchenService;
-import com.revature.beans.Player;
-
 import reactor.core.publisher.Mono;
 
 @RestController
@@ -33,6 +32,8 @@ public class KitchenController {
 	@PostMapping("/new")
 	public Mono<ResponseEntity<Kitchen>> addKitchen(@RequestBody Kitchen k) {
 		System.out.println("Hello from register");
+		k.setId(Uuids.timeBased());
+		k.setHeadUser(Uuids.timeBased());
 		return kitchenService.addKitchen(k).map(kitchen -> ResponseEntity.status(201).body(kitchen))
 				.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(k)));
 	}
