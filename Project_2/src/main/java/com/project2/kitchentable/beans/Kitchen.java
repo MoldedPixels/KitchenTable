@@ -21,7 +21,7 @@ public class Kitchen implements Serializable{
 			name="headuser",
 			ordinal=1,
 			type=PrimaryKeyType.CLUSTERED)
-	private int headUser;
+	private UUID headUser;
 	@Column
 	private UUID familyID;
 	@Column
@@ -29,8 +29,13 @@ public class Kitchen implements Serializable{
 	@Column
 	private List<Ingredient> inventory;
 	
-	public Kitchen() {
+	public Kitchen(UUID id, UUID headUser, UUID familyID, List<Ingredient> shoppingList, List<Ingredient> inventory) {
 		super();
+		this.id = id;
+		this.headUser = headUser;
+		this.familyID = familyID;
+		this.shoppingList = shoppingList;
+		this.inventory = inventory;
 	}
 
 	public UUID getId() {
@@ -41,11 +46,11 @@ public class Kitchen implements Serializable{
 		this.id = id;
 	}
 
-	public int getHeadUser() {
+	public UUID getHeadUser() {
 		return headUser;
 	}
 
-	public void setHeadUser(int headUser) {
+	public void setHeadUser(UUID headUser) {
 		this.headUser = headUser;
 	}
 
@@ -82,7 +87,7 @@ public class Kitchen implements Serializable{
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((familyID == null) ? 0 : familyID.hashCode());
-		result = prime * result + headUser;
+		result = prime * result + ((headUser == null) ? 0 : headUser.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((inventory == null) ? 0 : inventory.hashCode());
 		result = prime * result + ((shoppingList == null) ? 0 : shoppingList.hashCode());
@@ -103,7 +108,10 @@ public class Kitchen implements Serializable{
 				return false;
 		} else if (!familyID.equals(other.familyID))
 			return false;
-		if (headUser != other.headUser)
+		if (headUser == null) {
+			if (other.headUser != null)
+				return false;
+		} else if (!headUser.equals(other.headUser))
 			return false;
 		if (id == null) {
 			if (other.id != null)

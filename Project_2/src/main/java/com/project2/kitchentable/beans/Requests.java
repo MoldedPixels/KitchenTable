@@ -32,6 +32,19 @@ public class Requests implements Serializable{
 	private double rating;
 	@Column
 	private String body;
+	
+	public Requests(UUID requestId, UUID recipeId, String cuisine, String ingredients, String name, double rating,
+			String body) {
+		super();
+		this.requestId = requestId;
+		this.recipeId = recipeId;
+		this.cuisine = cuisine;
+		this.ingredients = ingredients;
+		this.name = name;
+		this.rating = rating;
+		this.body = body;
+	}
+	
 	public UUID getRequestId() {
 		return requestId;
 	}

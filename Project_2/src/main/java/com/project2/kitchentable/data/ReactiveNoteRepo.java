@@ -3,14 +3,13 @@ package com.project2.kitchentable.data;
 import java.util.UUID;
 
 import org.springframework.data.cassandra.repository.ReactiveCassandraRepository;
+import org.springframework.stereotype.Repository;
 
-import com.project2.kitchentable.beans.User;
+import com.project2.kitchentable.beans.Notes;
 
 import reactor.core.publisher.Mono;
 
-import org.springframework.stereotype.Repository;
-
 @Repository
-public interface ReactiveUserRepo extends ReactiveCassandraRepository<User, String> {
-	
+public interface ReactiveNoteRepo extends ReactiveCassandraRepository<Notes, String>{
+
 }

@@ -1,5 +1,7 @@
 package com.project2.kitchentable.services;
 
+import java.util.UUID;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,26 +19,28 @@ public class UserServiceImpl implements UserService {
 	private ReactiveUserRepo userRepo;
 	
 	@Override
-	public Mono<User> getUser(String fname, String lname) {
-		// TODO Auto-generated method stub
-		return null;
+	public Flux<User> getUser(String firstname, String lastname) {
+		Flux<User> users = userRepo.findAll();
+		Flux<User> user = users.filter(user1 -> user1.getLastname().equals(lastname) && user1.getFirstname().equals(firstname));
+		
+		return user;
 	}
+	
 	@Override
 	public Mono<User> addUser(User u) {
 		return userRepo.insert(u);
 	}
 	@Override
 	public Mono<User> updateUser(User u) {
-		// TODO Auto-generated method stub
-		return null;
+		return userRepo.save(u);
 	}
 	@Override
 	public Flux<User> getUsers() {
-		// TODO Auto-generated method stub
-		return null;
+		return userRepo.findAll();
 	}
+	
 	@Override
-	public Mono<User> getUserByID(int userID) {
-		return userRepo.findById(Integer.toString(userID));
+	public Mono<Void> removeUser(User u){
+		return userRepo.delete(u);
 	}
 }

@@ -3,6 +3,7 @@ package com.project2.kitchentable.services;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
@@ -37,6 +38,16 @@ public class KitchenServiceImpl implements KitchenService {
 	
 	public Mono<Kitchen> updateKitchen(Kitchen k){
 		return kitchenRepo.save(k);
+	}
+	
+	public Mono<Kitchen> getKitchenById(UUID id){
+		String kitchenId = id.toString();
+		
+		return kitchenRepo.findById(kitchenId);
+	}
+	
+	public Mono<Void> removeKitchen(Kitchen k){
+		return kitchenRepo.delete(k);
 	}
 	
 	

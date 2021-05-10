@@ -31,8 +31,13 @@ public class Recipe implements Serializable {
 			ordering=Ordering.DESCENDING)
 	private double rating;
 	
-	public Recipe() {
+	public Recipe(UUID id, int cuisine, String name, List<Ingredient> ingredients, double rating) {
 		super();
+		this.id = id;
+		this.cuisine = cuisine;
+		this.name = name;
+		this.ingredients = ingredients;
+		this.rating = rating;
 	}
 
 	public UUID getId() {

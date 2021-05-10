@@ -22,9 +22,22 @@ public class Ingredient implements Serializable {
 	private String name;
 	@Column
 	private double amount;
+	@Column
+	private String amountType;
 	
-	public Ingredient() {
+	public Ingredient(UUID id, String name, double amount) {
 		super();
+		this.id = id;
+		this.name = name;
+		this.amount = amount;
+	}
+
+	public String getAmountType() {
+		return amountType;
+	}
+
+	public void setAmountType(String amountType) {
+		this.amountType = amountType;
 	}
 
 	public UUID getId() {
@@ -62,6 +75,7 @@ public class Ingredient implements Serializable {
 		long temp;
 		temp = Double.doubleToLongBits(amount);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + ((amountType == null) ? 0 : amountType.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		return result;
@@ -78,6 +92,11 @@ public class Ingredient implements Serializable {
 		Ingredient other = (Ingredient) obj;
 		if (Double.doubleToLongBits(amount) != Double.doubleToLongBits(other.amount))
 			return false;
+		if (amountType == null) {
+			if (other.amountType != null)
+				return false;
+		} else if (!amountType.equals(other.amountType))
+			return false;
 		if (id == null) {
 			if (other.id != null)
 				return false;
@@ -93,7 +112,7 @@ public class Ingredient implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Ingredient [id=" + id + ", name=" + name + ", amount=" + amount + "]";
+		return "Ingredient [id=" + id + ", name=" + name + ", amount=" + amount + ", amountType=" + amountType + "]";
 	}
 
 
