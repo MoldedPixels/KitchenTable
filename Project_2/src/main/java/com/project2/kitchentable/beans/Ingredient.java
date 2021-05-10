@@ -20,7 +20,6 @@ public class Ingredient implements Serializable {
 			ordinal=1,
 			type=PrimaryKeyType.CLUSTERED)
 	private String name;
-	@Column
 	private double amount;
 	
 	public Ingredient() {
