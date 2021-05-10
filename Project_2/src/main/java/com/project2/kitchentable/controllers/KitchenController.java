@@ -12,9 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.datastax.oss.driver.api.core.uuid.Uuids;
-import com.project2.kitchentable.beans.Ingredient;
 import com.project2.kitchentable.beans.Kitchen;
 import com.project2.kitchentable.services.KitchenService;
+import com.project2.kitchentable.services.RecipeService;
+
 import reactor.core.publisher.Mono;
 
 @RestController
@@ -22,9 +23,16 @@ import reactor.core.publisher.Mono;
 public class KitchenController {
 
 	private KitchenService kitchenService;
+	private RecipeService recipeService;
+
 	@Autowired
 	public void setKitchenService(KitchenService kitchenService) {
 		this.kitchenService = kitchenService;
+	}
+
+	@Autowired
+	public void setRecipeService(RecipeService recipeService) {
+		this.recipeService = recipeService;
 	}
 
 	@PostMapping("/new")
