@@ -26,6 +26,13 @@ public class Ingredient implements Serializable {
 		super();
 	}
 
+	public Ingredient(UUID id, String name, double amount) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.amount = amount;
+	}
+
 	public UUID getId() {
 		return id;
 	}
