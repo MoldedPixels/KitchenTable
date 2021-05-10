@@ -32,51 +32,82 @@ public class Requests implements Serializable{
 	private double rating;
 	@Column
 	private String body;
+	
+	public Requests() {
+		super();
+	}
+
+	public Requests(UUID requestId, UUID recipeId, String cuisine, String ingredients, String name, double rating,
+			String body) {
+		super();
+		this.requestId = requestId;
+		this.recipeId = recipeId;
+		this.cuisine = cuisine;
+		this.ingredients = ingredients;
+		this.name = name;
+		this.rating = rating;
+		this.body = body;
+	}
+
 	public UUID getRequestId() {
 		return requestId;
 	}
+	
 	public void setRequestId(UUID requestId) {
 		this.requestId = requestId;
 	}
+	
 	public UUID getRecipeId() {
 		return recipeId;
 	}
+	
 	public void setRecipeId(UUID recipeId) {
 		this.recipeId = recipeId;
 	}
+	
 	public String getCuisine() {
 		return cuisine;
 	}
+	
 	public void setCuisine(String cuisine) {
 		this.cuisine = cuisine;
 	}
+	
 	public String getIngredients() {
 		return ingredients;
 	}
 	public void setIngredients(String ingredients) {
 		this.ingredients = ingredients;
 	}
+	
 	public String getName() {
 		return name;
 	}
+	
 	public void setName(String name) {
 		this.name = name;
 	}
+	
 	public double getRating() {
 		return rating;
 	}
+	
 	public void setRating(double rating) {
 		this.rating = rating;
 	}
+	
 	public String getBody() {
 		return body;
 	}
+	
 	public void setBody(String body) {
 		this.body = body;
 	}
+	
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -92,6 +123,7 @@ public class Requests implements Serializable{
 		result = prime * result + ((requestId == null) ? 0 : requestId.hashCode());
 		return result;
 	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -135,6 +167,7 @@ public class Requests implements Serializable{
 			return false;
 		return true;
 	}
+	
 	@Override
 	public String toString() {
 		return "Requests [requestId=" + requestId + ", recipeId=" + recipeId + ", cuisine=" + cuisine + ", ingredients="

@@ -29,6 +29,13 @@ public class Notes implements Serializable{
 		super();
 	}
 
+	public Notes(UUID userId, UUID recipeId, String body) {
+		super();
+		this.userId = userId;
+		this.recipeId = recipeId;
+		this.body = body;
+	}
+
 	public UUID getUserId() {
 		return userId;
 	}

@@ -37,6 +37,16 @@ public class User implements Serializable {
 		super();
 	}
 
+	public User(UUID userID, String firstname, String lastname, UUID familyID, UUID kitchenID, int userType) {
+		super();
+		this.userID = userID;
+		this.firstname = firstname;
+		this.lastname = lastname;
+		this.familyID = familyID;
+		this.kitchenID = kitchenID;
+		this.userType = userType;
+	}
+
 	public UUID getUserID() {
 		return userID;
 	}

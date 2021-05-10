@@ -33,6 +33,15 @@ public class Kitchen implements Serializable{
 		super();
 	}
 
+	public Kitchen(UUID id, int headUser, UUID familyID, List<Ingredient> shoppingList, List<Ingredient> inventory) {
+		super();
+		this.id = id;
+		this.headUser = headUser;
+		this.familyID = familyID;
+		this.shoppingList = shoppingList;
+		this.inventory = inventory;
+	}
+
 	public UUID getId() {
 		return id;
 	}
