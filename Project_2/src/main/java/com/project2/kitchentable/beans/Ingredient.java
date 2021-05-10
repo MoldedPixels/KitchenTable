@@ -24,11 +24,8 @@ public class Ingredient implements Serializable {
 	@Column
 	private String amountType;
 	
-	public Ingredient(UUID id, String name, double amount) {
+	public Ingredient() {
 		super();
-		this.id = id;
-		this.name = name;
-		this.amount = amount;
 	}
 
 	public String getAmountType() {

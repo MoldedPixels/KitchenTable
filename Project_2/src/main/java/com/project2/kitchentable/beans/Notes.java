@@ -25,11 +25,8 @@ public class Notes implements Serializable{
 	@Column
 	private String body;
 	
-	public Notes(UUID userId, UUID recipeId, String body) {
+	public Notes() {
 		super();
-		this.userId = userId;
-		this.recipeId = recipeId;
-		this.body = body;
 	}
 
 	public UUID getUserId() {

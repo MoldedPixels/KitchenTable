@@ -29,13 +29,8 @@ public class Kitchen implements Serializable{
 	@Column
 	private List<Ingredient> inventory;
 	
-	public Kitchen(UUID id, UUID headUser, UUID familyID, List<Ingredient> shoppingList, List<Ingredient> inventory) {
+	public Kitchen() {
 		super();
-		this.id = id;
-		this.headUser = headUser;
-		this.familyID = familyID;
-		this.shoppingList = shoppingList;
-		this.inventory = inventory;
 	}
 
 	public UUID getId() {

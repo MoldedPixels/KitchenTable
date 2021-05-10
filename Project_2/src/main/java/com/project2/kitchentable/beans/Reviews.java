@@ -32,13 +32,8 @@ public class Reviews implements Serializable {
 	@Column
 	private String body;
 
-	public Reviews(UUID reviewId, UUID userId, UUID recipeId, double score, String body) {
+	public Reviews() {
 		super();
-		this.reviewId = reviewId;
-		this.userId = userId;
-		this.recipeId = recipeId;
-		this.score = score;
-		this.body = body;
 	}
 
 	public UUID getReviewId() {
