@@ -9,7 +9,7 @@ import reactor.core.publisher.Mono;
 
 public interface UserService {
 
-	Flux<User> getUser(String firstname, String lastname);
+	Flux<User> getUsersByName(String fname, String lname);
 
 	Mono<User> addUser(User u);
 
@@ -20,3 +20,4 @@ public interface UserService {
 	Mono<Void> removeUser(User u);
 
 }
+

@@ -32,10 +32,6 @@ public class User implements Serializable {
 			ordinal=2,
 			type=PrimaryKeyType.CLUSTERED)
 	private int userType;
-	
-	public User() {
-		super();
-	}
 
 	public User(UUID userID, String firstname, String lastname, UUID familyID, UUID kitchenID, int userType) {
 		super();
@@ -45,6 +41,10 @@ public class User implements Serializable {
 		this.familyID = familyID;
 		this.kitchenID = kitchenID;
 		this.userType = userType;
+	}
+
+	public UUID getUserID() {
+		return userID;
 	}
 
 	public void setUserID(UUID userID) {

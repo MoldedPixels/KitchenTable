@@ -1,34 +1,41 @@
 package com.project2.kitchentable.controllers;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+
+import org.springframework.web.bind.annotation.GetMapping;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.datastax.oss.driver.api.core.uuid.Uuids;
 import com.project2.kitchentable.beans.Ingredient;
 import com.project2.kitchentable.beans.Kitchen;
+
 import com.project2.kitchentable.beans.User;
+
 import com.project2.kitchentable.services.KitchenService;
-import com.project2.kitchentable.services.KitchenServiceImpl;
+import reactor.core.publisher.Mono;
 
 import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping(value = "/kitchen")
 public class KitchenController {
-	
+
 	private KitchenService kitchenService;
-	
+
 	@Autowired
 	public void setKitchenService(KitchenService kitchenService) {
 		this.kitchenService = kitchenService;
 	}
-	
+
 	@PostMapping("/new")
 	public Mono<ResponseEntity<Kitchen>> addKitchen(@RequestBody Kitchen k) {
 		System.out.println("Hello from register");
@@ -68,5 +75,5 @@ public class KitchenController {
 	 * kitchenService.getKitchenInv(kID.toString()); } else { return; }
 	 * kitchenService.removeFood(list, iID, amt); }
 	 */
-	
+
 }

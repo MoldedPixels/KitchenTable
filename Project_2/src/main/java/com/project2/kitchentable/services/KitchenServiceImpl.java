@@ -52,8 +52,8 @@ public class KitchenServiceImpl implements KitchenService {
 	
 	
 	@Override
-	public void removeFood() {
-		// Have to return the map of ingredients and then edit and save
+	public void removeFood(List<Ingredient> list, UUID ingredient, Double amount) {
+		
 		
 	}
 	@Override
