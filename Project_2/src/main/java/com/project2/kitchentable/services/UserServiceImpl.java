@@ -27,23 +27,25 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public Mono<User> addUser(User u) {
+		log.trace("Attempting to add user: " + u.toString());
 		return userRepo.insert(u);
 	}
 
 	@Override
 	public Mono<User> updateUser(User u) {
-		// TODO Auto-generated method stub
-		return null;
+		log.trace("Attempting to update user: " + u.toString());
+		return userRepo.save(u);
 	}
 
 	@Override
 	public Flux<User> getUsers() {
-		// TODO Auto-generated method stub
-		return null;
+		log.trace("Attempting to find all users: ");
+		return userRepo.findAll();
 	}
 
 	@Override
 	public Mono<User> getUserByID(UUID userID) {
+		log.trace("Attempting to locate the user with uuid: " + userID);
 		return userRepo.findById(userID.toString());
 	}
 }

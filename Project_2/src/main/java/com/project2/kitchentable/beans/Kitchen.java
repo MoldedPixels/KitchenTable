@@ -1,9 +1,13 @@
 package com.project2.kitchentable.beans;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
 import org.springframework.data.cassandra.core.mapping.Column;
 import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
@@ -25,21 +29,22 @@ public class Kitchen implements Serializable{
 	@Column
 	private UUID familyID;
 	@Column
-	private List<Ingredient> shoppingList;
+	private Map<String, Double> shoppingList;
 	@Column
-	private List<Ingredient> inventory;
+	private Map<String, Double> inventory;
 	
 	public Kitchen() {
 		super();
 	}
 
-	public Kitchen(UUID id, UUID headUser, UUID familyID, List<Ingredient> shoppingList, List<Ingredient> inventory) {
+	@SuppressWarnings("unchecked")
+	public Kitchen(UUID id, UUID headUser, UUID familyID, Object[] shoppingList, Object[] inventory) {
 		super();
 		this.id = id;
 		this.headUser = headUser;
 		this.familyID = familyID;
-		this.shoppingList = shoppingList;
-		this.inventory = inventory;
+		this.shoppingList = ArrayUtils.toMap(shoppingList) ;
+		this.inventory = ArrayUtils.toMap(inventory);
 	}
 
 	public UUID getId() {
@@ -66,19 +71,19 @@ public class Kitchen implements Serializable{
 		this.familyID = familyID;
 	}
 
-	public List<Ingredient> getShoppingList() {
+	public Map<String, Double> getShoppingList() {
 		return shoppingList;
 	}
 
-	public void setShoppingList(List<Ingredient> shoppingList) {
+	public void setShoppingList(Map<String, Double> shoppingList) {
 		this.shoppingList = shoppingList;
 	}
 
-	public List<Ingredient> getInventory() {
+	public Map<String, Double> getInventory() {
 		return inventory;
 	}
 
-	public void setInventory(List<Ingredient> inventory) {
+	public void setInventory(Map<String, Double> inventory) {
 		this.inventory = inventory;
 	}
 

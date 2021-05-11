@@ -3,27 +3,26 @@ package com.project2.kitchentable.services;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.http.ResponseEntity;
-
 import com.fasterxml.jackson.core.JsonParseException;
 import com.project2.kitchentable.beans.Ingredient;
 import com.project2.kitchentable.beans.Kitchen;
+import com.project2.kitchentable.beans.Recipe;
 
 import reactor.core.publisher.Mono;
 
-public interface KitchenService {
+public interface RecipeService {
 
 	List<Ingredient> removeFood(List<Ingredient> list, UUID ingredient, Double amount);
 
 	void cook();
 
-	Mono<Kitchen> getKitchenByID(UUID id);
+	Mono<Recipe> getRecipeByID(UUID id);
 
-	Mono<Kitchen> updateKitchen(Kitchen k);
+	Mono<Recipe> updateRecipe(Recipe r);
 
-	Mono<Kitchen> addKitchen(Kitchen k);
+	Mono<Recipe> addRecipe(Recipe r);
 
-	List<Ingredient> getShoppingList(String kitchenId) throws Exception;
+	List<Ingredient> getShoppingList(String recipeId) throws Exception;
 
-	List<Ingredient> getKitchenInv(String kitchen) throws JsonParseException, Exception;
+	List<Ingredient> getRecipeIng(String recipe) throws JsonParseException, Exception;
 }
