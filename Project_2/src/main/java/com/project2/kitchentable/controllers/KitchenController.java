@@ -24,32 +24,24 @@ import reactor.core.publisher.Mono;
 public class KitchenController {
 
 	private KitchenService kitchenService;
-	//private RecipeService recipeService;
+	// private RecipeService recipeService;
 
 	@Autowired
 	public void setKitchenService(KitchenService kitchenService) {
 		this.kitchenService = kitchenService;
 	}
 
-	//@Autowired
+	// @Autowired
 //	public void setRecipeService(RecipeService recipeService) {
 //		this.recipeService = recipeService;
 //	}
 
 	@PostMapping("/new")
 	public Mono<ResponseEntity<Kitchen>> addKitchen(@RequestBody Kitchen k) {
-		System.out.println("Hello from register");
+		System.out.println("Making a new kitchen");
 		k.setId(Uuids.timeBased());
 		k.setHeadUser(Uuids.timeBased());
 		k.setFamilyID(Uuids.timeBased());
-		for(Ingredient i : k.getInventory())
-		{
-			i.setId(Uuids.timeBased());
-		}
-		for(Ingredient i : k.getShoppingList())
-		{
-			i.setId(Uuids.timeBased());
-		}
 		return kitchenService.addKitchen(k).map(kitchen -> ResponseEntity.status(201).body(kitchen))
 				.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(k)));
 	}

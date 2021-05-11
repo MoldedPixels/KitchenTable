@@ -27,7 +27,7 @@ public class KitchenServiceImpl implements KitchenService {
 
 	@Override
 	public Mono<Kitchen> addKitchen(Kitchen k) {
-		return kitchenRepo.insert(k);
+		return kitchenRepo.save(k);
 	}
 
 	public Flux<Kitchen> getKitchens() {

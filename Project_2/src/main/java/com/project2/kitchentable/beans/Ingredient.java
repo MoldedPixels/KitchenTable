@@ -1,27 +1,21 @@
 package com.project2.kitchentable.beans;
+
 import java.io.Serializable;
 import java.util.UUID;
 
-import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
-import org.springframework.data.cassandra.core.mapping.Column;
-import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
-import org.springframework.data.cassandra.core.mapping.Table;
+import org.springframework.data.cassandra.core.mapping.Element;
+import org.springframework.data.cassandra.core.mapping.Tuple;
 
-@Table("ingredient")
+@Tuple
 public class Ingredient implements Serializable {
 	private static final long serialVersionUID = 468730651941425795L;
-	@PrimaryKeyColumn(
-			name="id",
-			ordinal=0,
-			type=PrimaryKeyType.PARTITIONED)
+	@Element(0)
 	private UUID id;
-	@PrimaryKeyColumn(
-			name="name",
-			ordinal=1,
-			type=PrimaryKeyType.CLUSTERED)
+	@Element(1)
 	private String name;
+	@Element(2)
 	private double amount;
-	
+
 	public Ingredient() {
 		super();
 	}
@@ -101,6 +95,5 @@ public class Ingredient implements Serializable {
 	public String toString() {
 		return "Ingredient [id=" + id + ", name=" + name + ", amount=" + amount + "]";
 	}
-
 
 }
