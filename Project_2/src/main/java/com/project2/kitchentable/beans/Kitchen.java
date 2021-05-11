@@ -1,6 +1,8 @@
 package com.project2.kitchentable.beans;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,21 +27,21 @@ public class Kitchen implements Serializable{
 	@Column
 	private UUID familyID;
 	@Column
-	private String shoppingList;
+	private List<Ingredient> shoppingList;
 	@Column
-	private String inventory;
+	private List<Ingredient> inventory;
 	
 	public Kitchen() {
 		super();
 	}
 
-	public Kitchen(UUID id, UUID headUser, UUID familyID, List<Ingredient> shoppingList, List<Ingredient> inventory) {
+	public Kitchen(UUID id, UUID headUser, UUID familyID, Ingredient[] shoppingList, Ingredient[] inventory) {
 		super();
 		this.id = id;
 		this.headUser = headUser;
 		this.familyID = familyID;
-		this.shoppingList = shoppingList;
-		this.inventory = inventory;
+		this.shoppingList = Arrays.asList(shoppingList);
+		this.inventory = Arrays.asList(inventory);
 	}
 
 	public UUID getId() {
@@ -66,19 +68,19 @@ public class Kitchen implements Serializable{
 		this.familyID = familyID;
 	}
 
-	public String getShoppingList() {
+	public List<Ingredient> getShoppingList() {
 		return shoppingList;
 	}
 
-	public void setShoppingList(String shoppingList) {
+	public void setShoppingList(List<Ingredient> shoppingList) {
 		this.shoppingList = shoppingList;
 	}
 
-	public String getInventory() {
+	public List<Ingredient> getInventory() {
 		return inventory;
 	}
 
-	public void setInventory(String inventory) {
+	public void setInventory(List<Ingredient> inventory) {
 		this.inventory = inventory;
 	}
 
