@@ -16,34 +16,32 @@ import reactor.core.publisher.Mono;
 @Service
 public class IngredientServiceImpl implements IngredientService {
 	private static Logger log = LogManager.getLogger(IngredientServiceImpl.class);
-	
+
 	@Autowired
 	private ReactiveIngredientRepo ingredientRepo;
-	
+
 	@Override
-	public Mono<Ingredient> addIngredient(Ingredient i){
-		return ingredientRepo.insert(i);
+	public Mono<Ingredient> addIngredient(Ingredient i) {
+		log.trace("Adding ingredient" + i);
+		return ingredientRepo.save(i);
 	}
-	
-	@Override
+
 	public Flux<Ingredient> getIngredients() {
 		return ingredientRepo.findAll();
 	}
-	
-	@Override
-	public Mono<Ingredient> updateIngredient(Ingredient i){
+
+	public Mono<Ingredient> updateIngredient(Ingredient i) {
 		return ingredientRepo.save(i);
 	}
-	
+
 	@Override
-	public Mono<Ingredient> getIngredientById(UUID id){
-		String ingredientId = id.toString();
-		
-		return ingredientRepo.findById(ingredientId);
+	public Mono<Ingredient> getIngredientById(UUID id) {
+		return ingredientRepo.findById(id.toString());
 	}
-	
+
 	@Override
-	public Mono<Void> removeIngredient(Ingredient i){
+	public Mono<Void> removeIngredient(Ingredient i) {
 		return ingredientRepo.delete(i);
 	}
+
 }

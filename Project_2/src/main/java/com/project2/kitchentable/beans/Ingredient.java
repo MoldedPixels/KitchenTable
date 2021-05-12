@@ -3,27 +3,36 @@ package com.project2.kitchentable.beans;
 import java.io.Serializable;
 import java.util.UUID;
 
-import org.springframework.data.cassandra.core.mapping.Element;
-import org.springframework.data.cassandra.core.mapping.Tuple;
+import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
+import org.springframework.data.cassandra.core.mapping.Column;
+import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
+import org.springframework.data.cassandra.core.mapping.Table;
 
-@Tuple
+@Table("ingredients")
 public class Ingredient implements Serializable {
 	private static final long serialVersionUID = 468730651941425795L;
-	@Element(0)
+	@PrimaryKeyColumn(
+			name="id",
+			ordinal=0,
+			type=PrimaryKeyType.PARTITIONED)
 	private UUID id;
-	@Element(1)
+	@PrimaryKeyColumn(
+			name="name",
+			ordinal=1,
+			type=PrimaryKeyType.CLUSTERED)
 	private String name;
-	@Element(2)
-	private double amount;
-
+	@Column
+	private String unit;
+	
 	public Ingredient() {
 		super();
 	}
-	
-	public Ingredient(UUID id, String name, double amount) {
+  
+	public Ingredient(UUID id, String name, String unit) {
+		super();
 		this.id = id;
 		this.name = name;
-		this.amount = amount;
+		this.unit = unit;
 	}
 
 	public UUID getId() {
@@ -42,12 +51,13 @@ public class Ingredient implements Serializable {
 		this.name = name;
 	}
 
-	public double getAmount() {
-		return amount;
+	
+	public String getUnit() {
+		return unit;
 	}
 
-	public void setAmount(double amount) {
-		this.amount = amount;
+	public void setUnit(String unit) {
+		this.unit = unit;
 	}
 
 	public static long getSerialversionuid() {
@@ -58,9 +68,6 @@ public class Ingredient implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		long temp;
-		temp = Double.doubleToLongBits(amount);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		return result;
@@ -75,8 +82,6 @@ public class Ingredient implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Ingredient other = (Ingredient) obj;
-		if (Double.doubleToLongBits(amount) != Double.doubleToLongBits(other.amount))
-			return false;
 		if (id == null) {
 			if (other.id != null)
 				return false;
@@ -92,7 +97,7 @@ public class Ingredient implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Ingredient [id=" + id + ", name=" + name + ", amount=" + amount + "]";
+		return "Ingredient [id=" + id + ", name=" + name + "]";
 	}
 
 }
