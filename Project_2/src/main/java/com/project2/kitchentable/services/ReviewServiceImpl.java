@@ -31,6 +31,11 @@ public class ReviewServiceImpl implements ReviewService {
 	}
 	
 	@Override
+	public Flux<Reviews> getReviewsByRecipeId(UUID id) {
+		return reviewRepo.findAllByRecipeID(id);
+	}
+	
+	@Override
 	public Mono<Reviews> updateReview(Reviews r){
 		return reviewRepo.save(r);
 	}
