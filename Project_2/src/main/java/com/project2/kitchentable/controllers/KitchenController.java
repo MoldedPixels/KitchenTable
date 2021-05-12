@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.datastax.oss.driver.api.core.uuid.Uuids;
 import com.project2.kitchentable.beans.Kitchen;
 import com.project2.kitchentable.services.KitchenService;
+import com.project2.kitchentable.services.RecipeService;
+import com.project2.kitchentable.beans.Recipe;
+
 import reactor.core.publisher.Mono;
 
 @RestController
@@ -19,7 +22,7 @@ import reactor.core.publisher.Mono;
 public class KitchenController {
 
 	private KitchenService kitchenService;
-	// private RecipeService recipeService;
+	private RecipeService recipeService;
 
 	@Autowired
 	public void setKitchenService(KitchenService kitchenService) {
@@ -53,8 +56,7 @@ public class KitchenController {
 	}
 
 	@GetMapping(value = "/kitchen/removeFood")
-	public Mono<ResponseEntity<Kitchen>> removeFood(
-			@RequestParam(name = "list", required = false) String listname,
+	public Mono<ResponseEntity<Kitchen>> removeFood(@RequestParam(name = "list", required = false) String listname,
 			@RequestParam(name = "kitchen", required = false) UUID kID,
 			@RequestParam(name = "ingredient", required = false) UUID iID,
 			@RequestParam(name = "amount", required = false) Double amt) throws Exception {
@@ -62,7 +64,16 @@ public class KitchenController {
 		return kitchenService.removeFood(listname, k, iID, amt).map(kitchen -> ResponseEntity.status(201).body(kitchen))
 				.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(k)));
 
-		
+	}
+
+	@GetMapping(value = "/kitchen/removeFood")
+	public Mono<ResponseEntity<Kitchen>> cook(@RequestParam(name = "recipe", required = false) UUID recipe,
+			@RequestParam(name = "kitchen", required = false) UUID kID) throws Exception {
+		Kitchen k = kitchenService.getKitchenByID(kID).block();
+		Recipe r = recipeService.getRecipeById(recipe).block();
+		return kitchenService.cook(r, k).map(kitchen -> ResponseEntity.status(201).body(kitchen))
+				.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(k)));
+
 	}
 
 }

@@ -23,14 +23,6 @@ public interface RecipeService {
 
 	Mono<Void> removeRecipe(Recipe r);
 
-	List<Ingredient> removeFood(List<Ingredient> list, UUID ingredient, Double amount);
-
-	void cook();
-
 	Mono<Recipe> getRecipeByID(UUID id);
 
-	List<Ingredient> getShoppingList(String recipeId) throws Exception;
-
-	List<Ingredient> getRecipeIng(String recipe) throws JsonParseException, Exception;
 }
-
