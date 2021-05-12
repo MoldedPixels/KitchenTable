@@ -1,13 +1,13 @@
 package com.project2.kitchentable.services;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.project2.kitchentable.beans.Ingredient;
@@ -40,29 +40,69 @@ public class KitchenServiceImpl implements KitchenService {
 		return kitchenRepo.save(k);
 	}
 
-	public Mono<Kitchen> getKitchenByID(UUID id){
+	public Mono<Kitchen> getKitchenByID(UUID id) {
 		return kitchenRepo.findById(id.toString());
 	}
-  
-	@Override
-	public Mono<Ingredient> addIngredient(Ingredient i)
-	{
-		return ingredientRepo.save(i);
-  }
-	public Mono<Void> removeKitchen(Kitchen k){
+
+	public Mono<Void> removeKitchen(Kitchen k) {
 		return kitchenRepo.delete(k);
 	}
 
 	@Override
-	public List<Ingredient> removeFood(List<Ingredient> list, UUID ingredient, Double amount) {
-		List<Ingredient> result = list;
-		for (Ingredient i : result) {
-			if (i.getId().equals(ingredient)) {
-				//i.setAmount(i.getAmount() - amount);
-				log.trace("Successfully removed " + amount + "of " + i.getName());
+	public Mono<Kitchen> removeFood(String listname, Kitchen k, UUID ingredient, Double amount) {
+		Map<UUID, Double> list = null;
+		if (listname.equals("shopping")) {
+			list = k.getShoppingList();
+		} else if (listname.equals("inventory")) {
+			list = k.getInventory();
+		} else {
+		}
+		for (UUID iID : list.keySet()) {
+			if (iID.equals(ingredient)) {
+				double newAmt = list.get(iID) - amount;
+				if (newAmt > 0) {
+					list.replace(iID, newAmt);
+					log.trace("Successfully removed " + amount + "of " + ingredient);
+				} else {
+					log.trace("Failed to remove " + amount + "of " + ingredient
+							+ ". The requested amount was too large.");
+				}
+			}
+
+		}
+		if (listname.equals("shopping")) {
+			k.setShoppingList(list);
+		} else if (listname.equals("inventory")) {
+			k.setInventory(list);
+		}
+		return Mono.just(k);
+	}
+
+	@Override
+	public Mono<Kitchen> addFood(String listname, Kitchen k, UUID ingredient, Double amt) {
+		Map<UUID, Double> list = null;
+		if (listname.equals("shopping")) {
+			list = k.getShoppingList();
+		} else if (listname.equals("inventory")) {
+			list = k.getInventory();
+		} else {
+		}
+		if (list.putIfAbsent(ingredient, amt) == null) {
+			for (UUID iID : list.keySet()) {
+				if (iID.equals(ingredient)) {
+					double newAmt = list.get(iID) + amt;
+					list.replace(iID, newAmt);
+					log.trace("Successfully added " + amt + "to " + ingredient);
+				}
 			}
 		}
-		return result;
+		if (listname.equals("shopping")) {
+			k.setShoppingList(list);
+		} else if (listname.equals("inventory")) {
+			k.setInventory(list);
+		}
+
+		return Mono.just(k);
 	}
 
 	@Override

@@ -1,18 +1,16 @@
 package com.project2.kitchentable.services;
 
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 import com.fasterxml.jackson.core.JsonParseException;
-import com.project2.kitchentable.beans.Ingredient;
 import com.project2.kitchentable.beans.Kitchen;
 
 import reactor.core.publisher.Mono;
 
 public interface KitchenService {
 
-	List<Ingredient> removeFood(List<Ingredient> list, UUID ingredient, Double amount);
+	Mono<Kitchen> removeFood(String listname, Kitchen k, UUID ingredient, Double amount);
 
 	void cook();
 
@@ -26,6 +24,5 @@ public interface KitchenService {
 
 	Map<UUID, Double> getKitchenInv(String kitchen) throws JsonParseException, Exception;
 
-	Mono<Ingredient> addIngredient(Ingredient i);
-
+	Mono<Kitchen> addFood(String listname, Kitchen k, UUID iID, Double amt);
 }
