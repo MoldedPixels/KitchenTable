@@ -21,6 +21,8 @@
   		<sonar.projectKey>MoldedPixels_Kitchen_Table</sonar.projectKey>
   		<sonar.organization>moldedpixels</sonar.organization>
   		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
+		<maven.compiler.source>1.8</maven.compiler.source>
+    		<maven.compiler.target>1.8</maven.compiler.target>
 	</properties>
 
 	<build>
