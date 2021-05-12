@@ -27,4 +27,5 @@ public interface KitchenService {
 	Map<UUID, Double> getKitchenInv(String kitchen) throws JsonParseException, Exception;
 
 	Mono<Ingredient> addIngredient(Ingredient i);
+
 }

@@ -27,7 +27,7 @@ public class Ingredient implements Serializable {
 	public Ingredient() {
 		super();
 	}
-
+  
 	public Ingredient(UUID id, String name, String unit) {
 		super();
 		this.id = id;

@@ -1,6 +1,7 @@
 package com.project2.kitchentable.services;
 
 import java.util.UUID;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.project2.kitchentable.beans.Ingredient;
 import com.project2.kitchentable.data.ReactiveIngredientRepo;
+
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -34,6 +36,11 @@ public class IngredientServiceImpl implements IngredientService {
 
 	public Mono<Ingredient> getIngredientByID(UUID id) {
 		return ingredientRepo.findById(id.toString());
+	}
+	
+	@Override
+	public Mono<Void> removeIngredient(Ingredient i){
+		return ingredientRepo.delete(i);
 	}
 
 }

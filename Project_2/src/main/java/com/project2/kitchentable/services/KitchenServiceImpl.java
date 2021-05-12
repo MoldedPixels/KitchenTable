@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,14 +40,17 @@ public class KitchenServiceImpl implements KitchenService {
 		return kitchenRepo.save(k);
 	}
 
-	public Mono<Kitchen> getKitchenByID(UUID id) {
+	public Mono<Kitchen> getKitchenByID(UUID id){
 		return kitchenRepo.findById(id.toString());
 	}
-	
+  
 	@Override
 	public Mono<Ingredient> addIngredient(Ingredient i)
 	{
 		return ingredientRepo.save(i);
+  }
+	public Mono<Void> removeKitchen(Kitchen k){
+		return kitchenRepo.delete(k);
 	}
 
 	@Override

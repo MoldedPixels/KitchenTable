@@ -35,9 +35,8 @@ public class Reviews implements Serializable {
 	public Reviews() {
 		super();
 	}
-
+	
 	public Reviews(UUID reviewId, UUID userId, UUID recipeId, double score, String body) {
-		super();
 		this.reviewId = reviewId;
 		this.userId = userId;
 		this.recipeId = recipeId;

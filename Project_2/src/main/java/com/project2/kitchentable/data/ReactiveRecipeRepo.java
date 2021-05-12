@@ -4,13 +4,10 @@ import java.util.UUID;
 
 import org.springframework.data.cassandra.repository.ReactiveCassandraRepository;
 import org.springframework.stereotype.Repository;
-
-import com.project2.kitchentable.beans.Ingredient;
+import com.project2.kitchentable.beans.Recipe;
 
 import reactor.core.publisher.Mono;
 
 @Repository
-public interface ReactiveIngredientRepo extends ReactiveCassandraRepository<Ingredient, String>{
-	
+public interface ReactiveRecipeRepo extends ReactiveCassandraRepository<Recipe, String>{
 }
-
