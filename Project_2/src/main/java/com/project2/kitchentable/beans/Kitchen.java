@@ -2,6 +2,7 @@ package com.project2.kitchentable.beans;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
@@ -25,9 +26,9 @@ public class Kitchen implements Serializable{
 	@Column
 	private UUID familyID;
 	@Column
-	private List<Ingredient> shoppingList;
+	private Map<String, Double> shoppingList;
 	@Column
-	private List<Ingredient> inventory;
+	private Map<String, Double> inventory;
 	
 	public Kitchen() {
 		super();
@@ -57,19 +58,19 @@ public class Kitchen implements Serializable{
 		this.familyID = familyID;
 	}
 
-	public List<Ingredient> getShoppingList() {
+	public Map<String, Double> getShoppingList() {
 		return shoppingList;
 	}
 
-	public void setShoppingList(List<Ingredient> shoppingList) {
+	public void setShoppingList(Map<String, Double> shoppingList) {
 		this.shoppingList = shoppingList;
 	}
 
-	public List<Ingredient> getInventory() {
+	public Map<String, Double> getInventory() {
 		return inventory;
 	}
 
-	public void setInventory(List<Ingredient> inventory) {
+	public void setInventory(Map<String, Double> inventory) {
 		this.inventory = inventory;
 	}
 

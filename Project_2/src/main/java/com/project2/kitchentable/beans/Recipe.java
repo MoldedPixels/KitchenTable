@@ -2,6 +2,7 @@ package com.project2.kitchentable.beans;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.data.cassandra.core.cql.Ordering;
@@ -23,7 +24,7 @@ public class Recipe implements Serializable {
 	@Column
 	private String name;
 	@Column
-	private List<Ingredient> ingredients;
+	private Map<String, Double> ingredients;
 	@PrimaryKeyColumn(
 			name="rating",
 			ordinal=1,
@@ -59,11 +60,11 @@ public class Recipe implements Serializable {
 		this.name = name;
 	}
 
-	public List<Ingredient> getIngredients() {
+	public Map<String, Double> getIngredients() {
 		return ingredients;
 	}
 
-	public void setIngredients(List<Ingredient> ingredients) {
+	public void setIngredients(Map<String, Double> ingredients) {
 		this.ingredients = ingredients;
 	}
 
