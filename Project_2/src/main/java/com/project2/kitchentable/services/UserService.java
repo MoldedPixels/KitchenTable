@@ -9,14 +9,15 @@ import reactor.core.publisher.Mono;
 
 public interface UserService {
 
-	Flux<User> getUsersByName(String fname, String lname);
+	Mono<User> getUsersByName(String fname, String lname);
 
 	Mono<User> addUser(User u);
 
-	Mono<User> updateUser(User u);
-
 	Flux<User> getUsers();
 
-	Mono<User> getUserByID(UUID userID);
+	Mono<Void> removeUser(User u);
+
+	Mono<User> updateUser(User user);
 
 }
+

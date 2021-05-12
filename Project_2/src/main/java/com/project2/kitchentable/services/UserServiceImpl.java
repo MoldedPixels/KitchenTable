@@ -15,14 +15,14 @@ import reactor.core.publisher.Mono;
 
 @Service
 public class UserServiceImpl implements UserService {
-	@SuppressWarnings("unused")
+
 	private static Logger log = LogManager.getLogger(UserServiceImpl.class);
 	@Autowired
 	private ReactiveUserRepo userRepo;
 
 	@Override
-	public Flux<User> getUsersByName(String fname, String lname) {
-		return userRepo.findAll().filter((u) -> (u.getFirstname().equals(fname) && u.getLastname().equals(lname)));
+	public Mono<User> getUsersByName(String lname, String fname) {
+		return userRepo.findByLastnameAndFirstname(lname,fname);
 	}
 
 	@Override
@@ -42,8 +42,12 @@ public class UserServiceImpl implements UserService {
 		log.trace("Attempting to find all users: ");
 		return userRepo.findAll();
 	}
-
+	
 	@Override
+	public Mono<Void> removeUser(User u){
+		return userRepo.delete(u);
+	}
+	
 	public Mono<User> getUserByID(UUID userID) {
 		log.trace("Attempting to locate the user with uuid: " + userID);
 		return userRepo.findById(userID.toString());

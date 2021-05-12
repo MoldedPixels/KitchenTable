@@ -19,9 +19,8 @@ public class Ingredient implements Serializable {
 	public Ingredient() {
 		super();
 	}
-
+	
 	public Ingredient(UUID id, String name, double amount) {
-		super();
 		this.id = id;
 		this.name = name;
 		this.amount = amount;

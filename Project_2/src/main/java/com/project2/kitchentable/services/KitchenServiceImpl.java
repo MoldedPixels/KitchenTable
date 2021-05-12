@@ -1,10 +1,9 @@
 package com.project2.kitchentable.services;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -38,8 +37,12 @@ public class KitchenServiceImpl implements KitchenService {
 		return kitchenRepo.save(k);
 	}
 
-	public Mono<Kitchen> getKitchenByID(UUID id) {
+	public Mono<Kitchen> getKitchenByID(UUID id){
 		return kitchenRepo.findById(id.toString());
+	}
+	
+	public Mono<Void> removeKitchen(Kitchen k){
+		return kitchenRepo.delete(k);
 	}
 
 	@Override
@@ -62,13 +65,13 @@ public class KitchenServiceImpl implements KitchenService {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Ingredient> getShoppingList(String kitchenId) throws Exception {
+	public Map<String, Double> getShoppingList(String kitchenId) throws Exception {
 		Mono<Kitchen> userKitchen = kitchenRepo.findById(kitchenId);
-		List<Ingredient> list = new ArrayList<Ingredient>();
-
+		Map<String, Double> list = new HashMap<>();
+		
 		try {
-			list = (List<Ingredient>) userKitchen.subscribe(Kitchen::getShoppingList);
-		} catch (Exception e) {
+			list = (Map<String, Double>) userKitchen.subscribe(Kitchen::getShoppingList);
+		}catch(Exception e) {
 			log.warn(e.getMessage());
 			for (StackTraceElement st : e.getStackTrace())
 				log.debug(st.toString());
@@ -80,13 +83,13 @@ public class KitchenServiceImpl implements KitchenService {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Ingredient> getKitchenInv(String kitchenId) throws Exception {
+	public Map<String, Double> getKitchenInv(String kitchenId) throws Exception {
 		Mono<Kitchen> userKitchen = kitchenRepo.findById(kitchenId);
-		List<Ingredient> list = new ArrayList<Ingredient>();
-
+		Map<String, Double> list = new HashMap<>();
+		
 		try {
-			list = (List<Ingredient>) userKitchen.subscribe(Kitchen::getInventory);
-		} catch (Exception e) {
+			list = (Map<String, Double>) userKitchen.subscribe(Kitchen::getInventory);
+		}catch(Exception e) {
 			log.warn(e.getMessage());
 			for (StackTraceElement st : e.getStackTrace())
 				log.debug(st.toString());
