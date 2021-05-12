@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import com.project2.kitchentable.beans.Ingredient;
 
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public interface IngredientService {

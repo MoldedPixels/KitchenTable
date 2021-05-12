@@ -34,12 +34,13 @@ public class IngredientServiceImpl implements IngredientService {
 		return ingredientRepo.save(i);
 	}
 
-	public Mono<Ingredient> getIngredientByID(UUID id) {
+	@Override
+	public Mono<Ingredient> getIngredientById(UUID id) {
 		return ingredientRepo.findById(id.toString());
 	}
-	
+
 	@Override
-	public Mono<Void> removeIngredient(Ingredient i){
+	public Mono<Void> removeIngredient(Ingredient i) {
 		return ingredientRepo.delete(i);
 	}
 
