@@ -1,10 +1,10 @@
 package com.project2.kitchentable.beans;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.springframework.data.cassandra.core.cql.Ordering;
 import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
 import org.springframework.data.cassandra.core.mapping.Column;
@@ -24,7 +24,7 @@ public class Recipe implements Serializable {
 	@Column
 	private String name;
 	@Column
-	private Map<String, Double> ingredients;
+	private Map<UUID, Double> ingredients;
 	@PrimaryKeyColumn(
 			name="rating",
 			ordinal=1,
@@ -36,11 +36,12 @@ public class Recipe implements Serializable {
 		super();
 	}
 	
-	public Recipe(UUID id, int cuisine, String name, Map<String, Double> ingredients, double rating) {
+	@SuppressWarnings("unchecked")
+	public Recipe(UUID id, int cuisine, String name, Object[] ingredients, double rating) {
 		this.id = id;
 		this.cuisine = cuisine;
 		this.name = name;
-		this.ingredients = ingredients;
+		this.ingredients = ArrayUtils.toMap(ingredients);
 		this.rating = rating;
 	}
 
@@ -68,11 +69,11 @@ public class Recipe implements Serializable {
 		this.name = name;
 	}
 
-	public Map<String, Double> getIngredients() {
+	public Map<UUID, Double> getIngredients() {
 		return ingredients;
 	}
 
-	public void setIngredients(Map<String, Double> ingredients) {
+	public void setIngredients(Map<UUID, Double> ingredients) {
 		this.ingredients = ingredients;
 	}
 
