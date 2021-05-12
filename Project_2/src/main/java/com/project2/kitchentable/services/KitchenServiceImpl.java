@@ -14,51 +14,53 @@ import com.project2.kitchentable.beans.Ingredient;
 import com.project2.kitchentable.beans.Kitchen;
 import com.project2.kitchentable.data.ReactiveKitchenRepo;
 
-
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
 
 @Service
 public class KitchenServiceImpl implements KitchenService {
 	private static Logger log = LogManager.getLogger(KitchenServiceImpl.class);
-	
+
 	@Autowired
 	private ReactiveKitchenRepo kitchenRepo;
-	
+
 	@Override
-	public Mono<Kitchen> addKitchen(Kitchen k){
-		return kitchenRepo.insert(k);
+	public Mono<Kitchen> addKitchen(Kitchen k) {
+		return kitchenRepo.save(k);
 	}
-	
+
 	public Flux<Kitchen> getKitchens() {
 		return kitchenRepo.findAll();
 	}
-	
-	public Mono<Kitchen> updateKitchen(Kitchen k){
+
+	public Mono<Kitchen> updateKitchen(Kitchen k) {
 		return kitchenRepo.save(k);
 	}
-	
-	public Mono<Kitchen> getKitchenById(UUID id){
-		String kitchenId = id.toString();
-		
-		return kitchenRepo.findById(kitchenId);
+
+	public Mono<Kitchen> getKitchenByID(UUID id){
+		return kitchenRepo.findById(id.toString());
 	}
 	
 	public Mono<Void> removeKitchen(Kitchen k){
 		return kitchenRepo.delete(k);
 	}
-	
-	
+
 	@Override
-	public void removeFood(List<Ingredient> list, UUID ingredient, Double amount) {
-		
-		
+	public List<Ingredient> removeFood(List<Ingredient> list, UUID ingredient, Double amount) {
+		List<Ingredient> result = list;
+		for (Ingredient i : result) {
+			if (i.getId().equals(ingredient)) {
+				i.setAmount(i.getAmount() - amount);
+				log.trace("Successfully removed " + amount + "of " + i.getName());
+			}
+		}
+		return result;
 	}
+
 	@Override
 	public void cook() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@SuppressWarnings("unchecked")
@@ -75,7 +77,7 @@ public class KitchenServiceImpl implements KitchenService {
 				log.debug(st.toString());
 			return null;
 		}
-		
+
 		return list;
 	}
 
@@ -93,7 +95,7 @@ public class KitchenServiceImpl implements KitchenService {
 				log.debug(st.toString());
 			return null;
 		}
-		
+
 		return list;
 	}
 

@@ -27,17 +27,19 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public Mono<User> addUser(User u) {
+		log.trace("Attempting to add user: " + u.toString());
 		return userRepo.insert(u);
 	}
 
 	@Override
-	public Mono<User> updateUser(User user) {
-		log.trace(user);
-		return this.userRepo.save(user);
+	public Mono<User> updateUser(User u) {
+		log.trace("Attempting to update user: " + u.toString());
+		return userRepo.save(u);
 	}
 
 	@Override
 	public Flux<User> getUsers() {
+		log.trace("Attempting to find all users: ");
 		return userRepo.findAll();
 	}
 	
@@ -45,5 +47,9 @@ public class UserServiceImpl implements UserService {
 	public Mono<Void> removeUser(User u){
 		return userRepo.delete(u);
 	}
+	
+	public Mono<User> getUserByID(UUID userID) {
+		log.trace("Attempting to locate the user with uuid: " + userID);
+		return userRepo.findById(userID.toString());
+	}
 }
-

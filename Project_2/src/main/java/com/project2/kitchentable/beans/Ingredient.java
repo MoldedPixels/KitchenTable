@@ -1,39 +1,23 @@
 package com.project2.kitchentable.beans;
+
 import java.io.Serializable;
 import java.util.UUID;
 
-import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
-import org.springframework.data.cassandra.core.mapping.Column;
-import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
-import org.springframework.data.cassandra.core.mapping.Table;
+import org.springframework.data.cassandra.core.mapping.Element;
+import org.springframework.data.cassandra.core.mapping.Tuple;
 
-@Table("ingredient")
+@Tuple
 public class Ingredient implements Serializable {
 	private static final long serialVersionUID = 468730651941425795L;
-	@PrimaryKeyColumn(
-			name="id",
-			ordinal=0,
-			type=PrimaryKeyType.PARTITIONED)
+	@Element(0)
 	private UUID id;
-	@PrimaryKeyColumn(
-			name="name",
-			ordinal=1,
-			type=PrimaryKeyType.CLUSTERED)
+	@Element(1)
 	private String name;
+	@Element(2)
 	private double amount;
-	@Column
-	private String amountType;
-	
+
 	public Ingredient() {
 		super();
-	}
-
-	public String getAmountType() {
-		return amountType;
-	}
-
-	public void setAmountType(String amountType) {
-		this.amountType = amountType;
 	}
 
 	public UUID getId() {
@@ -71,7 +55,6 @@ public class Ingredient implements Serializable {
 		long temp;
 		temp = Double.doubleToLongBits(amount);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
-		result = prime * result + ((amountType == null) ? 0 : amountType.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		return result;
@@ -88,11 +71,6 @@ public class Ingredient implements Serializable {
 		Ingredient other = (Ingredient) obj;
 		if (Double.doubleToLongBits(amount) != Double.doubleToLongBits(other.amount))
 			return false;
-		if (amountType == null) {
-			if (other.amountType != null)
-				return false;
-		} else if (!amountType.equals(other.amountType))
-			return false;
 		if (id == null) {
 			if (other.id != null)
 				return false;
@@ -108,8 +86,7 @@ public class Ingredient implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Ingredient [id=" + id + ", name=" + name + ", amount=" + amount + ", amountType=" + amountType + "]";
+		return "Ingredient [id=" + id + ", name=" + name + ", amount=" + amount + "]";
 	}
-
 
 }

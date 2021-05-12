@@ -1,10 +1,13 @@
 package com.project2.kitchentable.beans;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
 import org.springframework.data.cassandra.core.mapping.Column;
 import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
@@ -32,6 +35,16 @@ public class Kitchen implements Serializable{
 	
 	public Kitchen() {
 		super();
+	}
+
+	@SuppressWarnings("unchecked")
+	public Kitchen(UUID id, UUID headUser, UUID familyID, Object[] shoppingList, Object[] inventory) {
+		super();
+		this.id = id;
+		this.headUser = headUser;
+		this.familyID = familyID;
+		this.shoppingList = ArrayUtils.toMap(shoppingList) ;
+		this.inventory = ArrayUtils.toMap(inventory);
 	}
 
 	public UUID getId() {

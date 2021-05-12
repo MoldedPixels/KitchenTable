@@ -12,9 +12,13 @@ import reactor.core.publisher.Mono;
 
 public interface KitchenService {
 
-	void removeFood(List<Ingredient> list, UUID ingredient, Double amount);
-	
+	List<Ingredient> removeFood(List<Ingredient> list, UUID ingredient, Double amount);
+
 	void cook();
+
+	Mono<Kitchen> getKitchenByID(UUID id);
+
+	Mono<Kitchen> updateKitchen(Kitchen k);
 
 	Mono<Kitchen> addKitchen(Kitchen k);
 
