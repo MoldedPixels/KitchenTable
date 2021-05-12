@@ -35,6 +35,14 @@ public class Recipe implements Serializable {
 	public Recipe() {
 		super();
 	}
+	
+	public Recipe(UUID id, int cuisine, String name, Map<String, Double> ingredients, double rating) {
+		this.id = id;
+		this.cuisine = cuisine;
+		this.name = name;
+		this.ingredients = ingredients;
+		this.rating = rating;
+	}
 
 	public UUID getId() {
 		return id;

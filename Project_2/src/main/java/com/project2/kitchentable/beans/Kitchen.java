@@ -39,7 +39,6 @@ public class Kitchen implements Serializable{
 
 	@SuppressWarnings("unchecked")
 	public Kitchen(UUID id, UUID headUser, UUID familyID, Object[] shoppingList, Object[] inventory) {
-		super();
 		this.id = id;
 		this.headUser = headUser;
 		this.familyID = familyID;
