@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.project2.kitchentable.beans.Kitchen;
+import com.project2.kitchentable.beans.Recipe;
 
 import reactor.core.publisher.Mono;
 
@@ -12,7 +13,7 @@ public interface KitchenService {
 
 	Mono<Kitchen> removeFood(String listname, Kitchen k, UUID ingredient, Double amount);
 
-	void cook();
+	Mono<Kitchen> cook(Recipe r, Kitchen k);
 
 	Mono<Kitchen> getKitchenByID(UUID id);
 

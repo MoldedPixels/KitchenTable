@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.project2.kitchentable.beans.Ingredient;
 import com.project2.kitchentable.beans.Kitchen;
+import com.project2.kitchentable.beans.Recipe;
 import com.project2.kitchentable.data.ReactiveIngredientRepo;
 import com.project2.kitchentable.data.ReactiveKitchenRepo;
 
@@ -106,9 +107,24 @@ public class KitchenServiceImpl implements KitchenService {
 	}
 
 	@Override
-	public void cook() {
-		// TODO Auto-generated method stub
+	public Mono<Kitchen> cook(Recipe r, Kitchen k) {
+		Map<UUID, Double> rIngredients = r.getIngredients();
+		Map<UUID, Double> kIngredients = k.getInventory();
 
+		for (UUID iID : rIngredients.keySet()) {
+			if (kIngredients.containsKey(iID)) {
+				if (kIngredients.get(iID) - rIngredients.get(iID) >= 0) {
+					k = this.removeFood("inventory", k, iID, rIngredients.get(iID)).block();
+				} else {
+					log.trace("Unable to cook recipe: Insufficient amount of ingredient " + iID.toString());
+				}
+			} else {
+				log.trace("Unable to cook recipe: Missing one or more ingredients ");
+			}
+
+			
+		}
+		return Mono.just(k);
 	}
 
 	@SuppressWarnings("unchecked")
