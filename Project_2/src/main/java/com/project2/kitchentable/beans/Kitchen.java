@@ -26,9 +26,9 @@ public class Kitchen implements Serializable{
 	@Column
 	private UUID familyID;
 	@Column
-	private Map<String, Double> shoppingList;
+	private Map<UUID, Double> shoppingList;
 	@Column
-	private Map<String, Double> inventory;
+	private Map<UUID, Double> inventory;
 	
 	public Kitchen() {
 		super();
@@ -39,7 +39,7 @@ public class Kitchen implements Serializable{
 		this.id = id;
 		this.headUser = headUser;
 		this.familyID = familyID;
-		this.shoppingList = ArrayUtils.toMap(shoppingList) ;
+		this.shoppingList = ArrayUtils.toMap(shoppingList);
 		this.inventory = ArrayUtils.toMap(inventory);
 	}
 
@@ -67,19 +67,19 @@ public class Kitchen implements Serializable{
 		this.familyID = familyID;
 	}
 
-	public Map<String, Double> getShoppingList() {
+	public Map<UUID, Double> getShoppingList() {
 		return shoppingList;
 	}
 
-	public void setShoppingList(Map<String, Double> shoppingList) {
+	public void setShoppingList(Map<UUID, Double> shoppingList) {
 		this.shoppingList = shoppingList;
 	}
 
-	public Map<String, Double> getInventory() {
+	public Map<UUID, Double> getInventory() {
 		return inventory;
 	}
 
-	public void setInventory(Map<String, Double> inventory) {
+	public void setInventory(Map<UUID, Double> inventory) {
 		this.inventory = inventory;
 	}
 
