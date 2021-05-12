@@ -2,7 +2,6 @@ package com.project2.kitchentable.controllers;
 
 import java.time.Duration;
 import java.util.UUID;
-
 import org.reactivestreams.Publisher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -15,12 +14,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ServerWebExchange;
-
 import com.datastax.oss.driver.api.core.uuid.Uuids;
 import com.project2.kitchentable.beans.User;
 import com.project2.kitchentable.services.UserService;
 import com.project2.kitchentable.utils.JWTParser;
-
 import reactor.core.publisher.Mono;
 
 @RestController
