@@ -1,11 +1,17 @@
 package com.project2.kitchentable.controllers;
 
 import java.time.Duration;
+import java.util.HashMap;
 import java.util.UUID;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.reactivestreams.Publisher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +23,7 @@ import org.springframework.web.server.ServerWebExchange;
 import com.datastax.oss.driver.api.core.uuid.Uuids;
 import com.project2.kitchentable.beans.User;
 import com.project2.kitchentable.services.UserService;
+import com.project2.kitchentable.services.UserServiceImpl;
 import com.project2.kitchentable.utils.JWTParser;
 import reactor.core.publisher.Mono;
 
@@ -24,6 +31,10 @@ import reactor.core.publisher.Mono;
 public class UserController {
 	private UserService userService;
 	private JWTParser tokenService;
+	@Autowired
+	private AuthController authorize;
+	
+	private static Logger log = LogManager.getLogger(UserController.class);
 	
 	@Autowired
 	public void setUserService(UserService userService) {
@@ -37,8 +48,13 @@ public class UserController {
 	
 	@GetMapping(value = "users", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Publisher<User> getUsers(ServerWebExchange exchange) {
+		User u = authorize.UserAuth(exchange);
 		
-		return userService.getUsers();
+		if(u != null && u.getUserType() == 3) {
+			return userService.getUsers();
+		}
+		
+		return null;
 	}
 	
 	@PostMapping("users")
@@ -58,8 +74,14 @@ public class UserController {
 	
 	@PostMapping(value="login", produces = MediaType.APPLICATION_NDJSON_VALUE)
 	public Publisher<User> login(ServerWebExchange exchange, @RequestBody User u) {
-		
-		return userService.getUsersByName(u.getLastname(), u.getFirstname());
+
+		return userService.getUsersByName(u.getLastname(), u.getFirstname()).delayElement(Duration.ofSeconds(2)).doOnNext(user -> {
+			try {
+				exchange.getResponse().addCookie(ResponseCookie.from("token", tokenService.makeToken(user)).httpOnly(true).build());
+			}catch(Exception e) {
+				exchange.getResponse().setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+		});
 	}
 	
 	@DeleteMapping("login")
