@@ -4,9 +4,6 @@ import org.springframework.data.cassandra.repository.ReactiveCassandraRepository
 import org.springframework.stereotype.Repository;
 import com.project2.kitchentable.beans.Kitchen;
 
-
-import reactor.core.publisher.Flux;
-
 @Repository
 public interface ReactiveKitchenRepo extends ReactiveCassandraRepository<Kitchen, String>{
 	

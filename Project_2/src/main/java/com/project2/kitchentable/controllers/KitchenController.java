@@ -43,7 +43,8 @@ public class KitchenController {
 		k.setHeadUser(Uuids.timeBased());
 		k.setFamilyID(Uuids.timeBased());
 		return kitchenService.addKitchen(k).map(kitchen -> ResponseEntity.status(201).body(kitchen))
-				.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(k)));
+				.onErrorStop();
+				//.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(k)));
 	}
 
 	/*

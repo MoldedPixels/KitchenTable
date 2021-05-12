@@ -1,9 +1,8 @@
 package com.project2.kitchentable.services;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
-
-import org.springframework.http.ResponseEntity;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.project2.kitchentable.beans.Ingredient;
@@ -23,7 +22,9 @@ public interface KitchenService {
 
 	Mono<Kitchen> addKitchen(Kitchen k);
 
-	List<Ingredient> getShoppingList(String kitchenId) throws Exception;
+	Map<UUID, Double> getShoppingList(String kitchenId) throws Exception;
 
-	List<Ingredient> getKitchenInv(String kitchen) throws JsonParseException, Exception;
+	Map<UUID, Double> getKitchenInv(String kitchen) throws JsonParseException, Exception;
+
+	Mono<Ingredient> addIngredient(Ingredient i);
 }
