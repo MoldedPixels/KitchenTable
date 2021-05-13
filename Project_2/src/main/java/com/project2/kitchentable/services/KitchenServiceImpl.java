@@ -71,7 +71,6 @@ public class KitchenServiceImpl implements KitchenService {
 		} else if (listname.equals("inventory")) {
 			k.setInventory(list);
 		}
-		kitchenRepo.save(k);
 		return Mono.just(k);
 	}
 
