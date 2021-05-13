@@ -22,6 +22,7 @@ public class RequestServiceImpl implements RequestService {
 	
 	@Override
 	public Mono<Requests> addRequest(Requests r){
+		log.trace("adding a request");
 		return requestRepo.insert(r);
 	}
 	
