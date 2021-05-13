@@ -32,7 +32,7 @@ public class ReviewServiceImpl implements ReviewService {
 	
 	@Override
 	public Flux<Reviews> getReviewsByRecipeId(UUID id) {
-		return reviewRepo.findAllByRecipeID(id);
+		return reviewRepo.findAllByRecipeId(id);
 	}
 	
 	@Override
