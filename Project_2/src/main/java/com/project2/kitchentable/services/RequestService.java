@@ -19,4 +19,8 @@ public interface RequestService {
 
 	Mono<Void> removeRequest(Requests r);
 
+	Mono<Requests> approve(Requests q);
+	
+	Mono<Requests> reject(Requests q);
+
 }

@@ -71,7 +71,7 @@ public class KitchenController {
 	public Mono<ResponseEntity<Kitchen>> cook(@RequestParam(name = "recipe", required = false) UUID recipe,
 			@RequestParam(name = "kitchen", required = false) UUID kID) throws Exception {
 		Kitchen k = kitchenService.getKitchenByID(kID).block();
-		Recipe r = recipeService.getRecipeById(recipe).block();
+		Recipe r = recipeService.getRecipeByID(recipe).block();
 		return kitchenService.cook(r, k).map(kitchen -> ResponseEntity.status(201).body(kitchen))
 				.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(k)));
 

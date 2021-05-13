@@ -47,4 +47,16 @@ public class RequestServiceImpl implements RequestService {
 	public Mono<Void> removeRequest(Requests r){
 		return requestRepo.delete(r);
 	}
+
+	@Override
+	public Mono<Requests> approve(Requests q) {
+		requestRepo.delete(q);
+		return Mono.just(q);
+	}
+
+	@Override
+	public Mono<Requests> reject(Requests q) {
+		requestRepo.delete(q);
+		return Mono.just(q);
+	}
 }
