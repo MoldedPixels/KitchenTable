@@ -4,10 +4,10 @@ import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.stereotype.Service;
-
 import com.project2.kitchentable.beans.Recipe;
 import com.project2.kitchentable.data.ReactiveRecipeRepo;
+import org.springframework.stereotype.Service;
+
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -44,6 +44,6 @@ public class RecipeServiceImpl implements RecipeService {
 
 	@Override
 	public Mono<Recipe> getRecipeByID(UUID id) {
-		return recipeRepo.findById(id.toString());
+		return recipeRepo.findById(id);
 	}
 }

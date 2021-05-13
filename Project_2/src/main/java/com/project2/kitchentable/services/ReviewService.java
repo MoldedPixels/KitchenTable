@@ -19,4 +19,6 @@ public interface ReviewService {
 
 	Mono<Void> removeReview(Reviews r);
 
+	Flux<Reviews> getReviewsByRecipeId(UUID id);
+
 }
