@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ServerWebExchange;
 
 import com.datastax.oss.driver.api.core.uuid.Uuids;
 import com.project2.kitchentable.beans.Kitchen;
@@ -37,10 +38,10 @@ public class KitchenController {
 		this.kitchenService = kitchenService;
 	}
 
-	// @Autowired
-//	public void setRecipeService(RecipeService recipeService) {
-//		this.recipeService = recipeService;
-//	}
+	@Autowired
+	public void setRecipeService(RecipeService recipeService) {
+		this.recipeService = recipeService;
+	}
 
 	@PostMapping("/new")
 	public Mono<ResponseEntity<Kitchen>> addKitchen(@RequestBody Kitchen k) {
@@ -63,7 +64,7 @@ public class KitchenController {
 				.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(k)));
 	}
 
-	@GetMapping(value = "/kitchen/removeFood")
+	@GetMapping(value = "/removeFood")
 	public Mono<ResponseEntity<Kitchen>> removeFood(@RequestParam(name = "list", required = false) String listname,
 			@RequestParam(name = "kitchen", required = false) UUID kID,
 			@RequestParam(name = "ingredient", required = false) UUID iID,
@@ -104,6 +105,24 @@ public class KitchenController {
 		 // TODO
 		return reviewService.getReviewsByRecipeId(recipe).map(reviews -> ResponseEntity.status(201).body(reviews));
 		
+	}
+
+	@GetMapping(value = "/buyFood")
+	public Mono<ResponseEntity<Kitchen>> buyFood(ServerWebExchange exchange,
+			@RequestParam(name = "list", required = false) String listname,
+			@RequestParam(name = "kitchen", required = false) UUID kID,
+			@RequestParam(name = "ingredient", required = false) UUID iID,
+			@RequestParam(name = "amount", required = false) Double amt) {
+
+		Kitchen k = kitchenService.getKitchenByID(kID).block();
+		
+		if (k != null && k.getShoppingList().containsKey(iID)) {
+			Kitchen tempK = kitchenService.removeFood("shopping", k, iID, amt).block();
+			return kitchenService.addFood("inventory", tempK, iID, amt)
+					.map(kitchen -> ResponseEntity.status(201).body(kitchen))
+					.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(k)));
+		}
+		return Mono.just(ResponseEntity.badRequest().body(k));
 	}
 
 }

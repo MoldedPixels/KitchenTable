@@ -20,6 +20,7 @@ public class RecipeServiceImpl implements RecipeService {
 
 	@Override
 	public Mono<Recipe> addRecipe(Recipe r) {
+		log.trace("adding recipe");
 		return recipeRepo.insert(r);
 	}
 

@@ -15,15 +15,15 @@
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>2.4.5</version>
 	</parent>
-	
+
 	<properties>
 		<java.version>1.8</java.version>
-  		<sonar.projectKey>moldedpixels_Kitchen_Table</sonar.projectKey>
-  		<sonar.organization>moldedpixels</sonar.organization>
-  		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
-		<sonar.moduleKey>${project.groupId}:${project.artifactId}</sonar.moduleKey>
+		<sonar.projectKey>com.project2.kitchentable:KitchenTable</sonar.projectKey>
+		<sonar.organization>moldedpixels</sonar.organization>
+		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
+		<sonar.moduleKey>${project.groupId}:${project.artifactId}/Project_2</sonar.moduleKey>
 		<maven.compiler.source>1.8</maven.compiler.source>
-    		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.compiler.target>1.8</maven.compiler.target>
 	</properties>
 
 	<build>
@@ -33,8 +33,27 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
-                    			<skip>true</skip>
-                		</configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.8.4</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>report</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
