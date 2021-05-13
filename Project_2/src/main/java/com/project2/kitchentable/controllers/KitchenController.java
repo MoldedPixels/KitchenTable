@@ -75,33 +75,27 @@ public class KitchenController {
 
 	}
 
-	@GetMapping(value = "/kitchen/cook")
-	public Mono<ResponseEntity<String>> cook(@RequestParam(name = "recipe", required = false) UUID recipe,
-			@RequestParam(name = "kitchen", required = false) UUID kID, 
+	@GetMapping(value = "/cook")
+	public Mono<ResponseEntity<String>> cook(@RequestParam(name = "recipe", required = true) UUID recipe,
+			@RequestParam(name = "kitchen", required = true) UUID kID, 
 			@RequestParam(name = "review", required = false) String reviewBody,
 			@RequestParam(name = "score", required = false) Double score,
 			@RequestParam(name = "images", required = false) MultipartFile images) throws Exception {
-		Kitchen k = kitchenService.getKitchenByID(kID).block();
-		Recipe r = recipeService.getRecipeByID(recipe).block();
-		if((reviewBody != null) && (score != null)) {
-			Reviews rev = new Reviews(Uuids.timeBased(), Uuids.timeBased() /* This param will be changed to the logged in user's UUID */, recipe, score, reviewBody);
-			Mono<ResponseEntity<String>> response = kitchenService.cook(r, k).map(kitchen -> ResponseEntity.status(201).body(kitchen.toString())) // Try to cook
-					.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(error.toString()))); // If error, return error message to Mono
-			
-			response = reviewService.addReview(rev).map(review -> ResponseEntity.status(201).body(review.toString())) // Otherwise, proceed to try to add review
-					.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(error.toString()))); // If error, assign error message to response
-			return response;
-		}
-		else {
-			return kitchenService.cook(r, k).map(kitchen -> ResponseEntity.status(201).body(kitchen.toString()))
-					.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(error.toString())));
-		}
 
+		
+		return Mono.zip(kitchenService.getKitchenByID(kID), recipeService.getRecipeByID(recipe)).flatMap(data -> {
+			Kitchen k = data.getT1();
+			Recipe r = data.getT2();
+			
+			Mono<ResponseEntity<String>> response = kitchenService.cook(r, k).map(kitchen -> ResponseEntity.status(201).body(kitchen.toString()))
+					.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(error.toString())));
+			return response;
+		});
+		
 	}
 	
 	@GetMapping(value = "reviews/{recipe}")
 	public Flux<ResponseEntity<Reviews>> viewReviews(@PathVariable("recipe") UUID recipe) {
-		 // TODO
 		return reviewService.getReviewsByRecipeId(recipe).map(reviews -> ResponseEntity.status(201).body(reviews));
 		
 	}

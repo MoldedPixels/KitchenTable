@@ -37,7 +37,7 @@ public class KitchenServiceImpl implements KitchenService {
 	}
 
 	public Mono<Kitchen> getKitchenByID(UUID id) {
-		return kitchenRepo.findById(id.toString());
+		return kitchenRepo.findById(id);
 	}
 
 	public Mono<Void> removeKitchen(Kitchen k) {
@@ -71,6 +71,7 @@ public class KitchenServiceImpl implements KitchenService {
 		} else if (listname.equals("inventory")) {
 			k.setInventory(list);
 		}
+		kitchenRepo.save(k);
 		return Mono.just(k);
 	}
 
