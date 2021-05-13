@@ -12,5 +12,5 @@ import reactor.core.publisher.Flux;
 @Repository
 public interface ReactiveReviewRepo extends ReactiveCassandraRepository<Reviews, String>{
 	@AllowFiltering
-	Flux<Reviews> findAllByRecipeID(UUID recipeId);
+	Flux<Reviews> findAllByRecipeId(UUID recipeId);
 }

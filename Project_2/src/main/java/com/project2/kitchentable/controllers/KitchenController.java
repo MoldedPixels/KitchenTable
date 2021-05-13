@@ -1,9 +1,7 @@
 package com.project2.kitchentable.controllers;
 
-import java.util.List;
 import java.util.UUID;
 
-import org.reactivestreams.Publisher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +21,7 @@ import com.project2.kitchentable.services.ReviewService;
 import com.project2.kitchentable.beans.Recipe;
 import com.project2.kitchentable.beans.Reviews;
 
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RestController
@@ -86,7 +85,8 @@ public class KitchenController {
 		if((reviewBody != null) && (score != null)) {
 			Reviews rev = new Reviews(Uuids.timeBased(), Uuids.timeBased() /* This param will be changed to the logged in user's UUID */, recipe, score, reviewBody);
 			Mono<ResponseEntity<String>> response = kitchenService.cook(r, k).map(kitchen -> ResponseEntity.status(201).body(kitchen.toString())) // Try to cook
-					.onErrorResume(error -> { return Mono.just(ResponseEntity.badRequest().body(error.toString())); }); // If error, return error message to Mono
+					.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(error.toString()))); // If error, return error message to Mono
+			
 			response = reviewService.addReview(rev).map(review -> ResponseEntity.status(201).body(review.toString())) // Otherwise, proceed to try to add review
 					.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(error.toString()))); // If error, assign error message to response
 			return response;
@@ -100,9 +100,9 @@ public class KitchenController {
 	}
 	
 	@GetMapping(value = "reviews/{recipe}")
-	public Publisher<ResponseEntity<Kitchen>> viewReviews(@PathVariable("recipe") UUID recipe) {
-		reviewService.getReviewsByRecipeId(recipe); // TODO
-		return null;
+	public Flux<ResponseEntity<Reviews>> viewReviews(@PathVariable("recipe") UUID recipe) {
+		 // TODO
+		return reviewService.getReviewsByRecipeId(recipe).map(reviews -> ResponseEntity.status(201).body(reviews));
 		
 	}
 
