@@ -25,7 +25,7 @@ public class Requests implements Serializable{
 			type=PrimaryKeyType.CLUSTERED)
 	private UUID recipeId;
 	@Column
-	private String cuisine;
+	private int cuisine;
 	@Column
 	private Map<UUID, Double> ingredients;
 	@Column
@@ -40,7 +40,7 @@ public class Requests implements Serializable{
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Requests(UUID requestId, UUID recipeId, String cuisine, Object[] ingredients, String name, double rating,
+	public Requests(UUID requestId, UUID recipeId, int cuisine, Object[] ingredients, String name, double rating,
 			String body) {
 		this.requestId = requestId;
 		this.recipeId = recipeId;
@@ -67,11 +67,11 @@ public class Requests implements Serializable{
 		this.recipeId = recipeId;
 	}
 	
-	public String getCuisine() {
+	public int getCuisine() {
 		return cuisine;
 	}
 	
-	public void setCuisine(String cuisine) {
+	public void setCuisine(int cuisine) {
 		this.cuisine = cuisine;
 	}
 	
@@ -115,7 +115,6 @@ public class Requests implements Serializable{
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((body == null) ? 0 : body.hashCode());
-		result = prime * result + ((cuisine == null) ? 0 : cuisine.hashCode());
 		result = prime * result + ((ingredients == null) ? 0 : ingredients.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		long temp;
@@ -139,11 +138,6 @@ public class Requests implements Serializable{
 			if (other.body != null)
 				return false;
 		} else if (!body.equals(other.body))
-			return false;
-		if (cuisine == null) {
-			if (other.cuisine != null)
-				return false;
-		} else if (!cuisine.equals(other.cuisine))
 			return false;
 		if (ingredients == null) {
 			if (other.ingredients != null)

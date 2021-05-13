@@ -82,7 +82,7 @@ public class KitchenController {
 			@RequestParam(name = "score", required = false) Double score,
 			@RequestParam(name = "images", required = false) MultipartFile images) throws Exception {
 		Kitchen k = kitchenService.getKitchenByID(kID).block();
-		Recipe r = recipeService.getRecipeById(recipe).block();
+		Recipe r = recipeService.getRecipeByID(recipe).block();
 		if((reviewBody != null) && (score != null)) {
 			Reviews rev = new Reviews(Uuids.timeBased(), Uuids.timeBased() /* This param will be changed to the logged in user's UUID */, recipe, score, reviewBody);
 			Mono<ResponseEntity<String>> response = kitchenService.cook(r, k).map(kitchen -> ResponseEntity.status(201).body(kitchen.toString())) // Try to cook
@@ -96,7 +96,6 @@ public class KitchenController {
 			return kitchenService.cook(r, k).map(kitchen -> ResponseEntity.status(201).body(kitchen.toString()))
 					.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(error.toString())));
 		}
-
 
 	}
 	

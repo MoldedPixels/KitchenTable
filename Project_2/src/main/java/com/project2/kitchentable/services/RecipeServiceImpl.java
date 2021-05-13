@@ -2,10 +2,12 @@ package com.project2.kitchentable.services;
 
 import java.util.UUID;
 
-import org.springframework.stereotype.Service;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import com.project2.kitchentable.beans.Recipe;
 import com.project2.kitchentable.data.ReactiveRecipeRepo;
+import org.springframework.stereotype.Service;
+
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -14,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 @Service
 public class RecipeServiceImpl implements RecipeService {
+	private static Logger log = LogManager.getLogger(RecipeServiceImpl.class);
 
 	@Autowired
 	private ReactiveRecipeRepo recipeRepo;
@@ -35,15 +38,12 @@ public class RecipeServiceImpl implements RecipeService {
 	}
 
 	@Override
-	public Mono<Recipe> getRecipeById(UUID id) {
-		String recipeId = id.toString();
-
-		return recipeRepo.findById(recipeId);
-	}
-
-	@Override
 	public Mono<Void> removeRecipe(Recipe r) {
 		return recipeRepo.delete(r);
 	}
 
+	@Override
+	public Mono<Recipe> getRecipeByID(UUID id) {
+		return recipeRepo.findById(id.toString());
+	}
 }
