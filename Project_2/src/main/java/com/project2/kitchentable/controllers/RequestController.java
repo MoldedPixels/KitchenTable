@@ -23,10 +23,9 @@ public class RequestController {
 	}
 
 	@PostMapping("/new")
-	public Mono<ResponseEntity<Requests>> addKitchen(@RequestBody Requests q) {
-		System.out.println("Making a new request");
+	public Mono<ResponseEntity<Requests>> addRequest(@RequestBody Requests q) {
 		q.setRequestId(Uuids.timeBased());
-		if (q.getRecipeId().equals(null)) {
+		if (q.getRecipeId() == (null)) {
 			q.setRecipeId(Uuids.timeBased());
 		}
 		return requestService.addRequest(q).map(request -> ResponseEntity.status(201).body(request))
