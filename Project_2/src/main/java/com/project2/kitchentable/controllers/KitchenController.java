@@ -83,19 +83,16 @@ public class KitchenController {
 			@RequestParam(name = "kitchen", required = false) UUID kID,
 			@RequestParam(name = "ingredient", required = false) UUID iID,
 			@RequestParam(name = "amount", required = false) Double amt) {
+
+		Kitchen k = kitchenService.getKitchenByID(kID).block();
 		
-		try {
-			Kitchen k = kitchenService.getKitchenByID(kID).block();
-			if (k.getShoppingList().containsKey(iID)) {
-				Kitchen tempK = kitchenService.removeFood("shopping", k, iID, amt).block();
-				return kitchenService.addFood("inventory", tempK, iID, amt)
-						.map(kitchen -> ResponseEntity.status(201).body(kitchen))
-						.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(k)));
-			}
-			return Mono.just(ResponseEntity.badRequest().body(k));
-		} catch (Exception e) {
-			return Mono.just(ResponseEntity.badRequest().body(null));
+		if (k != null && k.getShoppingList().containsKey(iID)) {
+			Kitchen tempK = kitchenService.removeFood("shopping", k, iID, amt).block();
+			return kitchenService.addFood("inventory", tempK, iID, amt)
+					.map(kitchen -> ResponseEntity.status(201).body(kitchen))
+					.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(k)));
 		}
+		return Mono.just(ResponseEntity.badRequest().body(k));
 	}
 
 }
