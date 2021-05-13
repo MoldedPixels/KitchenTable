@@ -32,6 +32,7 @@ public class RequestController {
 	public void setRecipeService(RecipeService recipeService) {
 		this.recipeService = recipeService;
 	}
+
 	@PostMapping("/new")
 	public Mono<ResponseEntity<Requests>> addRequest(@RequestBody Requests q) {
 		q.setRequestId(Uuids.timeBased());
@@ -41,25 +42,28 @@ public class RequestController {
 		return requestService.addRequest(q).map(request -> ResponseEntity.status(201).body(request))
 				.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(q)));
 	}
-	
+
 	@GetMapping("/approve")
 	public Mono<ResponseEntity<Requests>> approveRequest(@RequestBody UUID qID) {
 		Requests q = requestService.getRequestById(qID).block();
-		if (recipeService.getRecipeByID(q.getRecipeId()) != null)
-		{
+		if (q != null && recipeService.getRecipeByID(q.getRecipeId()) != null) {
 			Recipe r = recipeService.getRecipeByID(q.getRecipeId()).block();
-			r.setCuisine(q.getCuisine());
-			r.setName(q.getName());
-			r.setIngredients(q.getIngredients());
-			recipeService.updateRecipe(r);
+			if (r != null) {
+				r.setCuisine(q.getCuisine());
+				r.setName(q.getName());
+				r.setIngredients(q.getIngredients());
+				recipeService.updateRecipe(r);
+			}
+
 		}
-		return requestService.approve(q).map(request -> ResponseEntity.status(201).body(request))
+		return requestService.approveOrReject(q).map(request -> ResponseEntity.status(201).body(request))
 				.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(q)));
 	}
+
 	@GetMapping("/reject")
 	public Mono<ResponseEntity<Requests>> rejectRequest(@RequestBody UUID qID) {
 		Requests q = requestService.getRequestById(qID).block();
-		return requestService.reject(q).map(request -> ResponseEntity.status(201).body(request))
+		return requestService.approveOrReject(q).map(request -> ResponseEntity.status(201).body(request))
 				.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(q)));
 	}
 
