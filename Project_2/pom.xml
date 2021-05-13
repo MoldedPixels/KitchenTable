@@ -18,9 +18,12 @@
 	
 	<properties>
 		<java.version>1.8</java.version>
-  		<sonar.projectKey>MoldedPixels_Kitchen_Table</sonar.projectKey>
+  		<sonar.projectKey>moldedpixels_Kitchen_Table</sonar.projectKey>
   		<sonar.organization>moldedpixels</sonar.organization>
   		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
+		<sonar.moduleKey>${project.groupId}:${project.artifactId}</sonar.moduleKey>
+		<maven.compiler.source>1.8</maven.compiler.source>
+    		<maven.compiler.target>1.8</maven.compiler.target>
 	</properties>
 
 	<build>
@@ -29,6 +32,9 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+                    			<skip>true</skip>
+                		</configuration>
 			</plugin>
 		</plugins>
 	</build>
