@@ -22,6 +22,7 @@ public class RequestServiceImpl implements RequestService {
 	
 	@Override
 	public Mono<Requests> addRequest(Requests r){
+		log.trace("adding a request");
 		return requestRepo.insert(r);
 	}
 	
@@ -45,5 +46,11 @@ public class RequestServiceImpl implements RequestService {
 	@Override
 	public Mono<Void> removeRequest(Requests r){
 		return requestRepo.delete(r);
+	}
+
+	@Override
+	public Mono<Requests> approveOrReject(Requests q) {
+		requestRepo.delete(q);
+		return Mono.just(q);
 	}
 }
