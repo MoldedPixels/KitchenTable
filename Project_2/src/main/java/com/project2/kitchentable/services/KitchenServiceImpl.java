@@ -7,13 +7,10 @@ import java.util.UUID;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.project2.kitchentable.beans.Ingredient;
 import com.project2.kitchentable.beans.Kitchen;
 import com.project2.kitchentable.beans.Recipe;
-import com.project2.kitchentable.data.ReactiveIngredientRepo;
 import com.project2.kitchentable.data.ReactiveKitchenRepo;
 
 import reactor.core.publisher.Flux;
@@ -25,8 +22,6 @@ public class KitchenServiceImpl implements KitchenService {
 
 	@Autowired
 	private ReactiveKitchenRepo kitchenRepo;
-	@Autowired
-	private ReactiveIngredientRepo ingredientRepo;
 
 	@Override
 	public Mono<Kitchen> addKitchen(Kitchen k) {
@@ -122,7 +117,6 @@ public class KitchenServiceImpl implements KitchenService {
 				log.trace("Unable to cook recipe: Missing one or more ingredients ");
 			}
 
-			
 		}
 		return Mono.just(k);
 	}
