@@ -29,10 +29,10 @@ public class KitchenController {
 		this.kitchenService = kitchenService;
 	}
 
-	// @Autowired
-//	public void setRecipeService(RecipeService recipeService) {
-//		this.recipeService = recipeService;
-//	}
+	 @Autowired
+	public void setRecipeService(RecipeService recipeService) {
+		this.recipeService = recipeService;
+	}
 
 	@PostMapping("/new")
 	public Mono<ResponseEntity<Kitchen>> addKitchen(@RequestBody Kitchen k) {

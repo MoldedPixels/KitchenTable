@@ -23,7 +23,6 @@ import org.springframework.web.server.ServerWebExchange;
 import com.datastax.oss.driver.api.core.uuid.Uuids;
 import com.project2.kitchentable.beans.User;
 import com.project2.kitchentable.services.UserService;
-import com.project2.kitchentable.services.UserServiceImpl;
 import com.project2.kitchentable.utils.JWTParser;
 import reactor.core.publisher.Mono;
 
@@ -53,7 +52,7 @@ public class UserController {
 		if(u != null && u.getUserType() == 3) {
 			return userService.getUsers();
 		}
-		
+		exchange.getResponse().setStatusCode(HttpStatus.BAD_REQUEST);
 		return null;
 	}
 	
@@ -87,13 +86,24 @@ public class UserController {
 	@DeleteMapping("login")
 	public ResponseEntity<Void> logout(ServerWebExchange exchange) {
 		
+		try {
+			exchange.getResponse().addCookie(ResponseCookie.from("token", null).httpOnly(true).build());
+		}catch(Exception e) {
+			exchange.getResponse().setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
 		return ResponseEntity.noContent().build();
 	}
 	
 	@PutMapping("users/{userID}")
-	public Mono<User> updateUser(@PathVariable("userID") String userID, @RequestBody User u){
+	public Mono<User> updateUser(ServerWebExchange exchange, @PathVariable("userID") String userID, @RequestBody User u){
+		User user = authorize.UserAuth(exchange);
 		
-		return userService.updateUser(u);
+		if(user != null) {
+			return userService.updateUser(u);
+		}
+		exchange.getResponse().setStatusCode(HttpStatus.BAD_REQUEST);
+		return null;
 	}
 	
 }
