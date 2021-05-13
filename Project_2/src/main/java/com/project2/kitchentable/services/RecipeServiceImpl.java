@@ -38,20 +38,12 @@ public class RecipeServiceImpl implements RecipeService {
 	}
 
 	@Override
-	public Mono<Recipe> getRecipeById(UUID id) {
-		String recipeId = id.toString();
-
-		return recipeRepo.findById(recipeId);
-	}
-
-	@Override
 	public Mono<Void> removeRecipe(Recipe r) {
 		return recipeRepo.delete(r);
 	}
 
 	@Override
 	public Mono<Recipe> getRecipeByID(UUID id) {
-		// TODO Auto-generated method stub
-		return null;
+		return recipeRepo.findById(id.toString());
 	}
 }
