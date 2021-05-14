@@ -82,7 +82,7 @@ public class UserController {
 	@DeleteMapping("login")
 	public ResponseEntity<Void> logout(ServerWebExchange exchange) {
 		try {
-			exchange.getResponse().addCookie(ResponseCookie.from("token", null).httpOnly(true).build());
+			exchange.getResponse().addCookie(ResponseCookie.from("token", "").httpOnly(true).build());
 		}catch(Exception e) {
 			exchange.getResponse().setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -124,11 +124,9 @@ public class UserController {
 			for (StackTraceElement st : e.getStackTrace())
 				log.debug(st.toString());
 		}
-		if(user != null && u!= null) {
-			if(u.getUserType() == 2 && user.getKitchenID() == UUID.fromString(kitchenID)) {
+		if(user != null && u!= null && u.getUserType() == 2 && user.getKitchenID() == UUID.fromString(kitchenID)) {
 				u.setKitchenID(null);
 				return userService.updateUser(u);
-			}
 		}
 		exchange.getResponse().setStatusCode(HttpStatus.BAD_REQUEST);
 		return null;

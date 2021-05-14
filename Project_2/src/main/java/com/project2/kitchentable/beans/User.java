@@ -111,11 +111,8 @@ public class User implements Serializable {
 	}
 
 	public Boolean cooked(UUID id, User u) {
-		
-		boolean hasCooked = u.getCookedRecipes().stream()
+		return u.getCookedRecipes().stream()
 				.anyMatch(r -> r.equals(id));
-		
-		return hasCooked;
 	}
 
 	@Override
