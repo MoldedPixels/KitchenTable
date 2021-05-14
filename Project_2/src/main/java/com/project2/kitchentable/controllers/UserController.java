@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ServerWebExchange;
 import com.datastax.oss.driver.api.core.uuid.Uuids;
+import com.project2.kitchentable.aspects.Admin;
 import com.project2.kitchentable.beans.User;
 import com.project2.kitchentable.services.UserService;
 import com.project2.kitchentable.utils.JWTParser;
@@ -45,14 +46,10 @@ public class UserController {
 		this.tokenService = parser;
 	}
 	
+	@Admin
 	@GetMapping(value = "users", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Publisher<User> getUsers(ServerWebExchange exchange) {
-		User u = authorize.UserAuth(exchange);
-		if(u != null && u.getUserType() == 3) {
 			return userService.getUsers();
-		}
-		exchange.getResponse().setStatusCode(HttpStatus.BAD_REQUEST);
-		return null;
 	}
 	
 	@PostMapping("users")
@@ -100,7 +97,6 @@ public class UserController {
 		return null;
 	}
 	
-	@SuppressWarnings("unlikely-arg-type")
 	@PutMapping("users/{userID}/{kitchenID}")
 	public Mono<User> updateUserKitchen(ServerWebExchange exchange, @PathVariable("userID") String userID, @PathVariable("kitchenID") String kitchenID, @RequestBody User u){
 		User user = authorize.UserAuth(exchange);
@@ -113,7 +109,6 @@ public class UserController {
 		return null;
 	}
 	
-	@SuppressWarnings("unlikely-arg-type")
 	@DeleteMapping("users/{userID}/{kitchenID}")
 	public Mono<User> removeUserKitchen(ServerWebExchange exchange, @PathVariable("userID") String userID, @PathVariable("kitchenID") String kitchenID){
 		User user = authorize.UserAuth(exchange);
