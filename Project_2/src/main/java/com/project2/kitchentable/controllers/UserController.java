@@ -105,7 +105,7 @@ public class UserController {
 	public Mono<User> updateUserKitchen(ServerWebExchange exchange, @PathVariable("userID") String userID, @PathVariable("kitchenID") String kitchenID, @RequestBody User u){
 		User user = authorize.UserAuth(exchange);
 		
-		if(user != null && u.getUserType() == 2 && user.getKitchenID().equals(kitchenID)) {
+		if(user != null && u.getUserType() == 2 && user.getKitchenID() == UUID.fromString(kitchenID)) {
 			u.setKitchenID(UUID.fromString(kitchenID));
 			return userService.updateUser(u);
 		}
@@ -124,9 +124,11 @@ public class UserController {
 			for (StackTraceElement st : e.getStackTrace())
 				log.debug(st.toString());
 		}
-		if(user != null && u.getUserType() == 2 && user.getKitchenID().equals(kitchenID)) {
-			u.setKitchenID(null);
-			return userService.updateUser(u);
+		if(user != null && u!= null) {
+			if(u.getUserType() == 2 && user.getKitchenID() == UUID.fromString(kitchenID)) {
+				u.setKitchenID(null);
+				return userService.updateUser(u);
+			}
 		}
 		exchange.getResponse().setStatusCode(HttpStatus.BAD_REQUEST);
 		return null;

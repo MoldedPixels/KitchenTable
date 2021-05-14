@@ -6,7 +6,6 @@ import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.reactivestreams.Publisher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -34,7 +33,7 @@ public class NotesController {
 	private NoteService noteService;
 	@Autowired
 	private AuthController authorize;
-	private static Logger log = LogManager.getLogger(RecipeController.class);
+	private static Logger log = LogManager.getLogger(NotesController.class);
 	
 	@PostMapping("/add")
 	public Mono<Notes> addNote(ServerWebExchange exchange, @RequestBody Notes n) {
@@ -80,7 +79,7 @@ public class NotesController {
 			log.debug(st.toString());
 		}
 		
-		if(user != null && (user.getUserType() == 3 || n.getUserId() == user.getUserID())) {
+		if(user != null && n!= null && (user.getUserType() == 3 || n.getUserId() == user.getUserID())) {
 				noteService.removeNotes(n);
 		}
 		exchange.getResponse().setStatusCode(HttpStatus.BAD_REQUEST);
