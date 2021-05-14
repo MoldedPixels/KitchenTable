@@ -71,7 +71,7 @@ public class KitchenServiceImpl implements KitchenService {
 		} else if (listname.equals("inventory")) {
 			k.setInventory(list);
 		}
-		return Mono.just(k);
+		return kitchenRepo.save(k);
 	}
 
 	@Override
@@ -83,7 +83,7 @@ public class KitchenServiceImpl implements KitchenService {
 			list = k.getInventory();
 		} else {
 		}
-		if (list.putIfAbsent(ingredient, amt) == null) {
+		if (list.putIfAbsent(ingredient, amt) != null) {
 			for (UUID iID : list.keySet()) {
 				if (iID.equals(ingredient)) {
 					double newAmt = list.get(iID) + amt;
@@ -97,8 +97,7 @@ public class KitchenServiceImpl implements KitchenService {
 		} else if (listname.equals("inventory")) {
 			k.setInventory(list);
 		}
-
-		return Mono.just(k);
+		return kitchenRepo.save(k);
 	}
 
 	@Override
@@ -118,7 +117,7 @@ public class KitchenServiceImpl implements KitchenService {
 			}
 
 		}
-		return Mono.just(k);
+		return updateKitchen(k);
 	}
 
 	@SuppressWarnings("unchecked")

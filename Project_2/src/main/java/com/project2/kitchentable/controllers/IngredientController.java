@@ -32,7 +32,6 @@ public class IngredientController {
 	public Mono<ResponseEntity<Ingredient>> addIngredient(@RequestBody Ingredient i) {
 		System.out.println("Adding a new Ingredient");
 		i.setId(Uuids.timeBased());
-
 		return ingredientService.addIngredient(i).map(ingredient -> ResponseEntity.status(201).body(ingredient))
 				.onErrorStop();
 		// .onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(i)));

@@ -1,6 +1,7 @@
 package com.project2.kitchentable.controllers;
 
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -57,11 +58,14 @@ public class KitchenController {
 	public Mono<ResponseEntity<Kitchen>> addToList(@RequestParam(name = "list", required = false) String listname,
 			@RequestParam(name = "kitchen", required = false) UUID kID,
 			@RequestParam(name = "ingredient", required = false) UUID iID,
-			@RequestParam(name = "amount", required = false) Double amt) {
+			@RequestParam(name = "amount", required = false) Double amt)
+			throws InterruptedException, ExecutionException {
 		System.out.println("Adding to " + listname);
-		Kitchen k = kitchenService.getKitchenByID(kID).block();
+		Kitchen k = kitchenService.getKitchenByID(kID).toFuture().get();
+
 		return kitchenService.addFood(listname, k, iID, amt).map(kitchen -> ResponseEntity.status(201).body(kitchen))
 				.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(k)));
+
 	}
 
 	@GetMapping(value = "/removeFood")
@@ -77,27 +81,27 @@ public class KitchenController {
 
 	@GetMapping(value = "/cook")
 	public Mono<ResponseEntity<String>> cook(@RequestParam(name = "recipe", required = true) UUID recipe,
-			@RequestParam(name = "kitchen", required = true) UUID kID, 
+			@RequestParam(name = "kitchen", required = true) UUID kID,
 			@RequestParam(name = "review", required = false) String reviewBody,
 			@RequestParam(name = "score", required = false) Double score,
 			@RequestParam(name = "images", required = false) MultipartFile images) throws Exception {
 
-		
 		return Mono.zip(kitchenService.getKitchenByID(kID), recipeService.getRecipeByID(recipe)).flatMap(data -> {
 			Kitchen k = data.getT1();
 			Recipe r = data.getT2();
-			
-			Mono<ResponseEntity<String>> response = kitchenService.cook(r, k).map(kitchen -> ResponseEntity.status(201).body(kitchen.toString()))
+
+			Mono<ResponseEntity<String>> response = kitchenService.cook(r, k)
+					.map(kitchen -> ResponseEntity.status(201).body(kitchen.toString()))
 					.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(error.toString())));
 			return response;
 		});
-		
+
 	}
-	
+
 	@GetMapping(value = "reviews/{recipe}")
 	public Flux<ResponseEntity<Reviews>> viewReviews(@PathVariable("recipe") UUID recipe) {
 		return reviewService.getReviewsByRecipeId(recipe).map(reviews -> ResponseEntity.status(201).body(reviews));
-		
+
 	}
 
 	@GetMapping(value = "/buyFood")
@@ -108,7 +112,7 @@ public class KitchenController {
 			@RequestParam(name = "amount", required = false) Double amt) {
 
 		Kitchen k = kitchenService.getKitchenByID(kID).block();
-		
+
 		if (k != null && k.getShoppingList().containsKey(iID)) {
 			Kitchen tempK = kitchenService.removeFood("shopping", k, iID, amt).block();
 			return kitchenService.addFood("inventory", tempK, iID, amt)
