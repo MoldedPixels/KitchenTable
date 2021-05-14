@@ -23,6 +23,7 @@ import com.project2.kitchentable.beans.Notes;
 import com.project2.kitchentable.beans.User;
 import com.project2.kitchentable.services.NoteService;
 
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RestController
@@ -38,7 +39,6 @@ public class NotesController {
 	@PostMapping("/add")
 	public Mono<Notes> addNote(ServerWebExchange exchange, @RequestBody Notes n) {
 		User user = authorize.UserAuth(exchange);
-		
 		if(user != null && user.cooked(n.getRecipeId(), user)) {
 			return noteService.addNotes(n);
 		}
@@ -47,11 +47,10 @@ public class NotesController {
 	}
 	
 	@GetMapping(value="/getall/{recipeid}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public Mono<Notes> getNotesByRecipe(ServerWebExchange exchange, @PathVariable("recipeid") String recipeID) {
+	public Flux<Notes> getNotesByRecipe(ServerWebExchange exchange, @PathVariable("recipeid") String recipeID) {
 		User u = authorize.UserAuth(exchange);
-		
 		if(u != null) {
-			return noteService.getNotesById(UUID.fromString(recipeID));
+			return noteService.getNotes(UUID.fromString(recipeID));
 		}
 		exchange.getResponse().setStatusCode(HttpStatus.BAD_REQUEST);
 		return null;
@@ -60,7 +59,6 @@ public class NotesController {
 	@PutMapping("/{noteid}")
 	public Mono<Notes> updateNote(ServerWebExchange exchange, @PathVariable("noteid") String noteID, @RequestBody Notes n){
 		User user = authorize.UserAuth(exchange);
-		
 		if(user != null && n.getUserId() == user.getUserID()) {
 			return noteService.updateNotes(n);
 		}
@@ -68,19 +66,12 @@ public class NotesController {
 		return null;
 	}
 	
-	@DeleteMapping("/{noteid}")
-	public Mono<Void> removeNote(ServerWebExchange exchange, @PathVariable("noteid") String noteID){
+	@DeleteMapping("/{recipeid}/{userid}")
+	public Mono<Void> removeNote(ServerWebExchange exchange, @PathVariable("recipeid") String recipeID, @PathVariable("userid") String userID){
 		User user = authorize.UserAuth(exchange);
-		Notes n = null;
-		try {
-			n = noteService.getNotesById(UUID.fromString(noteID)).block(Duration.of(1000, ChronoUnit.MILLIS));
-		}catch(Exception e) {
-		for (StackTraceElement st : e.getStackTrace())
-			log.debug(st.toString());
-		}
 		
-		if(user != null && n!= null && (user.getUserType() == 3 || n.getUserId() == user.getUserID())) {
-				noteService.removeNotes(n);
+		if(user != null && (user.getUserType() == 3 || UUID.fromString(userID) == user.getUserID())) {
+			return noteService.removeNotes(UUID.fromString(recipeID), UUID.fromString(userID));
 		}
 		exchange.getResponse().setStatusCode(HttpStatus.BAD_REQUEST);
 		return null;

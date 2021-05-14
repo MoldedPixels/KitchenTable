@@ -15,10 +15,11 @@ public interface UserService {
 
 	Flux<User> getUsers();
 
-	Mono<Void> removeUser(User u);
-
 	Mono<User> updateUser(User user);
 	
 	Mono<User> getUserByID(UUID userID);
-}
 
+	Mono<Void> removeUser(UUID id);
+	
+	Mono<User> setKitchenNull(User u);
+}

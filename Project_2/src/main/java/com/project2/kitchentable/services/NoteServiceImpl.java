@@ -37,17 +37,14 @@ public class NoteServiceImpl implements NoteService {
 	}
 	
 	@Override
-	public Mono<Notes> getNotesById(UUID id){
-		String notesId = id.toString();
+	public Mono<Notes> getNotesByRecipeAndUser(UUID recipeID, UUID userID){
 		
-		return noteRepo.findById(notesId);
+		return noteRepo.findByRecipeIdAndUserId(recipeID, userID);
 	}
 	
 	@Override
-	public Mono<Void> removeNotes(Notes n){
-		return noteRepo.delete(n);
+	public Mono<Void> removeNotes(UUID recipeID, UUID userID){
+		return noteRepo.deleteByRecipeIdAndUserId(recipeID, userID);
 	}
-	
-	
 	
 }

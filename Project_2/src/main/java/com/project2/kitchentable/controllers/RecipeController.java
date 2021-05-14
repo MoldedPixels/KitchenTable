@@ -72,8 +72,7 @@ public class RecipeController {
 		User user = authorize.UserAuth(exchange);
 		if(user != null && user.getUserType() == 3) {
 			try {
-				Recipe r = recipeService.getRecipeByID(UUID.fromString(recipeID)).block(Duration.of(1000, ChronoUnit.MILLIS));
-				recipeService.removeRecipe(r);
+				return recipeService.removeRecipe(UUID.fromString(recipeID));
 			}catch(Exception e) {
 				for (StackTraceElement st : e.getStackTrace())
 					log.debug(st.toString());
