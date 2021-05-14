@@ -36,8 +36,8 @@ public class NotesController {
 	@PostMapping("/add")
 	public Mono<Notes> addNote(ServerWebExchange exchange, @RequestBody Notes n) {
 		User user = authorize.UserAuth(exchange);
-		log.trace(user.getFirstname() + " is trying to add a note");
 		if(user != null && user.cooked(n.getRecipeId(), user)) {
+			log.trace("%s is trying to add a note", user.getFirstname());
 			return noteService.addNotes(n);
 		}
 		exchange.getResponse().setStatusCode(HttpStatus.BAD_REQUEST);
