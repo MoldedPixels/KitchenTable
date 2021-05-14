@@ -16,4 +16,5 @@ public interface ReactiveRecipeRepo extends ReactiveCassandraRepository<Recipe, 
 	Mono<Recipe> findById(UUID id);
 	@AllowFiltering
 	Mono<Recipe> findByName(String name);
+	Mono<Void> deleteByRecipeID(UUID id);
 }

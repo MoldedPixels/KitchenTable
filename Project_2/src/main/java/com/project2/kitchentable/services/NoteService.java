@@ -13,10 +13,10 @@ public interface NoteService {
 
 	Mono<Notes> updateNotes(Notes n);
 
-	Mono<Notes> getNotesById(UUID id);
-
-	Mono<Void> removeNotes(Notes n);
-
 	Flux<Notes> getNotes(UUID recipeId);
+
+	Mono<Notes> getNotesByRecipeAndUser(UUID recipeID, UUID userID);
+
+	Mono<Void> removeNotes(UUID recipeID, UUID userID);
 
 }

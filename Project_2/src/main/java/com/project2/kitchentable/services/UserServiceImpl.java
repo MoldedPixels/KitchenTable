@@ -44,12 +44,18 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
-	public Mono<Void> removeUser(User u){
-		return userRepo.delete(u);
+	public Mono<Void> removeUser(UUID id){
+		return userRepo.deleteByUserID(id);
 	}
 	
+	@Override
 	public Mono<User> getUserByID(UUID userID) {
 		log.trace("Attempting to locate the user with uuid: " + userID);
 		return userRepo.findByUserID(userID);
+	}
+	
+	public Mono<User> setKitchenNull(User u) {
+		u.setKitchenID(null);
+		return userRepo.save(u);
 	}
 }
