@@ -1,9 +1,6 @@
 package com.project2.kitchentable.controllers;
 
-import java.time.Duration;
-import java.time.temporal.ChronoUnit;
 import java.util.UUID;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +36,7 @@ public class NotesController {
 	@PostMapping("/add")
 	public Mono<Notes> addNote(ServerWebExchange exchange, @RequestBody Notes n) {
 		User user = authorize.UserAuth(exchange);
+		log.trace(user.getFirstname() + " is trying to add a note");
 		if(user != null && user.cooked(n.getRecipeId(), user)) {
 			return noteService.addNotes(n);
 		}
