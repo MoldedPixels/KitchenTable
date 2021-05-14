@@ -45,11 +45,11 @@ public class Recipe implements Serializable {
 		this.rating = rating;
 	}
 
-	public UUID getId() {
+	public UUID getRecipeID() {
 		return id;
 	}
 
-	public void setId(UUID id) {
+	public void setRecipeID(UUID id) {
 		this.id = id;
 	}
 

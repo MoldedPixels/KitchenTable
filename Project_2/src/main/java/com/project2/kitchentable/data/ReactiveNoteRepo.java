@@ -7,10 +7,15 @@ import org.springframework.data.cassandra.repository.ReactiveCassandraRepository
 import org.springframework.stereotype.Repository;
 import com.project2.kitchentable.beans.Notes;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Repository
 public interface ReactiveNoteRepo extends ReactiveCassandraRepository<Notes, String>{
 
 	@AllowFiltering
 	Flux<Notes> findByRecipeId(UUID userID);
+
+	Mono<Notes> findByRecipeIdAndUserId(UUID recipeID, UUID userID);
+
+	Mono<Void> deleteByRecipeIdAndUserId(UUID recipeID, UUID userID);
 }
