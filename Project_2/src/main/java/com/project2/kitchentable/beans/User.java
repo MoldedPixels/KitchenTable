@@ -1,6 +1,7 @@
 package com.project2.kitchentable.beans;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
@@ -32,6 +33,8 @@ public class User implements Serializable {
 			ordinal=2,
 			type=PrimaryKeyType.CLUSTERED)
 	private int userType;
+	@Column
+	private List<UUID> cookedRecipes;
 
 	public User() {
 		super();
@@ -98,10 +101,28 @@ public class User implements Serializable {
 		return serialVersionUID;
 	}
 
+	
+	public List<UUID> getCookedRecipes() {
+		return cookedRecipes;
+	}
+
+	public void setCookedRecipes(List<UUID> cookedRecipes) {
+		this.cookedRecipes = cookedRecipes;
+	}
+
+	public Boolean cooked(UUID id, User u) {
+		
+		boolean hasCooked = u.getCookedRecipes().stream()
+				.anyMatch(r -> r.equals(id));
+		
+		return hasCooked;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((cookedRecipes == null) ? 0 : cookedRecipes.hashCode());
 		result = prime * result + ((familyID == null) ? 0 : familyID.hashCode());
 		result = prime * result + ((firstname == null) ? 0 : firstname.hashCode());
 		result = prime * result + ((kitchenID == null) ? 0 : kitchenID.hashCode());
@@ -120,6 +141,11 @@ public class User implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		User other = (User) obj;
+		if (cookedRecipes == null) {
+			if (other.cookedRecipes != null)
+				return false;
+		} else if (!cookedRecipes.equals(other.cookedRecipes))
+			return false;
 		if (familyID == null) {
 			if (other.familyID != null)
 				return false;
@@ -153,7 +179,8 @@ public class User implements Serializable {
 	@Override
 	public String toString() {
 		return "User [userID=" + userID + ", firstname=" + firstname + ", lastname=" + lastname + ", familyID="
-				+ familyID + ", kitchenID=" + kitchenID + ", userType=" + userType + "]";
+				+ familyID + ", kitchenID=" + kitchenID + ", userType=" + userType + ", cookedRecipes=" + cookedRecipes
+				+ "]";
 	}
 
 }

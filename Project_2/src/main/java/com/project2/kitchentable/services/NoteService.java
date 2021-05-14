@@ -2,21 +2,21 @@ package com.project2.kitchentable.services;
 
 import java.util.UUID;
 
-import com.project2.kitchentable.beans.Recipe;
+import com.project2.kitchentable.beans.Notes;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public interface NoteService {
 
-	Mono<Recipe> addRecipe(Recipe r);
+	Mono<Notes> addNotes(Notes n);
 
-	Flux<Recipe> getRecipes();
+	Mono<Notes> updateNotes(Notes n);
 
-	Mono<Recipe> updateRecipe(Recipe r);
+	Mono<Notes> getNotesById(UUID id);
 
-	Mono<Recipe> getRecipeById(UUID id);
+	Mono<Void> removeNotes(Notes n);
 
-	Mono<Void> removeRecipe(Recipe r);
+	Flux<Notes> getNotes(UUID recipeId);
 
 }

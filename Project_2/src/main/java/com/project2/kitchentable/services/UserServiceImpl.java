@@ -50,6 +50,6 @@ public class UserServiceImpl implements UserService {
 	
 	public Mono<User> getUserByID(UUID userID) {
 		log.trace("Attempting to locate the user with uuid: " + userID);
-		return userRepo.findById(userID.toString());
+		return userRepo.findByUserID(userID);
 	}
 }

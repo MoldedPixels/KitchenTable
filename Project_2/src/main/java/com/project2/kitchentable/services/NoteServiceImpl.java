@@ -14,31 +14,36 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Service
-public class NoteServiceImpl {
+public class NoteServiceImpl implements NoteService {
 
 	private static Logger log = LogManager.getLogger(NoteServiceImpl.class);
 	
 	@Autowired
 	private ReactiveNoteRepo noteRepo;
 	
+	@Override
 	public Mono<Notes> addNotes(Notes n){
 		return noteRepo.insert(n);
 	}
 	
-	public Flux<Notes> getNotes() {
-		return noteRepo.findAll();
+	@Override
+	public Flux<Notes> getNotes(UUID recipeId) {
+		return noteRepo.findByRecipeId(recipeId);
 	}
 	
+	@Override
 	public Mono<Notes> updateNotes(Notes n){
 		return noteRepo.save(n);
 	}
 	
+	@Override
 	public Mono<Notes> getNotesById(UUID id){
 		String notesId = id.toString();
 		
 		return noteRepo.findById(notesId);
 	}
 	
+	@Override
 	public Mono<Void> removeNotes(Notes n){
 		return noteRepo.delete(n);
 	}

@@ -46,4 +46,9 @@ public class RecipeServiceImpl implements RecipeService {
 	public Mono<Recipe> getRecipeByID(UUID id) {
 		return recipeRepo.findById(id);
 	}
+	
+	@Override
+	public Mono<Recipe> getRecipeByName(String name) {
+		return recipeRepo.findByName(name);
+	}
 }

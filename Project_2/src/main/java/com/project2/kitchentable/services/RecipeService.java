@@ -19,4 +19,6 @@ public interface RecipeService {
 
 	Mono<Recipe> getRecipeByID(UUID id);
 
+	Mono<Recipe> getRecipeByName(String name);
+
 }
