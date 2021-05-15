@@ -43,6 +43,11 @@ public class KitchenController {
 	public void setRecipeService(RecipeService recipeService) {
 		this.recipeService = recipeService;
 	}
+	
+	@Autowired
+	public void setReviewService(ReviewService reviewService) {
+		this.reviewService = reviewService;
+	}
 
 	@PostMapping("/new")
 	public Mono<ResponseEntity<Kitchen>> addKitchen(@RequestBody Kitchen k) {
@@ -93,7 +98,7 @@ public class KitchenController {
 				return kitchenService.cook(r, k).flatMap(kitchen -> { // Attempt to cook 
 					Reviews rev = new Reviews(Uuids.timeBased(), Uuids.timeBased() /* This param will be changed to the logged in user's UUID */, recipe, score, reviewBody);
 					System.out.println(rev.toString());
-					return reviewService.addReview(rev).map(review -> ResponseEntity.status(201).body("What happened?")) // Proceed to try to add review
+					return reviewService.addReview(rev).map(review -> ResponseEntity.status(201).body(kitchen.toString() + "\n" + review.toString())) // Proceed to try to add review
 							.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(error.toString()))); // If error, assign error message to response
 				}).onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(error.toString())));
 
