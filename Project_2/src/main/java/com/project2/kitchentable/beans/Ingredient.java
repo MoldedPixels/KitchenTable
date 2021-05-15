@@ -35,11 +35,11 @@ public class Ingredient implements Serializable {
 		this.unit = unit;
 	}
 
-	public UUID getId() {
+	public UUID getIngredientId() {
 		return id;
 	}
 
-	public void setId(UUID id) {
+	public void setIngredientId(UUID id) {
 		this.id = id;
 	}
 
