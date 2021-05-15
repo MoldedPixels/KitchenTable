@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ServerWebExchange;
+
+import com.datastax.oss.driver.api.core.uuid.Uuids;
 import com.project2.kitchentable.beans.Recipe;
 import com.project2.kitchentable.beans.User;
 import com.project2.kitchentable.services.RecipeService;
@@ -34,47 +36,51 @@ public class RecipeController {
 	@Autowired
 	private AuthController authorize;
 	private static Logger log = LogManager.getLogger(RecipeController.class);
-	
+
 	@PostMapping("/add")
 	public Mono<Recipe> addRecipe(ServerWebExchange exchange, @RequestBody Recipe r) {
 		User user = authorize.UserAuth(exchange);
-		
-		if(user != null && user.getUserType() == 3) {
+		if (r.getRecipeId() == null) {
+			r.setRecipeId(Uuids.timeBased());
+		}
+		if (user != null && user.getUserType() == 3) {
 			return recipeService.addRecipe(r);
 		}
 		exchange.getResponse().setStatusCode(HttpStatus.BAD_REQUEST);
 		return null;
 	}
-	
-	@GetMapping(value="/getall", produces = MediaType.APPLICATION_JSON_VALUE)
+
+	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public Publisher<Recipe> getRecipes(ServerWebExchange exchange) {
 		User u = authorize.UserAuth(exchange);
-		if(u != null) {
+		if (u != null) {
 			return recipeService.getRecipes();
 		}
 		exchange.getResponse().setStatusCode(HttpStatus.BAD_REQUEST);
 		return null;
 	}
-	
+
 	@PutMapping("/{recipeID}")
-	public Mono<Recipe> updateRecipe(ServerWebExchange exchange, @PathVariable("recipeID") String recipeID, @RequestBody Recipe r){
+	public Mono<Recipe> updateRecipe(ServerWebExchange exchange, @PathVariable("recipeID") String recipeID,
+			@RequestBody Recipe r) {
 		User user = authorize.UserAuth(exchange);
-		
-		if(user != null && user.getUserType() == 3) {
+
+		if (user != null && user.getUserType() == 3) {
 			return recipeService.updateRecipe(r);
 		}
 		exchange.getResponse().setStatusCode(HttpStatus.BAD_REQUEST);
 		return null;
 	}
-	
+
 	@DeleteMapping("/{recipeID}")
-	public Mono<Void> removeRecipe(ServerWebExchange exchange, @PathVariable("recipeID") String recipeID){
+	public Mono<Void> removeRecipe(ServerWebExchange exchange, @PathVariable("recipeID") String recipeId) {
 		User user = authorize.UserAuth(exchange);
-		if(user != null && user.getUserType() == 3) {
+		if (user != null && user.getUserType() == 3) {
 			try {
-				Recipe r = recipeService.getRecipeByID(UUID.fromString(recipeID)).block(Duration.of(1000, ChronoUnit.MILLIS));
+				Recipe r = recipeService.getRecipeById(UUID.fromString(recipeId))
+						.block(Duration.of(1000, ChronoUnit.MILLIS));
 				recipeService.removeRecipe(r);
-			}catch(Exception e) {
+			} catch (Exception e) {
 				for (StackTraceElement st : e.getStackTrace())
 					log.debug(st.toString());
 			}
@@ -82,12 +88,24 @@ public class RecipeController {
 		exchange.getResponse().setStatusCode(HttpStatus.BAD_REQUEST);
 		return null;
 	}
-	
-	@GetMapping(value="/{recipename}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public Publisher<Recipe> getRecipeByName(ServerWebExchange exchange, @PathVariable("recipename") String recipeName) {
+
+	@GetMapping(value = "/{recipeName}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public Publisher<Recipe> getRecipeByName(ServerWebExchange exchange,
+
+			@PathVariable("recipeName") String recipeName) {
 		User u = authorize.UserAuth(exchange);
-		if(u != null) {
+		if (u != null) {
 			return recipeService.getRecipeByName(recipeName);
+		}
+		exchange.getResponse().setStatusCode(HttpStatus.BAD_REQUEST);
+		return null;
+	}
+
+	@GetMapping(value = "/{recipeId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public Publisher<Recipe> getRecipeById(ServerWebExchange exchange, @PathVariable("recipeId") UUID recipeId) {
+		User u = authorize.UserAuth(exchange);
+		if (u != null) {
+			return recipeService.getRecipeById(recipeId);
 		}
 		exchange.getResponse().setStatusCode(HttpStatus.BAD_REQUEST);
 		return null;

@@ -17,8 +17,8 @@ public interface RecipeService {
 
 	Mono<Void> removeRecipe(Recipe r);
 
-	Mono<Recipe> getRecipeByID(UUID id);
+	Mono<Recipe> getRecipeById(UUID recipeId);
 
-	Mono<Recipe> getRecipeByName(String name);
+	Mono<Recipe> getRecipeByName(String recipeName);
 
 }

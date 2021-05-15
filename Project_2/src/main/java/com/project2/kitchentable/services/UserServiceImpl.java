@@ -1,13 +1,18 @@
 package com.project2.kitchentable.services;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.server.ServerResponse;
 
+import com.project2.kitchentable.beans.Recipe;
 import com.project2.kitchentable.beans.User;
+import com.project2.kitchentable.data.ReactiveRecipeRepo;
 import com.project2.kitchentable.data.ReactiveUserRepo;
 
 import reactor.core.publisher.Flux;
@@ -19,10 +24,12 @@ public class UserServiceImpl implements UserService {
 	private static Logger log = LogManager.getLogger(UserServiceImpl.class);
 	@Autowired
 	private ReactiveUserRepo userRepo;
+	@Autowired
+	private ReactiveRecipeRepo recipeRepo;
 
 	@Override
 	public Mono<User> getUsersByName(String lname, String fname) {
-		return userRepo.findByLastnameAndFirstname(lname,fname);
+		return userRepo.findByLastnameAndFirstname(lname, fname);
 	}
 
 	@Override
@@ -42,14 +49,52 @@ public class UserServiceImpl implements UserService {
 		log.trace("Attempting to find all users: ");
 		return userRepo.findAll();
 	}
-	
+
 	@Override
-	public Mono<Void> removeUser(User u){
+	public Mono<Void> removeUser(User u) {
 		return userRepo.delete(u);
 	}
-	
+
 	public Mono<User> getUserByID(UUID userID) {
 		log.trace("Attempting to locate the user with uuid: " + userID);
 		return userRepo.findByUserID(userID);
+	}
+
+	/*
+	 * @Override public Mono<List<Recipe>> getFavorites(UUID userid) {
+	 * log.debug("list of favorites incoming..."); Mono<User> u =
+	 * userRepo.findByUserID(userid); List<UUID> favList = u.publish(u ->{
+	 * 
+	 * }) }
+	 */
+
+	@Override
+	public Mono<List<Recipe>> getFavorites(UUID userid) {
+		log.debug("list of favorites incoming...");
+		// Get user for the list owner
+		return userRepo.findByUserID(userid).flatMap(user -> {
+			List<UUID> list = user.getFavorites();
+			// Return a flux of recipes as collected mono<list>
+			return Flux.fromIterable(list).flatMap(recipeid -> {
+				// Transform list of favorite ids to the actual associated recipes 
+				return recipeRepo.findByRecipeId(recipeid);
+			}).collectList();
+		});
+	}
+
+	@Override
+	public Mono<ServerResponse> updateFavorites(UUID userid, UUID recipeid) {
+		// Retrieve user from database
+		User u = userRepo.findByUserID(userid).block();
+		// Retrieve user's list of favorites
+		List<UUID> list = u.getFavorites();
+		// Add new recipe to the list by recipe ID
+		list.add(recipeid);
+		// Reset the new favorites list for the user
+		u.setFavorites(list);
+		// Save user back to repo
+		userRepo.save(u);
+		// return ResponseEntity.noContent().build();
+		return null;
 	}
 }

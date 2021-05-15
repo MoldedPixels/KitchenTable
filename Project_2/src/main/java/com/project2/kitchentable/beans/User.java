@@ -35,6 +35,8 @@ public class User implements Serializable {
 	private int userType;
 	@Column
 	private List<UUID> cookedRecipes;
+	@Column
+	private List<UUID> favorites;
 
 	public User() {
 		super();
@@ -115,12 +117,21 @@ public class User implements Serializable {
 				.anyMatch(r -> r.equals(id));
 	}
 
+	public List<UUID> getFavorites() {
+		return favorites;
+	}
+
+	public void setFavorites(List<UUID> favorites) {
+		this.favorites = favorites;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((cookedRecipes == null) ? 0 : cookedRecipes.hashCode());
 		result = prime * result + ((familyID == null) ? 0 : familyID.hashCode());
+		result = prime * result + ((favorites == null) ? 0 : favorites.hashCode());
 		result = prime * result + ((firstname == null) ? 0 : firstname.hashCode());
 		result = prime * result + ((kitchenID == null) ? 0 : kitchenID.hashCode());
 		result = prime * result + ((lastname == null) ? 0 : lastname.hashCode());
@@ -147,6 +158,11 @@ public class User implements Serializable {
 			if (other.familyID != null)
 				return false;
 		} else if (!familyID.equals(other.familyID))
+			return false;
+		if (favorites == null) {
+			if (other.favorites != null)
+				return false;
+		} else if (!favorites.equals(other.favorites))
 			return false;
 		if (firstname == null) {
 			if (other.firstname != null)
@@ -177,7 +193,7 @@ public class User implements Serializable {
 	public String toString() {
 		return "User [userID=" + userID + ", firstname=" + firstname + ", lastname=" + lastname + ", familyID="
 				+ familyID + ", kitchenID=" + kitchenID + ", userType=" + userType + ", cookedRecipes=" + cookedRecipes
-				+ "]";
+				+ ", favorites=" + favorites + "]";
 	}
 
 }

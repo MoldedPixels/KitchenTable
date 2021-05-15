@@ -2,6 +2,8 @@ package com.project2.kitchentable.controllers;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
@@ -18,9 +20,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ServerWebExchange;
 import com.datastax.oss.driver.api.core.uuid.Uuids;
+import com.project2.kitchentable.beans.Recipe;
 import com.project2.kitchentable.beans.User;
 import com.project2.kitchentable.services.UserService;
 import com.project2.kitchentable.utils.JWTParser;
@@ -64,13 +68,23 @@ public class UserController {
 		if(u.getKitchenID() == null) {
 			u.setKitchenID(Uuids.timeBased());
 		}
+		if(u.getFavorites() == null) {
+			List<UUID> favorites = new ArrayList<UUID>();
+			System.out.println(favorites);
+			u.setFavorites(favorites);
+		}
+		if(u.getCookedRecipes() == null) {
+			List<UUID> cooked = new ArrayList<UUID>();
+			System.out.println(cooked);
+			u.setCookedRecipes(cooked);
+		}
 		return userService.addUser(u).map(user -> ResponseEntity.status(201).body(user))
 				.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(u)));
 	}
 	
 	@PostMapping(value="login", produces = MediaType.APPLICATION_NDJSON_VALUE)
-	public Publisher<User> login(ServerWebExchange exchange, @RequestBody User u) {
-		return userService.getUsersByName(u.getLastname(), u.getFirstname()).delayElement(Duration.ofSeconds(2)).doOnNext(user -> {
+	public Publisher<User> login(ServerWebExchange exchange, @RequestParam(name = "userid") UUID userid) {
+		return userService.getUserByID(userid).doOnNext(user -> {
 			try {
 				exchange.getResponse().addCookie(ResponseCookie.from("token", tokenService.makeToken(user)).httpOnly(true).build());
 			}catch(Exception e) {
@@ -147,5 +161,24 @@ public class UserController {
 		exchange.getResponse().setStatusCode(HttpStatus.BAD_REQUEST);
 		return null;
 	}
+	
+	@GetMapping("users/favorites")
+	public Mono<List<Recipe>> getFavorites(@RequestParam(name = "userid") UUID userid) {
+		log.debug("Gathering list of favorites for user id: " + userid);
+		return userService.getFavorites(userid);
+
+	}
+
+	/*
+	 * @PutMapping("users/{userid}/favorites/update/{recipeid}") public
+	 * ResponseEntity<Void> updateFavorites(@PathVariable(name = "userid") String
+	 * userid,
+	 * 
+	 * @PathVariable(name = "recipeid") String recipeid) {
+	 * log.debug("Update list of favorites for user id: " + userid); return
+	 * userService.updateFavorites(UUID.fromString(userid),
+	 * UUID.fromString(recipeid)); }
+	 */
+
 	
 }

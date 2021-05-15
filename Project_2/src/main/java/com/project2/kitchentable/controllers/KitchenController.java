@@ -83,7 +83,7 @@ public class KitchenController {
 			@RequestParam(name = "images", required = false) MultipartFile images) throws Exception {
 
 		
-		return Mono.zip(kitchenService.getKitchenByID(kID), recipeService.getRecipeByID(recipe)).flatMap(data -> {
+		return Mono.zip(kitchenService.getKitchenByID(kID), recipeService.getRecipeById(recipe)).flatMap(data -> {
 			Kitchen k = data.getT1();
 			Recipe r = data.getT2();
 			

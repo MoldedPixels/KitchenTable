@@ -15,42 +15,43 @@ import org.springframework.data.cassandra.core.mapping.Table;
 public class Recipe implements Serializable {
 	private static final long serialVersionUID = -5825156404073366871L;
 	@Column
-	private UUID id;
-	@PrimaryKeyColumn(
-			name="cuisine",
-			ordinal=0,
-			type=PrimaryKeyType.PARTITIONED)
+	private UUID recipeId;
+	@PrimaryKeyColumn(name = "cuisine", ordinal = 0, type = PrimaryKeyType.PARTITIONED)
 	private int cuisine;
 	@Column
-	private String name;
+	private String recipeName;
 	@Column
 	private Map<UUID, Double> ingredients;
-	@PrimaryKeyColumn(
-			name="rating",
-			ordinal=1,
-			type=PrimaryKeyType.CLUSTERED,
-			ordering=Ordering.DESCENDING)
+	@PrimaryKeyColumn(name = "rating", ordinal = 1, type = PrimaryKeyType.CLUSTERED, ordering = Ordering.DESCENDING)
 	private double rating;
-	
+
 	public Recipe() {
 		super();
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public Recipe(UUID id, int cuisine, String name, Object[] ingredients, double rating) {
-		this.id = id;
+	public Recipe(UUID recipeId, int cuisine, String recipeName, Object[] ingredients, double rating) {
+		this.recipeId = recipeId;
 		this.cuisine = cuisine;
-		this.name = name;
+		this.recipeName = recipeName;
 		this.ingredients = ArrayUtils.toMap(ingredients);
 		this.rating = rating;
 	}
 
-	public UUID getId() {
-		return id;
+	public UUID getRecipeId() {
+		return recipeId;
 	}
 
-	public void setId(UUID id) {
-		this.id = id;
+	public void setRecipeId(UUID recipeId) {
+		this.recipeId = recipeId;
+	}
+
+	public String getRecipeName() {
+		return recipeName;
+	}
+
+	public void setRecipeName(String recipeName) {
+		this.recipeName = recipeName;
 	}
 
 	public int getCuisine() {
@@ -59,14 +60,6 @@ public class Recipe implements Serializable {
 
 	public void setCuisine(int cuisine) {
 		this.cuisine = cuisine;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public Map<UUID, Double> getIngredients() {
@@ -94,12 +87,12 @@ public class Recipe implements Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + cuisine;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((ingredients == null) ? 0 : ingredients.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		long temp;
 		temp = Double.doubleToLongBits(rating);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + ((recipeId == null) ? 0 : recipeId.hashCode());
+		result = prime * result + ((recipeName == null) ? 0 : recipeName.hashCode());
 		return result;
 	}
 
@@ -114,31 +107,30 @@ public class Recipe implements Serializable {
 		Recipe other = (Recipe) obj;
 		if (cuisine != other.cuisine)
 			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
 		if (ingredients == null) {
 			if (other.ingredients != null)
 				return false;
 		} else if (!ingredients.equals(other.ingredients))
 			return false;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
 		if (Double.doubleToLongBits(rating) != Double.doubleToLongBits(other.rating))
+			return false;
+		if (recipeId == null) {
+			if (other.recipeId != null)
+				return false;
+		} else if (!recipeId.equals(other.recipeId))
+			return false;
+		if (recipeName == null) {
+			if (other.recipeName != null)
+				return false;
+		} else if (!recipeName.equals(other.recipeName))
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "Recipe [id=" + id + ", cuisine=" + cuisine + ", name=" + name + ", ingredients=" + ingredients
-				+ ", rating=" + rating + "]";
+		return "Recipe [recipeId=" + recipeId + ", cuisine=" + cuisine + ", recipeName=" + recipeName + ", ingredients="
+				+ ingredients + ", rating=" + rating + "]";
 	}
 
-	
 }
