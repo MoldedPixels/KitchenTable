@@ -41,7 +41,7 @@ public class KitchenController {
 	public void setRecipeService(RecipeService recipeService) {
 		this.recipeService = recipeService;
 	}
-	
+
 	@Autowired
 	public void setReviewService(ReviewService reviewService) {
 		this.reviewService = reviewService;
@@ -92,20 +92,33 @@ public class KitchenController {
 			Kitchen k = data.getT1();
 			Recipe r = data.getT2();
 
-			if((reviewBody != null) && (score != null)) {
+			if ((reviewBody != null) && (score != null)) {
 
-				return kitchenService.cook(r, k).flatMap(kitchen -> { // Attempt to cook 
-					Reviews rev = new Reviews(Uuids.timeBased(), Uuids.timeBased() /* This param will be changed to the logged in user's UUID */, recipe, score, reviewBody);
-					return reviewService.addReview(rev).map(review -> ResponseEntity.status(201).body(kitchen.toString() + "\n" + review.toString())) // Proceed to try to add review
-						.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(error.toString()))); // If error, assign error message to response
+				return kitchenService.cook(r, k).flatMap(kitchen -> { // Attempt to cook
+					Reviews rev = new Reviews(Uuids.timeBased(),
+							Uuids.timeBased() /* This param will be changed to the logged in user's UUID */, recipe,
+							score, reviewBody);
+					return reviewService.addReview(rev).map(
+							review -> ResponseEntity.status(201).body(kitchen.toString() + "\n" + review.toString())) // Proceed
+																														// to
+																														// try
+																														// to
+																														// add
+																														// review
+							.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(error.toString()))); // If
+																													// error,
+																													// assign
+																													// error
+																													// message
+																													// to
+																													// response
 				}).onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(error.toString())));
 
-			}
-			else {
+			} else {
 				return kitchenService.cook(r, k).map(kitchen -> ResponseEntity.status(201).body(kitchen.toString()))
 						.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(error.toString())));
 			}
-			
+
 		});
 
 	}

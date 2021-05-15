@@ -9,10 +9,12 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.BodyExtractor.Context;
 import org.springframework.web.server.ServerWebExchange;
 
 import com.project2.kitchentable.beans.User;
 import com.project2.kitchentable.utils.JWTParser;
+
 
 @Component
 @Aspect
@@ -27,6 +29,7 @@ public class SecurityAspect {
 			throw new Exception("Invalid arguments to adviced method " + pjp.getSignature());
 		}
 		ServerWebExchange exchange = (ServerWebExchange) pjp.getArgs()[0];
+		Context ctx ;
 		try {
 			if (exchange.getRequest().getCookies().get("token") != null) {
 				String token = exchange.getRequest().getCookies().getFirst("token").getValue();
