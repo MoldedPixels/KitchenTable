@@ -1,12 +1,10 @@
 package com.project2.kitchentable.controllers;
 
-import java.time.Duration;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,7 +21,6 @@ import com.project2.kitchentable.services.ReviewService;
 import com.project2.kitchentable.beans.Recipe;
 import com.project2.kitchentable.beans.Reviews;
 
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RestController
@@ -97,7 +94,6 @@ public class KitchenController {
 
 				return kitchenService.cook(r, k).flatMap(kitchen -> { // Attempt to cook 
 					Reviews rev = new Reviews(Uuids.timeBased(), Uuids.timeBased() /* This param will be changed to the logged in user's UUID */, recipe, score, reviewBody);
-					System.out.println(rev.toString());
 					return reviewService.addReview(rev).map(review -> ResponseEntity.status(201).body(kitchen.toString() + "\n" + review.toString())) // Proceed to try to add review
 							.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(error.toString()))); // If error, assign error message to response
 				}).onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(error.toString())));
