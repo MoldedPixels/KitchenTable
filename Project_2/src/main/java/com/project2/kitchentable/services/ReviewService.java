@@ -21,4 +21,6 @@ public interface ReviewService {
 
 	Flux<Reviews> getReviewsByRecipeId(UUID id);
 
+	Flux<Reviews> getReviewsByUserId(UUID id);
+
 }
