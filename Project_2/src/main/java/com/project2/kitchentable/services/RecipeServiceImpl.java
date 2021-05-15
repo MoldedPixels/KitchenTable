@@ -38,8 +38,8 @@ public class RecipeServiceImpl implements RecipeService {
 	}
 
 	@Override
-	public Mono<Void> removeRecipe(Recipe r) {
-		return recipeRepo.delete(r);
+	public Mono<Void> removeRecipe(UUID id) {
+		return recipeRepo.deleteByRecipeID(id);
 	}
 
 	@Override

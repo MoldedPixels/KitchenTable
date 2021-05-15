@@ -2,8 +2,6 @@ package com.project2.kitchentable.services;
 
 import java.util.UUID;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +13,6 @@ import reactor.core.publisher.Mono;
 
 @Service
 public class ReviewServiceImpl implements ReviewService {
-	private static Logger log = LogManager.getLogger(ReviewServiceImpl.class);
 	
 	@Autowired
 	private ReactiveReviewRepo reviewRepo;
@@ -36,15 +33,18 @@ public class ReviewServiceImpl implements ReviewService {
 	}
 	
 	@Override
+	public Flux<Reviews> getReviewsByUserId(UUID id) {
+		return reviewRepo.findAllByUserId(id);
+	}
+	
+	@Override
 	public Mono<Reviews> updateReview(Reviews r){
 		return reviewRepo.save(r);
 	}
 	
 	@Override
-	public Mono<Reviews> getReviewById(UUID id){
-		String reviewId = id.toString();
-		
-		return reviewRepo.findById(reviewId);
+	public Mono<Reviews> getReviewById(UUID id){		
+		return reviewRepo.findByReviewId(id);
 	}
 	
 	@Override

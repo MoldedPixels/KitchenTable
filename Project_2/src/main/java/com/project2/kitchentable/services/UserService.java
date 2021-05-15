@@ -20,14 +20,15 @@ public interface UserService {
 
 	Flux<User> getUsers();
 
-	Mono<Void> removeUser(User u);
-
 	Mono<User> updateUser(User user);
 	
 	Mono<User> getUserByID(UUID userID);
-	
+
 	Mono<List<Recipe>> getFavorites(UUID userid);
 
 	Mono<ServerResponse> updateFavorites(UUID userid, UUID recipeid);
-}
 
+	Mono<Void> removeUser(UUID id);
+	
+	Mono<User> setKitchenNull(User u);
+}

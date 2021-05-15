@@ -10,10 +10,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.reactivestreams.Publisher;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,11 +23,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ServerWebExchange;
+
 import com.datastax.oss.driver.api.core.uuid.Uuids;
 import com.project2.kitchentable.beans.Recipe;
 import com.project2.kitchentable.beans.User;
 import com.project2.kitchentable.services.UserService;
 import com.project2.kitchentable.utils.JWTParser;
+
 import reactor.core.publisher.Mono;
 
 @RestController
@@ -129,18 +131,11 @@ public class UserController {
 	
 	@SuppressWarnings("unlikely-arg-type")
 	@DeleteMapping("users/{userID}/{kitchenID}")
-	public Mono<User> removeUserKitchen(ServerWebExchange exchange, @PathVariable("userID") String userID, @PathVariable("kitchenID") String kitchenID){
+	public Mono<User> removeUserKitchen(ServerWebExchange exchange, @PathVariable("kitchenID") String kitchenID, @RequestBody User u){
 		User user = authorize.UserAuth(exchange);
-		User u = null;
-		try {
-			u = userService.getUserByID(UUID.fromString(userID)).block(Duration.of(1000, ChronoUnit.MILLIS));
-		}catch(Exception e) {
-			for (StackTraceElement st : e.getStackTrace())
-				log.debug(st.toString());
-		}
-		if(user != null && u!= null && u.getUserType() == 2 && user.getKitchenID() == UUID.fromString(kitchenID)) {
-				u.setKitchenID(null);
-				return userService.updateUser(u);
+
+		if(user != null && user.getUserType() == 2 && user.getKitchenID() == UUID.fromString(kitchenID)) {
+				return userService.setKitchenNull(u);
 		}
 		exchange.getResponse().setStatusCode(HttpStatus.BAD_REQUEST);
 		return null;
@@ -151,8 +146,7 @@ public class UserController {
 		User user = authorize.UserAuth(exchange);
 		if(user != null && user.getUserType() == 3) {
 			try {
-				User u = userService.getUserByID(UUID.fromString(userID)).block(Duration.of(1000, ChronoUnit.MILLIS));
-				userService.removeUser(u);
+				return userService.removeUser(UUID.fromString(userID));
 			}catch(Exception e) {
 				for (StackTraceElement st : e.getStackTrace())
 					log.debug(st.toString());

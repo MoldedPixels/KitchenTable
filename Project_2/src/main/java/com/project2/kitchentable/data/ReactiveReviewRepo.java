@@ -8,9 +8,17 @@ import org.springframework.stereotype.Repository;
 import com.project2.kitchentable.beans.Reviews;
 
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Repository
 public interface ReactiveReviewRepo extends ReactiveCassandraRepository<Reviews, String>{
 	@AllowFiltering
 	Flux<Reviews> findAllByRecipeId(UUID recipeId);
+	
+	@AllowFiltering
+	Flux<Reviews> findAllByUserId(UUID userId);
+	
+	@AllowFiltering
+	Mono<Reviews> findByReviewId(UUID reviewId);
+
 }

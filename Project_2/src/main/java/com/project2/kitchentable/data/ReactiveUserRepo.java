@@ -17,4 +17,5 @@ public interface ReactiveUserRepo extends ReactiveCassandraRepository<User, Stri
 	Mono<User> findByLastnameAndFirstname(String lastname, String firstname);
 	@AllowFiltering
 	Mono<User> findByUserID(UUID userID);
+	Mono<Void> deleteByUserID(UUID id);
 }
