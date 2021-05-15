@@ -21,7 +21,7 @@ public class ReviewController {
 	private ReviewService reviewService;
 	
 	@Autowired
-	public void setIngredientService(ReviewService reviewService) {
+	public void setReviewService(ReviewService reviewService) {
 		this.reviewService = reviewService;
 	}
 	
