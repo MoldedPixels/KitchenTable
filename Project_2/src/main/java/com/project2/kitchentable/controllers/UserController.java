@@ -154,7 +154,7 @@ public class UserController {
 	
 	@GetMapping("users/favorites")
 	public Mono<List<Recipe>> getFavorites(@RequestParam(name = "userid") UUID userId) {
-		log.debug("Gathering list of favorites for user id: " + userId);
+		log.debug("Gathering list of favorites..");
 		return userService.getFavorites(userId);
 
 	}
