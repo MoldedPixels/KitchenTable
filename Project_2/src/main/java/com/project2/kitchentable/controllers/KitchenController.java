@@ -88,7 +88,6 @@ public class KitchenController {
 		return Mono.zip(kitchenService.getKitchenByID(kID), recipeService.getRecipeByID(recipe)).flatMap(data -> {
 			Kitchen k = data.getT1();
 			Recipe r = data.getT2();
-			System.out.println("Recipe object: " + r.toString());
 
 			if((reviewBody != null) && (score != null)) {
 
