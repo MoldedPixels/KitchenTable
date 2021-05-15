@@ -1,7 +1,5 @@
 package com.project2.kitchentable.controllers;
 
-import java.time.Duration;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -71,13 +69,11 @@ public class UserController {
 			u.setKitchenID(Uuids.timeBased());
 		}
 		if(u.getFavorites() == null) {
-			List<UUID> favorites = new ArrayList<UUID>();
-			System.out.println(favorites);
+			List<UUID> favorites = new ArrayList<>();
 			u.setFavorites(favorites);
 		}
 		if(u.getCookedRecipes() == null) {
-			List<UUID> cooked = new ArrayList<UUID>();
-			System.out.println(cooked);
+			List<UUID> cooked = new ArrayList<>();
 			u.setCookedRecipes(cooked);
 		}
 		return userService.addUser(u).map(user -> ResponseEntity.status(201).body(user))
@@ -157,9 +153,9 @@ public class UserController {
 	}
 	
 	@GetMapping("users/favorites")
-	public Mono<List<Recipe>> getFavorites(@RequestParam(name = "userid") UUID userid) {
-		log.debug("Gathering list of favorites for user id: " + userid);
-		return userService.getFavorites(userid);
+	public Mono<List<Recipe>> getFavorites(@RequestParam(name = "userid") UUID userId) {
+		log.debug("Gathering list of favorites for user id: " + userId);
+		return userService.getFavorites(userId);
 
 	}
 

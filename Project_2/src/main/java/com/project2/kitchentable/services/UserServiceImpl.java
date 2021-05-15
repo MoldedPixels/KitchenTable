@@ -61,23 +61,13 @@ public class UserServiceImpl implements UserService {
 		return userRepo.findByUserID(userID);
 	}
 
-	
-	/*
-	 * @Override public Mono<List<Recipe>> getFavorites(UUID userid) {
-	 * log.debug("list of favorites incoming..."); Mono<User> u =
-	 * userRepo.findByUserID(userid); List<UUID> favList = u.publish(u ->{
-	 * 
-	 * }) }
-	 */
-
 	@Override
 	public Mono<List<Recipe>> getFavorites(UUID userid) {
 		log.debug("list of favorites incoming...");
 		// Get user for the list owner
 		return userRepo.findByUserID(userid).flatMap(user -> {
-			List<UUID> list = user.getFavorites();
 			// Return a flux of recipes as collected mono<list>
-			return Flux.fromIterable(list).flatMap(recipeid -> {
+			return Flux.fromIterable(user.getFavorites()).flatMap(recipeid -> {
 				// Transform list of favorite ids to the actual associated recipes 
 				return recipeRepo.findByRecipeId(recipeid);
 			}).collectList();
@@ -96,7 +86,6 @@ public class UserServiceImpl implements UserService {
 		u.setFavorites(list);
 		// Save user back to repo
 		userRepo.save(u);
-		// return ResponseEntity.noContent().build();
 		return null;
 	}
 
