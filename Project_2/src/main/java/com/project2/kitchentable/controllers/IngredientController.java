@@ -16,8 +16,6 @@ import org.springframework.web.server.ServerWebExchange;
 
 import com.datastax.oss.driver.api.core.uuid.Uuids;
 import com.project2.kitchentable.beans.Ingredient;
-import com.project2.kitchentable.beans.Recipe;
-import com.project2.kitchentable.beans.User;
 import com.project2.kitchentable.services.IngredientService;
 import reactor.core.publisher.Mono;
 
@@ -26,7 +24,6 @@ import reactor.core.publisher.Mono;
 public class IngredientController {
 
 	private IngredientService ingredientService;
-	// private RecipeService recipeService;
 
 	private static Logger log = LogManager.getLogger(IngredientController.class);
 	
@@ -35,11 +32,6 @@ public class IngredientController {
 		this.ingredientService = ingredientService;
 	}
 
-	// @Autowired
-//	public void setRecipeService(RecipeService recipeService) {
-//		this.recipeService = recipeService;
-//	}
-
 	@PostMapping("/new")
 	public Mono<ResponseEntity<Ingredient>> addIngredient(@RequestBody Ingredient i) {
 		System.out.println("Adding a new Ingredient");
@@ -47,7 +39,6 @@ public class IngredientController {
 
 		return ingredientService.addIngredient(i).map(ingredient -> ResponseEntity.status(201).body(ingredient))
 				.onErrorStop();
-		// .onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(i)));
 	}
 	
 	@GetMapping(value="/getall", produces = MediaType.APPLICATION_JSON_VALUE)
