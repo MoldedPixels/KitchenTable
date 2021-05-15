@@ -94,7 +94,7 @@ public class KitchenController {
 				return kitchenService.cook(r, k).flatMap(kitchen -> { // Attempt to cook 
 					Reviews rev = new Reviews(Uuids.timeBased(), Uuids.timeBased() /* This param will be changed to the logged in user's UUID */, recipe, score, reviewBody);
 					return reviewService.addReview(rev).map(review -> ResponseEntity.status(201).body(kitchen.toString() + "\n" + review.toString())) // Proceed to try to add review
-							.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(error.toString()))); // If error, assign error message to response
+						.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(error.toString()))); // If error, assign error message to response
 				}).onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(error.toString())));
 
 			}
