@@ -1,5 +1,6 @@
 package com.project2.kitchentable.controllers;
 
+import java.time.Duration;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,23 +81,29 @@ public class KitchenController {
 			@RequestParam(name = "kitchen", required = true) UUID kID, 
 			@RequestParam(name = "review", required = false) String reviewBody,
 			@RequestParam(name = "score", required = false) Double score,
-			@RequestParam(name = "images", required = false) MultipartFile images) throws Exception {
-
+			@RequestParam(name = "images", required = false) MultipartFile images) {
 		
 		return Mono.zip(kitchenService.getKitchenByID(kID), recipeService.getRecipeByID(recipe)).flatMap(data -> {
 			Kitchen k = data.getT1();
 			Recipe r = data.getT2();
+			System.out.println("Recipe object: " + r.toString());
+
+			if((reviewBody != null) && (score != null)) {
+
+				return kitchenService.cook(r, k).flatMap(kitchen -> { // Attempt to cook 
+					Reviews rev = new Reviews(Uuids.timeBased(), Uuids.timeBased() /* This param will be changed to the logged in user's UUID */, recipe, score, reviewBody);
+					System.out.println(rev.toString());
+					return reviewService.addReview(rev).map(review -> ResponseEntity.status(201).body("What happened?")) // Proceed to try to add review
+							.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(error.toString()))); // If error, assign error message to response
+				}).onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(error.toString())));
+
+			}
+			else {
+				return kitchenService.cook(r, k).map(kitchen -> ResponseEntity.status(201).body(kitchen.toString()))
+						.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(error.toString())));
+			}
 			
-			Mono<ResponseEntity<String>> response = kitchenService.cook(r, k).map(kitchen -> ResponseEntity.status(201).body(kitchen.toString()))
-					.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(error.toString())));
-			return response;
 		});
-		
-	}
-	
-	@GetMapping(value = "reviews/{recipe}")
-	public Flux<ResponseEntity<Reviews>> viewReviews(@PathVariable("recipe") UUID recipe) {
-		return reviewService.getReviewsByRecipeId(recipe).map(reviews -> ResponseEntity.status(201).body(reviews));
 		
 	}
 
