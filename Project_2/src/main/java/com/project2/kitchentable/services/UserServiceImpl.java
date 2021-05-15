@@ -1,5 +1,6 @@
 package com.project2.kitchentable.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -50,10 +51,10 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Mono<Void> removeUser(UUID id){
+	public Mono<Void> removeUser(UUID id) {
 		return userRepo.deleteByUserID(id);
 	}
-	
+
 	@Override
 	public Mono<User> getUserByID(UUID userID) {
 		log.trace("Attempting to locate the user with uuid: " + userID);
@@ -66,10 +67,16 @@ public class UserServiceImpl implements UserService {
 		// Get user for the list owner
 		return userRepo.findByUserID(userid).flatMap(user -> {
 			// Return a flux of recipes as collected mono<list>
-			return Flux.fromIterable(user.getFavorites()).flatMap(recipeid -> {
-				// Transform list of favorite ids to the actual associated recipes 
-				return recipeRepo.findByRecipeId(recipeid);
-			}).collectList();
+			if (user.getFavorites() == null) {
+				List<Recipe> defaultList = new ArrayList<>();
+				defaultList.add(new Recipe());
+				return Mono.just(defaultList);
+			} else {
+				return Flux.fromIterable(user.getFavorites()).flatMap(recipeid -> {
+					// Transform list of favorite ids to the actual associated recipes
+					return recipeRepo.findByRecipeId(recipeid);
+				}).collectList();
+			}
 		});
 	}
 
