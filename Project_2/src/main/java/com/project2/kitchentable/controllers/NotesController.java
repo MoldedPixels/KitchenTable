@@ -67,7 +67,6 @@ public class NotesController {
 	@DeleteMapping("/{recipeid}/{userid}")
 	public Mono<Void> removeNote(ServerWebExchange exchange, @PathVariable("recipeid") String recipeID, @PathVariable("userid") String userID){
 		User user = authorize.UserAuth(exchange);
-		
 		if(user != null && (user.getUserType() == 3 || UUID.fromString(userID) == user.getUserID())) {
 			return noteService.removeNotes(UUID.fromString(recipeID), UUID.fromString(userID));
 		}

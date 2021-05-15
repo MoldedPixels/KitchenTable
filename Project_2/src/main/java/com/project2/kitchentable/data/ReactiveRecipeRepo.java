@@ -13,8 +13,9 @@ import reactor.core.publisher.Mono;
 @Repository
 public interface ReactiveRecipeRepo extends ReactiveCassandraRepository<Recipe, String>{
 	@AllowFiltering
-	Mono<Recipe> findById(UUID id);
+	Mono<Recipe> findByRecipeID(UUID id);
 	@AllowFiltering
 	Mono<Recipe> findByName(String name);
+	@AllowFiltering
 	Mono<Void> deleteByRecipeID(UUID id);
 }

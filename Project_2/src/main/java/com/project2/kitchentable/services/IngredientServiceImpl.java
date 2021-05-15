@@ -36,7 +36,7 @@ public class IngredientServiceImpl implements IngredientService {
 
 	@Override
 	public Mono<Ingredient> getIngredientById(UUID id) {
-		return ingredientRepo.findById(id.toString());
+		return ingredientRepo.findByIngredientId(id);
 	}
 
 	@Override
