@@ -38,17 +38,17 @@ public class RecipeServiceImpl implements RecipeService {
 	}
 
 	@Override
-	public Mono<Void> removeRecipe(UUID id) {
-		return recipeRepo.deleteByRecipeID(id);
+	public Mono<Void> removeRecipeById(UUID id) {
+		return recipeRepo.deleteByRecipeId(id);
 	}
 
 	@Override
-	public Mono<Recipe> getRecipeByID(UUID id) {
-		return recipeRepo.findById(id);
+	public Mono<Recipe> getRecipeById(UUID recipeId) {
+		return recipeRepo.findByRecipeId(recipeId);
 	}
 	
 	@Override
-	public Mono<Recipe> getRecipeByName(String name) {
-		return recipeRepo.findByName(name);
+	public Mono<Recipe> getRecipeByName(String recipeName) {
+		return recipeRepo.findByRecipeName(recipeName);
 	}
 }

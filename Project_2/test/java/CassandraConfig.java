@@ -1,4 +1,4 @@
-package com.project2.kitchentable;
+
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
