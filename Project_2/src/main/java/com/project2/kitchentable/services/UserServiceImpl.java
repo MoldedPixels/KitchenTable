@@ -7,9 +7,11 @@ import java.util.UUID;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
+import com.datastax.oss.driver.api.core.uuid.Uuids;
 import com.project2.kitchentable.beans.Recipe;
 import com.project2.kitchentable.beans.User;
 import com.project2.kitchentable.data.ReactiveRecipeRepo;
@@ -62,37 +64,39 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Mono<List<Recipe>> getFavorites(UUID userid) {
-		log.debug("list of favorites incoming...");
+	public Mono<List<Recipe>> getFavorites(UUID userId) {
+		log.debug("List of favorites incoming...");
 		// Get user for the list owner
-		return userRepo.findByUserID(userid).flatMap(user -> {
+		return userRepo.findByUserID(userId).flatMap(user -> {
 			// Return a flux of recipes as collected mono<list>
 			if (user.getFavorites() == null) {
+				log.debug("Favorites list was null, returning default list...");
 				List<Recipe> defaultList = new ArrayList<>();
-				defaultList.add(new Recipe());
 				return Mono.just(defaultList);
 			} else {
-				return Flux.fromIterable(user.getFavorites()).flatMap(recipeid -> {
+				log.debug("Favorites list was valid, bringing it back...");
+				return Flux.fromIterable(user.getFavorites()).flatMap(recipeId -> {
 					// Transform list of favorite ids to the actual associated recipes
-					return recipeRepo.findByRecipeId(recipeid);
+					return recipeRepo.findByRecipeId(recipeId);
 				}).collectList();
 			}
 		});
 	}
 
 	@Override
-	public Mono<ServerResponse> updateFavorites(UUID userid, UUID recipeid) {
+	public Mono<User> updateFavorites(UUID userId, UUID recipeId) {
 		// Retrieve user from database
-		User u = userRepo.findByUserID(userid).block();
-		// Retrieve user's list of favorites
-		List<UUID> list = u.getFavorites();
-		// Add new recipe to the list by recipe ID
-		list.add(recipeid);
-		// Reset the new favorites list for the user
-		u.setFavorites(list);
-		// Save user back to repo
-		userRepo.save(u);
-		return null;
+		log.debug("Attempting to update user's favorites list...");
+		return userRepo.findByUserID(userId).flatMap(user -> {
+			// Retrieve user's list of favorites
+			if(user.getFavorites() == null) {
+				log.debug("List was null, creating new list for user...");
+				user.setFavorites(new ArrayList<>());
+			}
+			log.debug("List is valid, adding recipe to user's favorite list...");
+			user.getFavorites().add(recipeId);
+			return userRepo.save(user);
+			});
 	}
 
 	public Mono<User> setKitchenNull(User u) {

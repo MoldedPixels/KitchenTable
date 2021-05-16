@@ -14,9 +14,15 @@ import org.springframework.data.cassandra.core.mapping.Table;
 @Table("recipe")
 public class Recipe implements Serializable {
 	private static final long serialVersionUID = -5825156404073366871L;
-	@Column
+	@PrimaryKeyColumn(
+			name="recipeid",
+			ordinal=0,
+			type=PrimaryKeyType.PARTITIONED)
 	private UUID recipeId;
-	@PrimaryKeyColumn(name = "cuisine", ordinal = 0, type = PrimaryKeyType.PARTITIONED)
+	@PrimaryKeyColumn(
+			name="cuisine",
+			ordinal=1,
+			type=PrimaryKeyType.CLUSTERED)
 	private int cuisine;
 	@Column
 	private String recipeName;
@@ -123,6 +129,11 @@ public class Recipe implements Serializable {
 			if (other.recipeName != null)
 				return false;
 		} else if (!recipeName.equals(other.recipeName))
+			return false;
+		if (recipeId == null) {
+			if (other.recipeId != null)
+				return false;
+		} else if (!recipeId.equals(other.recipeId))
 			return false;
 		return true;
 	}

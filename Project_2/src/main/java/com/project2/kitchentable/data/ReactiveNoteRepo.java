@@ -14,8 +14,8 @@ public interface ReactiveNoteRepo extends ReactiveCassandraRepository<Notes, Str
 
 	@AllowFiltering
 	Flux<Notes> findByRecipeId(UUID userID);
-
+	@AllowFiltering
 	Mono<Notes> findByRecipeIdAndUserId(UUID recipeID, UUID userID);
-
+	@AllowFiltering
 	Mono<Void> deleteByRecipeIdAndUserId(UUID recipeID, UUID userID);
 }

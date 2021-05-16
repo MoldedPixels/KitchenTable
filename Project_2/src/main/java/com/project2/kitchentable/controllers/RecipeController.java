@@ -8,6 +8,7 @@ import org.reactivestreams.Publisher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,13 +37,15 @@ public class RecipeController {
 	private static Logger log = LogManager.getLogger(RecipeController.class);
 
 	@PostMapping("/add")
-	public Mono<Recipe> addRecipe(ServerWebExchange exchange, @RequestBody Recipe r) {
-		User user = authorize.UserAuth(exchange);
-		if (r.getRecipeId() == null) {
+	public Mono<ResponseEntity<Recipe>> addRecipe(ServerWebExchange exchange, @RequestBody Recipe r) {
+		try {
+			log.trace("Adding recipe");
 			r.setRecipeId(Uuids.timeBased());
-		}
-		if (user != null && user.getUserType() == 3) {
-			return recipeService.addRecipe(r);
+			return recipeService.addRecipe(r).map(recipe -> ResponseEntity.status(201).body(recipe))
+					.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(r)));
+		}catch(Exception e) {
+			for (StackTraceElement st : e.getStackTrace())
+				log.debug(st.toString());
 		}
 		exchange.getResponse().setStatusCode(HttpStatus.BAD_REQUEST);
 		return null;

@@ -3,6 +3,7 @@ package com.project2.kitchentable.services;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
 import com.project2.kitchentable.beans.Recipe;
@@ -25,7 +26,7 @@ public interface UserService {
 
 	Mono<List<Recipe>> getFavorites(UUID userid);
 
-	Mono<ServerResponse> updateFavorites(UUID userid, UUID recipeid);
+	Mono<User> updateFavorites(UUID userid, UUID recipeid);
 
 	Mono<Void> removeUser(UUID id);
 	
