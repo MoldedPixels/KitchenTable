@@ -7,11 +7,8 @@ import java.util.UUID;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.server.ServerResponse;
 
-import com.datastax.oss.driver.api.core.uuid.Uuids;
 import com.project2.kitchentable.beans.Recipe;
 import com.project2.kitchentable.beans.User;
 import com.project2.kitchentable.data.ReactiveRecipeRepo;
@@ -89,14 +86,14 @@ public class UserServiceImpl implements UserService {
 		log.debug("Attempting to update user's favorites list...");
 		return userRepo.findByUserID(userId).flatMap(user -> {
 			// Retrieve user's list of favorites
-			if(user.getFavorites() == null) {
+			if (user.getFavorites() == null) {
 				log.debug("List was null, creating new list for user...");
 				user.setFavorites(new ArrayList<>());
 			}
 			log.debug("List is valid, adding recipe to user's favorite list...");
 			user.getFavorites().add(recipeId);
 			return userRepo.save(user);
-			});
+		});
 	}
 
 	public Mono<User> setKitchenNull(User u) {
