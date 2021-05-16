@@ -157,16 +157,53 @@ public class UserController {
 	}
 
 	@GetMapping("users/favorites")
-	public Mono<List<Recipe>> getFavorites(@RequestParam(name = "userid") UUID userId) {
-		log.debug("Gathering list of favorites..");
-		return userService.getFavorites(userId);
-
+	public Mono<List<Recipe>> getFavorites(ServerWebExchange exchange, @RequestParam(name = "userid") UUID userId) {
+		User user = authorize.UserAuth(exchange);
+		if ((user != null && user.getUserID().equals(userId)) || user.getUserType() == 3)
+			try {
+				log.debug("Gathering list of favorites..");
+				return userService.getFavorites(userId);
+			} catch (Exception e) {
+				for (StackTraceElement st : e.getStackTrace())
+					log.debug(st.toString());
+			}
+		log.debug("Invalid user access, only same user and/or admin may retrieve this list.");
+		exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
+		return null;
 	}
 
 	@PutMapping("users/favorites/update")
-	public Mono<User> updateFavorites(@RequestParam(name = "userId") UUID userId, @RequestParam(name = "recipeId") UUID recipeId) {
-		log.debug("Update list of favorites for user id: " + userId);
-		return userService.updateFavorites(userId, recipeId);
+	public Mono<User> addToFavorites(ServerWebExchange exchange, @RequestParam(name = "userId") UUID userId,
+			@RequestParam(name = "recipeId") UUID recipeId) {
+		User user = authorize.UserAuth(exchange);
+		if ((user != null && user.getUserID().equals(userId)) || user.getUserType() == 3)
+		try {
+			log.debug("Updating list of favorites for user id: " + userId);
+			return userService.addToFavorites(userId, recipeId);
+		} catch (Exception e) {
+			for (StackTraceElement st : e.getStackTrace())
+				log.debug(st.toString());
+		}
+		log.debug("Invalid user access, only same user and/or admin may update this list.");
+		exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
+		return null;
+	}
+	
+	@DeleteMapping("users/favorites/update")
+	public Mono<User> removeFromFavorites(ServerWebExchange exchange, @RequestParam(name = "userId") UUID userId,
+			@RequestParam(name = "recipeId") UUID recipeId) {
+		User user = authorize.UserAuth(exchange);
+		if ((user != null && user.getUserID().equals(userId)) || user.getUserType() == 3)
+		try {
+			log.debug("Updating list of favorites for user id: " + userId);
+			return userService.removeFromFavorites(userId, recipeId);
+		} catch (Exception e) {
+			for (StackTraceElement st : e.getStackTrace())
+				log.debug(st.toString());
+		}
+		log.debug("Invalid user access, only same user and/or admin may update this list.");
+		exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
+		return null;
 	}
 
 }

@@ -23,7 +23,9 @@ public interface UserService {
 
 	Mono<List<Recipe>> getFavorites(UUID userid);
 
-	Mono<User> updateFavorites(UUID userid, UUID recipeid);
+	Mono<User> addToFavorites(UUID userid, UUID recipeid);
+	
+	Mono<User> removeFromFavorites(UUID userId, UUID recipeId);
 
 	Mono<Void> removeUser(UUID id);
 
