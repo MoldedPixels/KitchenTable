@@ -88,7 +88,7 @@ public class RecipeController {
 		return null;
 	}
 
-	@GetMapping(value = "/{recipeName}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/name/{recipeName}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Publisher<Recipe> getRecipeByName(ServerWebExchange exchange,
 
 			@PathVariable("recipeName") String recipeName) {
@@ -100,7 +100,7 @@ public class RecipeController {
 		return null;
 	}
 
-	@GetMapping(value = "/{recipeId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/id/{recipeId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Publisher<Recipe> getRecipeById(ServerWebExchange exchange, @PathVariable("recipeId") UUID recipeId) {
 		User u = authorize.UserAuth(exchange);
 		if (u != null) {
