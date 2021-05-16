@@ -182,9 +182,14 @@ public class User implements Serializable {
 			if (other.userID != null)
 				return false;
 		} else if (!userID.equals(other.userID))
+		{
 			return false;
-		if (userType != other.userType)
+		}
+
+		if (userType != other.userType) {
 			return false;
+		}
+			
 		return true;
 	}
 

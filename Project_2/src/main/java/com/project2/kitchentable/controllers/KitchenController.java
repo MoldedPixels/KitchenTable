@@ -2,6 +2,8 @@ package com.project2.kitchentable.controllers;
 
 import java.util.UUID;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,6 +33,8 @@ public class KitchenController {
 	private RecipeService recipeService;
 	private ReviewService reviewService;
 
+	private static Logger log = LogManager.getLogger(KitchenController.class);
+
 	@Autowired
 	public void setKitchenService(KitchenService kitchenService) {
 		this.kitchenService = kitchenService;
@@ -40,7 +44,7 @@ public class KitchenController {
 	public void setRecipeService(RecipeService recipeService) {
 		this.recipeService = recipeService;
 	}
-	
+
 	@Autowired
 	public void setReviewService(ReviewService reviewService) {
 		this.reviewService = reviewService;
@@ -48,7 +52,7 @@ public class KitchenController {
 
 	@PostMapping("/new")
 	public Mono<ResponseEntity<Kitchen>> addKitchen(@RequestBody Kitchen k) {
-		System.out.println("Making a new kitchen");
+		log.trace("Making a new kitchen");
 		k.setId(Uuids.timeBased());
 		k.setHeadUser(Uuids.timeBased());
 		k.setFamilyID(Uuids.timeBased());
@@ -61,7 +65,7 @@ public class KitchenController {
 			@RequestParam(name = "kitchen", required = false) UUID kID,
 			@RequestParam(name = "ingredient", required = false) UUID iID,
 			@RequestParam(name = "amount", required = false) Double amt) {
-		System.out.println("Adding to " + listname);
+		log.trace("Adding to %s", listname);
 		Kitchen k = kitchenService.getKitchenByID(kID).block();
 		return kitchenService.addFood(listname, k, iID, amt).map(kitchen -> ResponseEntity.status(201).body(kitchen))
 				.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(k)));
@@ -71,7 +75,7 @@ public class KitchenController {
 	public Mono<ResponseEntity<Kitchen>> removeFood(@RequestParam(name = "list", required = false) String listname,
 			@RequestParam(name = "kitchen", required = false) UUID kID,
 			@RequestParam(name = "ingredient", required = false) UUID iID,
-			@RequestParam(name = "amount", required = false) Double amt) throws Exception {
+			@RequestParam(name = "amount", required = false) Double amt) {
 		Kitchen k = kitchenService.getKitchenByID(kID).block();
 		return kitchenService.removeFood(listname, k, iID, amt).map(kitchen -> ResponseEntity.status(201).body(kitchen))
 				.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(k)));
@@ -80,31 +84,44 @@ public class KitchenController {
 
 	@GetMapping(value = "/cook")
 	public Mono<ResponseEntity<String>> cook(@RequestParam(name = "recipe", required = true) UUID recipe,
-			@RequestParam(name = "kitchen", required = true) UUID kID, 
+			@RequestParam(name = "kitchen", required = true) UUID kID,
 			@RequestParam(name = "review", required = false) String reviewBody,
 			@RequestParam(name = "score", required = false) Double score,
 			@RequestParam(name = "images", required = false) MultipartFile images) {
-		
+
 		return Mono.zip(kitchenService.getKitchenByID(kID), recipeService.getRecipeById(recipe)).flatMap(data -> {
 			Kitchen k = data.getT1();
 			Recipe r = data.getT2();
 
-			if((reviewBody != null) && (score != null)) {
+			if ((reviewBody != null) && (score != null)) {
 
-				return kitchenService.cook(r, k).flatMap(kitchen -> { // Attempt to cook 
-					Reviews rev = new Reviews(Uuids.timeBased(), Uuids.timeBased() /* This param will be changed to the logged in user's UUID */, recipe, score, reviewBody);
-					return reviewService.addReview(rev).map(review -> ResponseEntity.status(201).body(kitchen.toString() + "\n" + review.toString())) // Proceed to try to add review
-						.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(error.toString()))); // If error, assign error message to response
+				return kitchenService.cook(r, k).flatMap(kitchen -> { // Attempt to cook
+					Reviews rev = new Reviews(Uuids.timeBased(),
+							Uuids.timeBased() /* This param will be changed to the logged in user's UUID */, recipe,
+							score, reviewBody);
+					return reviewService.addReview(rev).map(
+							review -> ResponseEntity.status(201).body(kitchen.toString() + "\n" + review.toString())) // Proceed
+																														// to
+																														// try
+																														// to
+																														// add
+																														// review
+							.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(error.toString()))); // If
+																													// error,
+																													// assign
+																													// error
+																													// message
+																													// to
+																													// response
 				}).onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(error.toString())));
 
-			}
-			else {
+			} else {
 				return kitchenService.cook(r, k).map(kitchen -> ResponseEntity.status(201).body(kitchen.toString()))
 						.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(error.toString())));
 			}
-			
+
 		});
-		
+
 	}
 
 	@GetMapping(value = "/buyFood")
@@ -115,7 +132,7 @@ public class KitchenController {
 			@RequestParam(name = "amount", required = false) Double amt) {
 
 		Kitchen k = kitchenService.getKitchenByID(kID).block();
-		
+
 		if (k != null && k.getShoppingList().containsKey(iID)) {
 			Kitchen tempK = kitchenService.removeFood("shopping", k, iID, amt).block();
 			return kitchenService.addFood("inventory", tempK, iID, amt)

@@ -46,9 +46,8 @@ public class CassandraConfig {
 	@Bean
 	public CassandraMappingContext mappingContext(CqlSession cqlSession) {
 
-		CassandraMappingContext mappingContext = new CassandraMappingContext();
+		return new CassandraMappingContext();
 
-		return mappingContext;
 	}
 
 	@Bean
@@ -61,4 +60,3 @@ public class CassandraConfig {
 		return new CassandraTemplate(sessionFactory, converter);
 	}
 }
-

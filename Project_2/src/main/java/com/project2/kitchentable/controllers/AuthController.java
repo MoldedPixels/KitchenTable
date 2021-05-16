@@ -16,7 +16,7 @@ public class AuthController {
 	@Autowired
 	private JWTParser tokenService;
 	
-	public User UserAuth(ServerWebExchange exchange) {
+	public User userAuth(ServerWebExchange exchange) {
 		User u = null;
 		
 		try {
