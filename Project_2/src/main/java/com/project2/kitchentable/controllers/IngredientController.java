@@ -34,7 +34,7 @@ public class IngredientController {
 
 	@PostMapping("/new")
 	public Mono<ResponseEntity<Ingredient>> addIngredient(@RequestBody Ingredient i) {
-		System.out.println("Adding a new Ingredient");
+		log.trace("Adding a new Ingredient");
 		i.setIngredientId(Uuids.timeBased());
 
 		return ingredientService.addIngredient(i).map(ingredient -> ResponseEntity.status(201).body(ingredient))

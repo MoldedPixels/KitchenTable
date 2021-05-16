@@ -22,7 +22,7 @@ public class IngredientServiceImpl implements IngredientService {
 
 	@Override
 	public Mono<Ingredient> addIngredient(Ingredient i) {
-		log.trace("Adding ingredient" + i);
+		log.trace("Adding ingredient %s", i);
 		return ingredientRepo.save(i);
 	}
 

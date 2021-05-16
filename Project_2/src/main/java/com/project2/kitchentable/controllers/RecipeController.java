@@ -53,7 +53,7 @@ public class RecipeController {
 
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public Publisher<Recipe> getRecipes(ServerWebExchange exchange) {
-		User u = authorize.UserAuth(exchange);
+		User u = authorize.userAuth(exchange);
 		if (u != null) {
 			return recipeService.getRecipes();
 		}
@@ -64,7 +64,7 @@ public class RecipeController {
 	@PutMapping("/{recipeID}")
 	public Mono<Recipe> updateRecipe(ServerWebExchange exchange, @PathVariable("recipeID") String recipeID,
 			@RequestBody Recipe r) {
-		User user = authorize.UserAuth(exchange);
+		User user = authorize.userAuth(exchange);
 
 		if (user != null && user.getUserType() == 3) {
 			return recipeService.updateRecipe(r);
@@ -75,7 +75,7 @@ public class RecipeController {
 
 	@DeleteMapping("/{recipeID}")
 	public Mono<Void> removeRecipe(ServerWebExchange exchange, @PathVariable("recipeID") String recipeId) {
-		User user = authorize.UserAuth(exchange);
+		User user = authorize.userAuth(exchange);
 		if (user != null && user.getUserType() == 3) {
 			try {
 				return recipeService.removeRecipeById(UUID.fromString(recipeId));
@@ -91,7 +91,7 @@ public class RecipeController {
 	@GetMapping(value = "/name/{recipeName}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Publisher<Recipe> getRecipeByName(ServerWebExchange exchange,
 			@PathVariable("recipeName") String recipeName) {
-		User u = authorize.UserAuth(exchange);
+		User u = authorize.userAuth(exchange);
 		if (u != null) {
 			return recipeService.getRecipeByName(recipeName);
 		}
@@ -101,7 +101,7 @@ public class RecipeController {
 
 	@GetMapping(value = "/id/{recipeId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Publisher<Recipe> getRecipeById(ServerWebExchange exchange, @PathVariable("recipeId") UUID recipeId) {
-		User u = authorize.UserAuth(exchange);
+		User u = authorize.userAuth(exchange);
 		if (u != null) {
 			return recipeService.getRecipeById(recipeId);
 		}

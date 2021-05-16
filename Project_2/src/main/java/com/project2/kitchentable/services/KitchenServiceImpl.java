@@ -19,6 +19,8 @@ import reactor.core.publisher.Mono;
 @Service
 public class KitchenServiceImpl implements KitchenService {
 	private static Logger log = LogManager.getLogger(KitchenServiceImpl.class);
+	private String shopping = "shopping";
+	private String inventory = "inventory";
 
 	@Autowired
 	private ReactiveKitchenRepo kitchenRepo;
@@ -47,9 +49,9 @@ public class KitchenServiceImpl implements KitchenService {
 	@Override
 	public Mono<Kitchen> removeFood(String listname, Kitchen k, UUID ingredient, Double amount) {
 		Map<UUID, Double> list = null;
-		if (listname.equals("shopping")) {
+		if (listname.equals(shopping)) {
 			list = k.getShoppingList();
-		} else if (listname.equals("inventory")) {
+		} else if (listname.equals(inventory)) {
 			list = k.getInventory();
 		} else {
 		}
@@ -66,9 +68,9 @@ public class KitchenServiceImpl implements KitchenService {
 			}
 
 		}
-		if (listname.equals("shopping")) {
+		if (listname.equals(shopping)) {
 			k.setShoppingList(list);
-		} else if (listname.equals("inventory")) {
+		} else if (listname.equals(inventory)) {
 			k.setInventory(list);
 		}
 		
@@ -78,9 +80,9 @@ public class KitchenServiceImpl implements KitchenService {
 	@Override
 	public Mono<Kitchen> addFood(String listname, Kitchen k, UUID ingredient, Double amt) {
 		Map<UUID, Double> list = null;
-		if (listname.equals("shopping")) {
+		if (listname.equals(shopping)) {
 			list = k.getShoppingList();
-		} else if (listname.equals("inventory")) {
+		} else if (listname.equals(inventory)) {
 			list = k.getInventory();
 		} else {
 		}
@@ -93,9 +95,9 @@ public class KitchenServiceImpl implements KitchenService {
 				}
 			}
 		}
-		if (listname.equals("shopping")) {
+		if (listname.equals(shopping)) {
 			k.setShoppingList(list);
-		} else if (listname.equals("inventory")) {
+		} else if (listname.equals(inventory)) {
 			k.setInventory(list);
 		}
 
@@ -110,7 +112,7 @@ public class KitchenServiceImpl implements KitchenService {
 		for (UUID iID : rIngredients.keySet()) {
 			if (kIngredients.containsKey(iID)) {
 				if (kIngredients.get(iID) - rIngredients.get(iID) >= 0) {
-					k = this.removeFood("inventory", k, iID, rIngredients.get(iID)).block();
+					k = this.removeFood(inventory, k, iID, rIngredients.get(iID)).block();
 				} else {
 					log.trace("Unable to cook recipe: Insufficient amount of ingredient " + iID.toString());
 				}
@@ -124,7 +126,7 @@ public class KitchenServiceImpl implements KitchenService {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Map<UUID, Double> getShoppingList(String kitchenId) throws Exception {
+	public Map<UUID, Double> getShoppingList(String kitchenId) {
 		Mono<Kitchen> userKitchen = kitchenRepo.findById(kitchenId);
 		Map<UUID, Double> list = new HashMap<UUID, Double>();
 
@@ -142,7 +144,7 @@ public class KitchenServiceImpl implements KitchenService {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Map<UUID, Double> getKitchenInv(String kitchenId) throws Exception {
+	public Map<UUID, Double> getKitchenInv(String kitchenId) {
 		Mono<Kitchen> userKitchen = kitchenRepo.findById(kitchenId);
 		Map<UUID, Double> list = new HashMap<UUID, Double>();
 
