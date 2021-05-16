@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.datastax.oss.driver.api.core.uuid.Uuids;
+import com.project2.kitchentable.aspects.Admin;
+import com.project2.kitchentable.aspects.LoggedIn;
 import com.project2.kitchentable.beans.Recipe;
 import com.project2.kitchentable.beans.Requests;
 import com.project2.kitchentable.services.RecipeService;
@@ -33,6 +35,7 @@ public class RequestController {
 		this.recipeService = recipeService;
 	}
 
+	@LoggedIn
 	@PostMapping("/new")
 	public Mono<ResponseEntity<Requests>> addRequest(@RequestBody Requests q) {
 		q.setRequestId(Uuids.timeBased());
@@ -42,7 +45,7 @@ public class RequestController {
 		return requestService.addRequest(q).map(request -> ResponseEntity.status(201).body(request))
 				.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(q)));
 	}
-
+	@Admin
 	@GetMapping("/approve")
 	public Mono<ResponseEntity<Requests>> approveRequest(@RequestBody UUID qID) {
 		Requests q = requestService.getRequestById(qID).block();
@@ -60,6 +63,7 @@ public class RequestController {
 				.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(q)));
 	}
 
+	@Admin
 	@GetMapping("/reject")
 	public Mono<ResponseEntity<Requests>> rejectRequest(@RequestBody UUID qID) {
 		Requests q = requestService.getRequestById(qID).block();

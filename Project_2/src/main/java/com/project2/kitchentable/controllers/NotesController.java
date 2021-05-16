@@ -4,7 +4,6 @@ import java.util.UUID;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,10 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ServerWebExchange;
 
+import com.project2.kitchentable.aspects.Admin;
+import com.project2.kitchentable.aspects.LoggedIn;
 import com.project2.kitchentable.beans.Notes;
-import com.project2.kitchentable.beans.User;
 import com.project2.kitchentable.services.NoteService;
-
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -29,48 +28,33 @@ public class NotesController {
 
 	@Autowired
 	private NoteService noteService;
-	@Autowired
-	private AuthController authorize;
+
 	private static Logger log = LogManager.getLogger(NotesController.class);
-	
-	@PostMapping("/add")
+
+	@LoggedIn
+	@PostMapping("add")
 	public Mono<Notes> addNote(ServerWebExchange exchange, @RequestBody Notes n) {
-		User user = authorize.UserAuth(exchange);
-		if(user != null && user.cooked(n.getRecipeId(), user)) {
-			log.trace("%s is trying to add a note", user.getFirstname());
-			return noteService.addNotes(n);
-		}
-		exchange.getResponse().setStatusCode(HttpStatus.BAD_REQUEST);
-		return null;
+		log.trace("Adding a note to recipe: " + n.getRecipeId());
+		return noteService.addNotes(n);
 	}
-	
-	@GetMapping(value="/getall/{recipeid}", produces = MediaType.APPLICATION_JSON_VALUE)
+
+	@LoggedIn
+	@GetMapping(value = "getall/{recipeid}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Flux<Notes> getNotesByRecipe(ServerWebExchange exchange, @PathVariable("recipeid") String recipeID) {
-		User u = authorize.UserAuth(exchange);
-		if(u != null) {
-			return noteService.getNotes(UUID.fromString(recipeID));
-		}
-		exchange.getResponse().setStatusCode(HttpStatus.BAD_REQUEST);
-		return null;
+		return noteService.getNotes(UUID.fromString(recipeID));
 	}
-	
-	@PutMapping("/{noteid}")
-	public Mono<Notes> updateNote(ServerWebExchange exchange, @PathVariable("noteid") String noteID, @RequestBody Notes n){
-		User user = authorize.UserAuth(exchange);
-		if(user != null && n.getUserId() == user.getUserID()) {
-			return noteService.updateNotes(n);
-		}
-		exchange.getResponse().setStatusCode(HttpStatus.BAD_REQUEST);
-		return null;
+
+	@Admin
+	@PutMapping("{noteid}")
+	public Mono<Notes> updateNote(ServerWebExchange exchange, @PathVariable("noteid") String noteID,
+			@RequestBody Notes n) {
+		return noteService.updateNotes(n);
 	}
-	
-	@DeleteMapping("/{recipeid}/{userid}")
-	public Mono<Void> removeNote(ServerWebExchange exchange, @PathVariable("recipeid") String recipeID, @PathVariable("userid") String userID){
-		User user = authorize.UserAuth(exchange);
-		if(user != null && (user.getUserType() == 3 || UUID.fromString(userID) == user.getUserID())) {
-			return noteService.removeNotes(UUID.fromString(recipeID), UUID.fromString(userID));
-		}
-		exchange.getResponse().setStatusCode(HttpStatus.BAD_REQUEST);
-		return null;
+
+	@Admin
+	@DeleteMapping("{recipeid}/{userid}")
+	public Mono<Void> removeNote(ServerWebExchange exchange, @PathVariable("recipeid") String recipeID,
+			@PathVariable("userid") String userID) {
+		return noteService.removeNotes(UUID.fromString(recipeID), UUID.fromString(userID));
 	}
 }

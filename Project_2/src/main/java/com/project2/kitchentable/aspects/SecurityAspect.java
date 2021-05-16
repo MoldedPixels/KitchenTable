@@ -31,6 +31,17 @@ public class SecurityAspect {
 		}
 		return;
 	}
+	
+	@Around("familyHook()")
+	public void isFamilyMember(ProceedingJoinPoint pjp) throws Throwable {
+		if (pjp.getArgs().length == 0) {
+			throw new Exception("Invalid arguments to adviced method " + pjp.getSignature());
+		}
+		
+		if (this.isFamilyMember((ServerWebExchange) pjp.getArgs()[0], (UUID) pjp.getArgs()[1])) {
+			pjp.proceed();
+		}
+	}
 
 	@Around("headUserHook()")
 	public void authorizedUser(ProceedingJoinPoint pjp) throws Throwable {
@@ -93,6 +104,10 @@ public class SecurityAspect {
 
 	@Pointcut("@annotation(com.project2.kitchentable.aspects.HeadUser)")
 	public void headUserHook() {
+		/* Empty method for Hook */ }
+	
+	@Pointcut("@annotation(com.project2.kitchentable.aspects.FamilyMember)")
+	public void familyHook() {
 		/* Empty method for Hook */ }
 
 	@Pointcut("@annotation(com.project2.kitchentable.aspects.LoggedIn)")

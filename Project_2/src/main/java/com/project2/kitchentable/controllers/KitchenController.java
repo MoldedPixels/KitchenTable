@@ -15,6 +15,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ServerWebExchange;
 
 import com.datastax.oss.driver.api.core.uuid.Uuids;
+import com.project2.kitchentable.aspects.Admin;
+import com.project2.kitchentable.aspects.FamilyMember;
+import com.project2.kitchentable.aspects.HeadUser;
+import com.project2.kitchentable.aspects.LoggedIn;
 import com.project2.kitchentable.beans.Kitchen;
 import com.project2.kitchentable.services.KitchenService;
 import com.project2.kitchentable.services.RecipeService;
@@ -47,6 +51,7 @@ public class KitchenController {
 		this.reviewService = reviewService;
 	}
 
+	@Admin
 	@PostMapping("/new")
 	public Mono<ResponseEntity<Kitchen>> addKitchen(@RequestBody Kitchen k) {
 		System.out.println("Making a new kitchen");
@@ -57,6 +62,7 @@ public class KitchenController {
 				.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(k)));
 	}
 
+	@LoggedIn
 	@PostMapping("/addToList")
 	public Mono<ResponseEntity<Kitchen>> addToList(@RequestParam(name = "list", required = false) String listname,
 			@RequestParam(name = "kitchen", required = false) UUID kID,
@@ -71,6 +77,8 @@ public class KitchenController {
 
 	}
 
+	@LoggedIn
+	@FamilyMember
 	@GetMapping(value = "/removeFood")
 	public Mono<ResponseEntity<Kitchen>> removeFood(@RequestParam(name = "list", required = false) String listname,
 			@RequestParam(name = "kitchen", required = false) UUID kID,
@@ -82,13 +90,15 @@ public class KitchenController {
 
 	}
 
+	@LoggedIn
+	@FamilyMember
 	@GetMapping(value = "/cook")
 	public Mono<ResponseEntity<String>> cook(@RequestParam(name = "recipe", required = true) UUID recipe,
 			@RequestParam(name = "kitchen", required = true) UUID kID,
 			@RequestParam(name = "review", required = false) String reviewBody,
 			@RequestParam(name = "score", required = false) Double score,
 			@RequestParam(name = "images", required = false) MultipartFile images) {
-		
+
 		return Mono.zip(kitchenService.getKitchenByID(kID), recipeService.getRecipeById(recipe)).flatMap(data -> {
 			Kitchen k = data.getT1();
 			Recipe r = data.getT2();
@@ -124,6 +134,8 @@ public class KitchenController {
 
 	}
 
+	@HeadUser
+	@FamilyMember
 	@GetMapping(value = "/buyFood")
 	public Mono<ResponseEntity<Kitchen>> buyFood(ServerWebExchange exchange,
 			@RequestParam(name = "list", required = false) String listname,

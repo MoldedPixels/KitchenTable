@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ServerWebExchange;
 
 import com.datastax.oss.driver.api.core.uuid.Uuids;
+import com.project2.kitchentable.aspects.Admin;
 import com.project2.kitchentable.beans.Ingredient;
 import com.project2.kitchentable.services.IngredientService;
 import reactor.core.publisher.Mono;
@@ -31,16 +32,16 @@ public class IngredientController {
 	public void setIngredientService(IngredientService ingredientService) {
 		this.ingredientService = ingredientService;
 	}
-
-	@PostMapping("/new")
+	@Admin
+	@PostMapping("new")
 	public Mono<ResponseEntity<Ingredient>> addIngredient(@RequestBody Ingredient i) {
 		System.out.println("Adding a new Ingredient");
 		i.setIngredientId(Uuids.timeBased());
 		return ingredientService.addIngredient(i).map(ingredient -> ResponseEntity.status(201).body(ingredient))
-				.onErrorStop();
+				.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(i)));
 	}
-	
-	@GetMapping(value="/getall", produces = MediaType.APPLICATION_JSON_VALUE)
+	@Admin
+	@GetMapping(value="getall", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Publisher<Ingredient> getIngredients(ServerWebExchange exchange) {
 		try {
 			return ingredientService.getIngredients();

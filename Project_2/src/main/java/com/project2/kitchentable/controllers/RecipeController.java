@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ServerWebExchange;
 
 import com.datastax.oss.driver.api.core.uuid.Uuids;
+import com.project2.kitchentable.aspects.Admin;
+import com.project2.kitchentable.aspects.LoggedIn;
 import com.project2.kitchentable.beans.Recipe;
 import com.project2.kitchentable.beans.User;
 import com.project2.kitchentable.services.RecipeService;
@@ -36,6 +38,7 @@ public class RecipeController {
 	private AuthController authorize;
 	private static Logger log = LogManager.getLogger(RecipeController.class);
 
+	@Admin
 	@PostMapping("/add")
 	public Mono<ResponseEntity<Recipe>> addRecipe(ServerWebExchange exchange, @RequestBody Recipe r) {
 		try {
@@ -43,7 +46,7 @@ public class RecipeController {
 			r.setRecipeId(Uuids.timeBased());
 			return recipeService.addRecipe(r).map(recipe -> ResponseEntity.status(201).body(recipe))
 					.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(r)));
-		}catch(Exception e) {
+		} catch (Exception e) {
 			for (StackTraceElement st : e.getStackTrace())
 				log.debug(st.toString());
 		}
@@ -51,6 +54,7 @@ public class RecipeController {
 		return null;
 	}
 
+	@LoggedIn
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public Publisher<Recipe> getRecipes(ServerWebExchange exchange) {
 		User u = authorize.UserAuth(exchange);
@@ -61,52 +65,31 @@ public class RecipeController {
 		return null;
 	}
 
-	@PutMapping("/{recipeID}")
-	public Mono<Recipe> updateRecipe(ServerWebExchange exchange, @PathVariable("recipeID") String recipeID,
-			@RequestBody Recipe r) {
-		User user = authorize.UserAuth(exchange);
-
-		if (user != null && user.getUserType() == 3) {
-			return recipeService.updateRecipe(r);
-		}
-		exchange.getResponse().setStatusCode(HttpStatus.BAD_REQUEST);
-		return null;
+	@Admin
+	@PutMapping("update/{recipeID}")
+	public Mono<ResponseEntity<Recipe>> updateRecipe(ServerWebExchange exchange,
+			@PathVariable("recipeID") String recipeID, @RequestBody Recipe r) {
+		return recipeService.updateRecipe(r).map(recipe -> ResponseEntity.status(201).body(recipe))
+				.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(r)));
 	}
 
-	@DeleteMapping("/{recipeID}")
+	@DeleteMapping("remove/{recipeID}")
 	public Mono<Void> removeRecipe(ServerWebExchange exchange, @PathVariable("recipeID") String recipeId) {
-		User user = authorize.UserAuth(exchange);
-		if (user != null && user.getUserType() == 3) {
-			try {
-				return recipeService.removeRecipeById(UUID.fromString(recipeId));
-			}catch(Exception e) {
-				for (StackTraceElement st : e.getStackTrace())
-					log.debug(st.toString());
-			}
-		}
-		exchange.getResponse().setStatusCode(HttpStatus.BAD_REQUEST);
-		return null;
+
+		return recipeService.removeRecipeById(UUID.fromString(recipeId));
 	}
 
+	@LoggedIn
 	@GetMapping(value = "/{recipeName}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Publisher<Recipe> getRecipeByName(ServerWebExchange exchange,
-
 			@PathVariable("recipeName") String recipeName) {
-		User u = authorize.UserAuth(exchange);
-		if (u != null) {
-			return recipeService.getRecipeByName(recipeName);
-		}
-		exchange.getResponse().setStatusCode(HttpStatus.BAD_REQUEST);
-		return null;
-	}
+		return recipeService.getRecipeByName(recipeName);
 
+	}
+	
+	@LoggedIn
 	@GetMapping(value = "/{recipeId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Publisher<Recipe> getRecipeById(ServerWebExchange exchange, @PathVariable("recipeId") UUID recipeId) {
-		User u = authorize.UserAuth(exchange);
-		if (u != null) {
-			return recipeService.getRecipeById(recipeId);
-		}
-		exchange.getResponse().setStatusCode(HttpStatus.BAD_REQUEST);
-		return null;
+		return recipeService.getRecipeById(recipeId);
 	}
 }

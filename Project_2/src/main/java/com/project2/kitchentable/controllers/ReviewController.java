@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project2.kitchentable.services.ReviewService;
+import com.project2.kitchentable.aspects.Admin;
+import com.project2.kitchentable.aspects.LoggedIn;
 import com.project2.kitchentable.beans.Reviews;
 
 import reactor.core.publisher.Mono;
@@ -27,19 +29,24 @@ public class ReviewController {
 		this.reviewService = reviewService;
 	}
 	
-	@GetMapping(value = "/{recipe}", produces = MediaType.APPLICATION_NDJSON_VALUE)
+	@LoggedIn
+	@GetMapping(value = "byRecipe/{recipe}", produces = MediaType.APPLICATION_NDJSON_VALUE)
 	public Mono<ResponseEntity<List<Reviews>>> viewReviewsByRecipe(@PathVariable("recipe") UUID recipe) {
-		return reviewService.getReviewsByRecipeId(recipe).collectList().map(reviews -> ResponseEntity.status(200).body(reviews));
+		return reviewService.getReviewsByRecipeId(recipe).collectList().map(reviews -> ResponseEntity.status(200).body(reviews))
+				.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body((List<Reviews>)null)));
 	}
 	
-	@GetMapping(value = "/user/{user}", produces = MediaType.APPLICATION_NDJSON_VALUE)
+	@Admin
+	@GetMapping(value = "byUser/{user}", produces = MediaType.APPLICATION_NDJSON_VALUE)
 	public Mono<ResponseEntity<List<Reviews>>> viewReviewsByUser(@PathVariable("user") UUID user) {
-		return reviewService.getReviewsByUserId(user).collectList().map(reviews -> ResponseEntity.status(200).body(reviews));
+		return reviewService.getReviewsByUserId(user).collectList().map(reviews -> ResponseEntity.status(200).body(reviews))
+				.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body((List<Reviews>)null)));
 	}
-	
-	@GetMapping(value = "/review/{review}", produces = MediaType.APPLICATION_NDJSON_VALUE)
+	@LoggedIn
+	@GetMapping(value = "{review}", produces = MediaType.APPLICATION_NDJSON_VALUE)
 	public Mono<ResponseEntity<Reviews>> viewReview(@PathVariable("review") UUID review) {
-		return reviewService.getReviewById(review).map(reviews -> ResponseEntity.status(200).body(reviews));
+		return reviewService.getReviewById(review).map(reviews -> ResponseEntity.status(200).body(reviews))
+				.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body((Reviews)null)));
 	}
 
 }
