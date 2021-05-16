@@ -56,7 +56,7 @@ public class UserController {
 		return userService.getUsers();
 	}
 
-	@PostMapping("users")
+	@PostMapping("register")
 	public Mono<ResponseEntity<User>> registerUser(@RequestBody User u) {
 		u.setUserID(Uuids.timeBased());
 		if (u.getFamilyID() == null) {
@@ -125,6 +125,7 @@ public class UserController {
 		exchange.getResponse().setStatusCode(HttpStatus.BAD_REQUEST);
 		return null;
 	}
+
 	@SuppressWarnings("unlikely-arg-type")
 	@DeleteMapping("users/{userID}/{kitchenID}")
 	public Mono<User> removeUserKitchen(ServerWebExchange exchange, @PathVariable("kitchenID") String kitchenID,
