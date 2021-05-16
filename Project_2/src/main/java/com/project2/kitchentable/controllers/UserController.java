@@ -159,7 +159,7 @@ public class UserController {
 	@GetMapping("users/favorites")
 	public Mono<List<Recipe>> getFavorites(ServerWebExchange exchange, @RequestParam(name = "userid") UUID userId) {
 		User user = authorize.UserAuth(exchange);
-		if ((user != null && user.getUserID().equals(userId)) || user.getUserType() == 3)
+		if ((user != null && user.getUserID().equals(userId)) || (user != null && user.getUserType() == 3))
 			try {
 				log.debug("Gathering list of favorites..");
 				return userService.getFavorites(userId);
