@@ -28,7 +28,7 @@ public class Recipe implements Serializable {
 	private String recipeName;
 	@Column
 	private Map<UUID, Double> ingredients;
-	@PrimaryKeyColumn(name = "rating", ordinal = 1, type = PrimaryKeyType.CLUSTERED, ordering = Ordering.DESCENDING)
+	@Column
 	private double rating;
 
 	public Recipe() {
