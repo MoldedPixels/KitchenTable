@@ -1,6 +1,7 @@
 package com.project2.kitchentable.controllers;
 
-import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
@@ -17,10 +18,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ServerWebExchange;
 
 import com.datastax.oss.driver.api.core.uuid.Uuids;
+import com.project2.kitchentable.beans.Recipe;
 import com.project2.kitchentable.beans.User;
 import com.project2.kitchentable.services.UserService;
 import com.project2.kitchentable.utils.JWTParser;
@@ -33,106 +36,118 @@ public class UserController {
 	private JWTParser tokenService;
 	@Autowired
 	private AuthController authorize;
-	
+
 	private static Logger log = LogManager.getLogger(UserController.class);
-	
+
 	@Autowired
 	public void setUserService(UserService userService) {
 		this.userService = userService;
 	}
-	
+
 	@Autowired
 	public void setTokenServicer(JWTParser parser) {
 		this.tokenService = parser;
 	}
-	
+
 	@GetMapping(value = "users", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Publisher<User> getUsers(ServerWebExchange exchange) {
 		User u = authorize.UserAuth(exchange);
-		if(u != null && u.getUserType() == 3) {
+		if (u != null && u.getUserType() == 3) {
 			return userService.getUsers();
 		}
 		exchange.getResponse().setStatusCode(HttpStatus.BAD_REQUEST);
 		return null;
 	}
-	
+
 	@PostMapping("users")
 	public Mono<ResponseEntity<User>> registerUser(@RequestBody User u) {
 		u.setUserID(Uuids.timeBased());
-		if(u.getFamilyID() == null) {
+		if (u.getFamilyID() == null) {
 			u.setFamilyID(Uuids.timeBased());
 		}
-		if(u.getKitchenID() == null) {
+		if (u.getKitchenID() == null) {
 			u.setKitchenID(Uuids.timeBased());
+		}
+		if (u.getFavorites() == null) {
+			List<UUID> favorites = new ArrayList<>();
+			u.setFavorites(favorites);
+		}
+		if (u.getCookedRecipes() == null) {
+			List<UUID> cooked = new ArrayList<>();
+			u.setCookedRecipes(cooked);
 		}
 		return userService.addUser(u).map(user -> ResponseEntity.status(201).body(user))
 				.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(u)));
 	}
-	
-	@PostMapping(value="login", produces = MediaType.APPLICATION_NDJSON_VALUE)
-	public Publisher<User> login(ServerWebExchange exchange, @RequestBody User u) {
-		return userService.getUsersByName(u.getLastname(), u.getFirstname()).delayElement(Duration.ofSeconds(2)).doOnNext(user -> {
+
+	@PostMapping(value = "login", produces = MediaType.APPLICATION_NDJSON_VALUE)
+	public Publisher<User> login(ServerWebExchange exchange, @RequestParam(name = "userid") UUID userid) {
+		return userService.getUserByID(userid).doOnNext(user -> {
 			try {
-				exchange.getResponse().addCookie(ResponseCookie.from("token", tokenService.makeToken(user)).httpOnly(true).build());
-			}catch(Exception e) {
+				exchange.getResponse()
+						.addCookie(ResponseCookie.from("token", tokenService.makeToken(user)).httpOnly(true).build());
+			} catch (Exception e) {
 				exchange.getResponse().setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 		});
 	}
-	
+
 	@DeleteMapping("login")
 	public ResponseEntity<Void> logout(ServerWebExchange exchange) {
 		try {
 			exchange.getResponse().addCookie(ResponseCookie.from("token", "").httpOnly(true).build());
-		}catch(Exception e) {
+		} catch (Exception e) {
 			exchange.getResponse().setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return ResponseEntity.noContent().build();
 	}
-	
+
 	@PutMapping("users/{userID}")
-	public Mono<User> updateUser(ServerWebExchange exchange, @PathVariable("userID") String userID, @RequestBody User u){
+	public Mono<User> updateUser(ServerWebExchange exchange, @PathVariable("userID") String userID,
+			@RequestBody User u) {
 		User user = authorize.UserAuth(exchange);
-		
-		if(user != null && user.getUserType() == 3) {
+
+		if (user != null && user.getUserType() == 3) {
 			return userService.updateUser(u);
 		}
 		exchange.getResponse().setStatusCode(HttpStatus.BAD_REQUEST);
 		return null;
 	}
-	
+
 	@SuppressWarnings("unlikely-arg-type")
 	@PutMapping("users/{userID}/{kitchenID}")
-	public Mono<User> updateUserKitchen(ServerWebExchange exchange, @PathVariable("userID") String userID, @PathVariable("kitchenID") String kitchenID, @RequestBody User u){
+	public Mono<User> updateUserKitchen(ServerWebExchange exchange, @PathVariable("userID") String userID,
+			@PathVariable("kitchenID") String kitchenID, @RequestBody User u) {
 		User user = authorize.UserAuth(exchange);
-		
-		if(user != null && u.getUserType() == 2 && user.getKitchenID() == UUID.fromString(kitchenID)) {
+
+		if (user != null && u.getUserType() == 2 && user.getKitchenID() == UUID.fromString(kitchenID)) {
 			u.setKitchenID(UUID.fromString(kitchenID));
 			return userService.updateUser(u);
 		}
 		exchange.getResponse().setStatusCode(HttpStatus.BAD_REQUEST);
 		return null;
 	}
-	
+
 	@SuppressWarnings("unlikely-arg-type")
 	@DeleteMapping("users/{userID}/{kitchenID}")
-	public Mono<User> removeUserKitchen(ServerWebExchange exchange, @PathVariable("kitchenID") String kitchenID, @RequestBody User u){
+	public Mono<User> removeUserKitchen(ServerWebExchange exchange, @PathVariable("kitchenID") String kitchenID,
+			@RequestBody User u) {
 		User user = authorize.UserAuth(exchange);
 
-		if(user != null && user.getUserType() == 2 && user.getKitchenID() == UUID.fromString(kitchenID)) {
-				return userService.setKitchenNull(u);
+		if (user != null && user.getUserType() == 2 && user.getKitchenID() == UUID.fromString(kitchenID)) {
+			return userService.setKitchenNull(u);
 		}
 		exchange.getResponse().setStatusCode(HttpStatus.BAD_REQUEST);
 		return null;
 	}
-	
+
 	@DeleteMapping("users/{userID}")
-	public Mono<Void> removeUser(ServerWebExchange exchange, @PathVariable("userID") String userID){
+	public Mono<Void> removeUser(ServerWebExchange exchange, @PathVariable("userID") String userID) {
 		User user = authorize.UserAuth(exchange);
-		if(user != null && user.getUserType() == 3) {
+		if (user != null && user.getUserType() == 3) {
 			try {
 				return userService.removeUser(UUID.fromString(userID));
-			}catch(Exception e) {
+			} catch (Exception e) {
 				for (StackTraceElement st : e.getStackTrace())
 					log.debug(st.toString());
 			}
@@ -140,5 +155,18 @@ public class UserController {
 		exchange.getResponse().setStatusCode(HttpStatus.BAD_REQUEST);
 		return null;
 	}
-	
+
+	@GetMapping("users/favorites")
+	public Mono<List<Recipe>> getFavorites(@RequestParam(name = "userid") UUID userId) {
+		log.debug("Gathering list of favorites..");
+		return userService.getFavorites(userId);
+
+	}
+
+	@PutMapping("users/favorites/update")
+	public Mono<User> updateFavorites(@RequestParam(name = "userId") UUID userId, @RequestParam(name = "recipeId") UUID recipeId) {
+		log.debug("Update list of favorites for user id: " + userId);
+		return userService.updateFavorites(userId, recipeId);
+	}
+
 }

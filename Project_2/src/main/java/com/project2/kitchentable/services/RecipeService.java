@@ -15,10 +15,10 @@ public interface RecipeService {
 
 	Mono<Recipe> updateRecipe(Recipe r);
 
-	Mono<Void> removeRecipe(UUID uuid);
+	Mono<Void> removeRecipeById(UUID id);
 
-	Mono<Recipe> getRecipeByID(UUID id);
+	Mono<Recipe> getRecipeById(UUID recipeId);
 
-	Mono<Recipe> getRecipeByName(String name);
+	Mono<Recipe> getRecipeByName(String recipeName);
 
 }

@@ -46,11 +46,11 @@ public class RequestController {
 	@GetMapping("/approve")
 	public Mono<ResponseEntity<Requests>> approveRequest(@RequestBody UUID qID) {
 		Requests q = requestService.getRequestById(qID).block();
-		if (q != null && recipeService.getRecipeByID(q.getRecipeId()) != null) {
-			Recipe r = recipeService.getRecipeByID(q.getRecipeId()).block();
+		if (q != null && recipeService.getRecipeById(q.getRecipeId()) != null) {
+			Recipe r = recipeService.getRecipeById(q.getRecipeId()).block();
 			if (r != null) {
 				r.setCuisine(q.getCuisine());
-				r.setName(q.getName());
+				r.setRecipeName(q.getName());
 				r.setIngredients(q.getIngredients());
 				recipeService.updateRecipe(r);
 			}
