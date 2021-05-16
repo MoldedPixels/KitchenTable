@@ -176,7 +176,7 @@ public class UserController {
 	public Mono<User> addToFavorites(ServerWebExchange exchange, @RequestParam(name = "userId") UUID userId,
 			@RequestParam(name = "recipeId") UUID recipeId) {
 		User user = authorize.UserAuth(exchange);
-		if ((user != null && user.getUserID().equals(userId)) || user.getUserType() == 3)
+		if ((user != null && user.getUserID().equals(userId)) || (user !=null && user.getUserType() == 3))
 		try {
 			log.debug("Updating list of favorites for user id: " + userId);
 			return userService.addToFavorites(userId, recipeId);
@@ -193,7 +193,7 @@ public class UserController {
 	public Mono<User> removeFromFavorites(ServerWebExchange exchange, @RequestParam(name = "userId") UUID userId,
 			@RequestParam(name = "recipeId") UUID recipeId) {
 		User user = authorize.UserAuth(exchange);
-		if ((user != null && user.getUserID().equals(userId)) || user.getUserType() == 3)
+		if ((user != null && user.getUserID().equals(userId)) || (user !=null && user.getUserType() == 3))
 		try {
 			log.debug("Updating list of favorites for user id: " + userId);
 			return userService.removeFromFavorites(userId, recipeId);
