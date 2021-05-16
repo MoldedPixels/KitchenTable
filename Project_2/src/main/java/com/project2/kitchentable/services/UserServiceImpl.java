@@ -81,7 +81,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Mono<User> updateFavorites(UUID userId, UUID recipeId) {
+	public Mono<User> addToFavorites(UUID userId, UUID recipeId) {
 		// Retrieve user from database
 		log.debug("Attempting to update user's favorites list...");
 		return userRepo.findByUserID(userId).flatMap(user -> {
@@ -92,6 +92,22 @@ public class UserServiceImpl implements UserService {
 			}
 			log.debug("List is valid, adding recipe to user's favorite list...");
 			user.getFavorites().add(recipeId);
+			return userRepo.save(user);
+		});
+	}
+
+	@Override
+	public Mono<User> removeFromFavorites(UUID userId, UUID recipeId) {
+		// Retrieve user from database
+		log.debug("Attempting to update user's favorites list...");
+		return userRepo.findByUserID(userId).flatMap(user -> {
+			// Retrieve user's list of favorites
+			if (user.getFavorites() == null) {
+				log.debug("List was null, nothing to remove.");
+				return userRepo.save(user);
+			}
+			log.debug("List is valid, removing recipe from user's favorite list...");
+			user.getFavorites().remove(recipeId);
 			return userRepo.save(user);
 		});
 	}
