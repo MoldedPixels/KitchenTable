@@ -33,7 +33,7 @@ public class NotesController {
 	private AuthController authorize;
 	private static Logger log = LogManager.getLogger(NotesController.class);
 	
-	@PostMapping("/add")
+	@PostMapping
 	public Mono<Notes> addNote(ServerWebExchange exchange, @RequestBody Notes n) {
 		User user = authorize.userAuth(exchange);
 		if(user != null) {
@@ -45,7 +45,7 @@ public class NotesController {
 		return null;
 	}
 	
-	@GetMapping(value="/getall/{recipeid}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value="/{recipeid}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Flux<Notes> getNotesByRecipe(ServerWebExchange exchange, @PathVariable("recipeid") String recipeID) {
 		User u = authorize.userAuth(exchange);
 		if(u != null) {

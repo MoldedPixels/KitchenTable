@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -48,7 +49,7 @@ public class KitchenController {
 		this.reviewService = reviewService;
 	}
 
-	@PostMapping("/new")
+	@PostMapping
 	public Mono<ResponseEntity<Kitchen>> addKitchen(ServerWebExchange exchange, @RequestBody Kitchen k) {
 		User user = authorize.userAuth(exchange);
 		if(user == null) {
@@ -62,7 +63,7 @@ public class KitchenController {
 				.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(k)));
 	}
 
-	@PostMapping("/addToList")
+	@PutMapping
 	public Mono<ResponseEntity<Kitchen>> addToList(ServerWebExchange exchange, @RequestParam(name = "list", required = false) String listname,
 			@RequestParam(name = "ingredient", required = false) UUID iID,
 			@RequestParam(name = "amount", required = false) Double amt) {
@@ -75,7 +76,7 @@ public class KitchenController {
 
 	}
 
-	@DeleteMapping(value = "/removeFood")
+	@DeleteMapping
 	public Mono<ResponseEntity<Kitchen>> removeFood(ServerWebExchange exchange, @RequestParam(name = "list", required = false) String listname,
 			@RequestParam(name = "ingredient", required = false) UUID iID,
 			@RequestParam(name = "amount", required = false) Double amt) {

@@ -5,7 +5,6 @@ import org.apache.logging.log4j.Logger;
 import org.reactivestreams.Publisher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,7 +31,7 @@ public class IngredientController {
 		this.ingredientService = ingredientService;
 	}
 
-	@PostMapping("/new")
+	@PostMapping
 	public Mono<ResponseEntity<Ingredient>> addIngredient(@RequestBody Ingredient i) {
 		log.trace("Adding a new Ingredient");
 		i.setIngredientId(Uuids.timeBased());
@@ -41,7 +40,7 @@ public class IngredientController {
 				.onErrorStop();
 	}
 	
-	@GetMapping(value="/getall", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping
 	public Publisher<Ingredient> getIngredients(ServerWebExchange exchange) {
 		try {
 			return ingredientService.getIngredients();
