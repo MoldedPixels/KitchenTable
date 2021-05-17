@@ -1,5 +1,6 @@
 package com.project2.kitchentable.services;
 
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -48,12 +49,15 @@ public class KitchenServiceImpl implements KitchenService {
 
 	@Override
 	public Mono<Kitchen> removeFood(String listname, Kitchen k, UUID ingredient, Double amount) {
-		Map<UUID, Double> list = null;
+		Map<UUID, Double> list = new HashMap<>();
 		if (listname.equals(shopping)) {
-			list = k.getShoppingList();
+			if(k.getShoppingList() != null) {
+				list = k.getShoppingList();
+			}
 		} else if (listname.equals(inventory)) {
-			list = k.getInventory();
-		} else {
+			if(k.getInventory() != null) {
+				list = k.getInventory();
+			}
 		}
 		for (UUID iID : list.keySet()) {
 			if (iID.equals(ingredient)) {
@@ -61,6 +65,8 @@ public class KitchenServiceImpl implements KitchenService {
 				if (newAmt > 0) {
 					list.replace(iID, newAmt);
 					log.trace("Successfully removed " + amount + "of " + ingredient);
+				} else if (newAmt == 0){
+					list.remove(iID);
 				} else {
 					log.trace("Failed to remove " + amount + "of " + ingredient
 							+ ". The requested amount was too large.");
@@ -74,24 +80,26 @@ public class KitchenServiceImpl implements KitchenService {
 			k.setInventory(list);
 		}
 		
-		return Mono.just(k);
+		return updateKitchen(k);
 	}
 
 	@Override
 	public Mono<Kitchen> addFood(String listname, Kitchen k, UUID ingredient, Double amt) {
-		Map<UUID, Double> list = null;
+		Map<UUID, Double> list = new HashMap<>();
 		if (listname.equals(shopping)) {
-			list = k.getShoppingList();
+			if(k.getShoppingList() != null) {
+				list = k.getShoppingList();
+			}
 		} else if (listname.equals(inventory)) {
-			list = k.getInventory();
-		} else {
+			if(k.getInventory() != null) {
+				list = k.getInventory();
+			}
 		}
-		if (list.putIfAbsent(ingredient, amt) == null) {
+		if (list.putIfAbsent(ingredient, amt) != null) {
 			for (UUID iID : list.keySet()) {
 				if (iID.equals(ingredient)) {
 					double newAmt = list.get(iID) + amt;
 					list.replace(iID, newAmt);
-					log.trace("Successfully added " + amt + "to " + ingredient);
 				}
 			}
 		}
@@ -101,7 +109,7 @@ public class KitchenServiceImpl implements KitchenService {
 			k.setInventory(list);
 		}
 
-		return Mono.just(k);
+		return updateKitchen(k);
 	}
 
 	@Override
@@ -112,7 +120,7 @@ public class KitchenServiceImpl implements KitchenService {
 		for (UUID iID : rIngredients.keySet()) {
 			if (kIngredients.containsKey(iID)) {
 				if (kIngredients.get(iID) - rIngredients.get(iID) >= 0) {
-					k = this.removeFood(inventory, k, iID, rIngredients.get(iID)).block();
+					return this.removeFood(inventory, k, iID, rIngredients.get(iID)).delayElement(Duration.ofSeconds(2));
 				} else {
 					log.trace("Unable to cook recipe: Insufficient amount of ingredient " + iID.toString());
 				}
