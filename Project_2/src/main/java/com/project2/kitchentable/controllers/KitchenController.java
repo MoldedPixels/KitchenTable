@@ -30,14 +30,14 @@ import reactor.core.publisher.Mono;
 @RestController
 @RequestMapping(value = "/kitchen")
 public class KitchenController {
-	private static Logger log = LogManager.getLogger(AuthController.class);
-
 	
 	@Autowired
 	private AuthController authorize;
 	private KitchenService kitchenService;
 	private RecipeService recipeService;
 	private ReviewService reviewService;
+
+	private static Logger log = LogManager.getLogger(KitchenController.class);
 
 	@Autowired
 	public void setKitchenService(KitchenService kitchenService) {
@@ -48,7 +48,7 @@ public class KitchenController {
 	public void setRecipeService(RecipeService recipeService) {
 		this.recipeService = recipeService;
 	}
-	
+
 	@Autowired
 	public void setReviewService(ReviewService reviewService) {
 		this.reviewService = reviewService;
@@ -82,7 +82,6 @@ public class KitchenController {
 
 		return kitchenService.addFood(listname, k, iID, amt).map(kitchen -> ResponseEntity.status(201).body(kitchen)).onErrorStop();
 
-		
 	}
 
 	@GetMapping(value = "/removeFood")
@@ -94,9 +93,8 @@ public class KitchenController {
 			exchange.getResponse().setStatusCode(HttpStatus.BAD_REQUEST);
 			return null;
 		}
-		Kitchen k = kitchenService.getKitchenByID(user.getKitchenID()).block();
-		return kitchenService.removeFood(listname, k, iID, amt).map(kitchen -> ResponseEntity.status(201).body(kitchen))
-				.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(k)));
+		return kitchenService.getKitchenByID(user.getKitchenID()).flatMap(k -> kitchenService.removeFood(listname, k, iID, amt).map(kitchen -> ResponseEntity.status(201).body(kitchen))
+				.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(k))));
 
 	}
 
@@ -122,21 +120,19 @@ public class KitchenController {
 						.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(error.toString()))); // If error, assign error message to response
 				}).onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(error.toString())));
 
-			}
-			else {
+			} else {
 				return kitchenService.cook(r, k).map(kitchen -> ResponseEntity.status(201).body(kitchen.toString()))
 						.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(error.toString())));
 			}
-			
+
 		});
-		
+
 	}
 
 	@GetMapping(value = "/buyFood")
 	public Mono<ResponseEntity<Kitchen>> buyFood(ServerWebExchange exchange,
 			@RequestParam(name = "ingredient", required = false) UUID iID,
-			@RequestParam(name = "amount", required = false) Double amt) {
-		
+			@RequestParam(name = "amount", required = false) Double amt) {		
 		User user = authorize.userAuth(exchange);
 		if(user == null) {
 			exchange.getResponse().setStatusCode(HttpStatus.BAD_REQUEST);

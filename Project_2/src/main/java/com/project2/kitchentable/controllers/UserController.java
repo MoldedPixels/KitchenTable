@@ -114,7 +114,6 @@ public class UserController {
 		return null;
 	}
 
-	@SuppressWarnings("unlikely-arg-type")
 	@PutMapping("users/{userID}/{kitchenID}")
 	public Mono<User> updateUserKitchen(ServerWebExchange exchange, @PathVariable("userID") String userID,
 			@PathVariable("kitchenID") String kitchenID, @RequestBody User u) {
@@ -128,7 +127,6 @@ public class UserController {
 		return null;
 	}
 
-	@SuppressWarnings("unlikely-arg-type")
 	@DeleteMapping("users/{userID}/{kitchenID}")
 	public Mono<User> removeUserKitchen(ServerWebExchange exchange, @PathVariable("kitchenID") String kitchenID,
 			@RequestBody User u) {
@@ -178,7 +176,7 @@ public class UserController {
 		User user = authorize.userAuth(exchange);
 		if ((user != null && user.getUserID().equals(userId)) || (user != null && user.getUserType() == 3))
 			try {
-				log.debug("Updating list of favorites for user id: " + userId);
+				log.debug("Updating list of favorites for user id: %s", userId);
 				return userService.addToFavorites(userId, recipeId);
 			} catch (Exception e) {
 				for (StackTraceElement st : e.getStackTrace())
@@ -195,7 +193,7 @@ public class UserController {
 		User user = authorize.userAuth(exchange);
 		if ((user != null && user.getUserID().equals(userId)) || (user != null && user.getUserType() == 3))
 			try {
-				log.debug("Updating list of favorites for user id: " + userId);
+				log.debug("Updating list of favorites for user id: %s", userId);
 				return userService.removeFromFavorites(userId, recipeId);
 			} catch (Exception e) {
 				for (StackTraceElement st : e.getStackTrace())
