@@ -141,11 +141,10 @@ public class KitchenController {
 
 		return kitchenService.getKitchenByID(user.getKitchenID()).flatMap(k -> {
 			if (k != null && k.getShoppingList().containsKey(iID)) {
-				return kitchenService.removeFood("shopping", k, iID, amt).flatMap(tempK -> {
-					return kitchenService.addFood("inventory", tempK, iID, amt)
+				return kitchenService.removeFood("shopping", k, iID, amt).flatMap(tempK -> kitchenService.addFood("inventory", tempK, iID, amt)
 							.map(kitchen -> ResponseEntity.status(201).body(kitchen))
-							.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(k)));
-				});
+							.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(k)))
+				);
 				
 			}
 			return Mono.just(ResponseEntity.badRequest().body(k));

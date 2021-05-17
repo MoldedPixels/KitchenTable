@@ -4,7 +4,6 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -81,16 +80,16 @@ public class KitchenServiceImpl implements KitchenService {
 	@Override
 	public Mono<Kitchen> addFood(String listname, Kitchen k, UUID ingredient, Double amt) {
 		Map<UUID, Double> list = null;
-		if (listname.equals("shopping")) {
+		if (listname.equals(shopping)) {
 			if(k.getShoppingList() == null) {
-				list = new HashMap<UUID, Double>();
+				list = new HashMap<>();
 			}
 			else {
 				list = k.getShoppingList();
 			}
-		} else if (listname.equals("inventory")) {
+		} else if (listname.equals(inventory)) {
 			if(k.getInventory() == null) {
-				list = new HashMap<UUID, Double>();
+				list = new HashMap<>();
 			}
 			else {
 				list = k.getInventory();
@@ -101,7 +100,6 @@ public class KitchenServiceImpl implements KitchenService {
 				if (iID.equals(ingredient)) {
 					double newAmt = list.get(iID) + amt;
 					list.replace(iID, newAmt);
-					log.debug("Successfully added " + amt + "to " + ingredient);
 				}
 			}
 		}
@@ -123,12 +121,10 @@ public class KitchenServiceImpl implements KitchenService {
 			if (kIngredients.containsKey(iID)) {
 				if (kIngredients.get(iID) - rIngredients.get(iID) >= 0) {
 					try {
-						k = this.removeFood("inventory", k, iID, rIngredients.get(iID)).delayElement(Duration.ofSeconds(2)).toFuture().get();
-					} catch (InterruptedException e) {
+						k = this.removeFood(inventory, k, iID, rIngredients.get(iID)).delayElement(Duration.ofSeconds(2)).toFuture().get();
+					} catch (Exception e) {
 						e.printStackTrace();
-					} catch (ExecutionException e) {
-						e.printStackTrace();
-					}
+					} 
 				} else {
 					log.trace("Unable to cook recipe: Insufficient amount of ingredient " + iID.toString());
 				}
