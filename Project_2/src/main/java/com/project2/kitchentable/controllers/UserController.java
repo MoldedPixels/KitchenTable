@@ -51,7 +51,7 @@ public class UserController {
 
 	@GetMapping(value = "users", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Publisher<User> getUsers(ServerWebExchange exchange) {
-		User u = authorize.UserAuth(exchange);
+		User u = authorize.userAuth(exchange);
 		if (u != null && u.getUserType() == 3) {
 			return userService.getUsers();
 		}
@@ -105,7 +105,7 @@ public class UserController {
 	@PutMapping("users/{userID}")
 	public Mono<User> updateUser(ServerWebExchange exchange, @PathVariable("userID") String userID,
 			@RequestBody User u) {
-		User user = authorize.UserAuth(exchange);
+		User user = authorize.userAuth(exchange);
 
 		if (user != null && user.getUserType() == 3) {
 			return userService.updateUser(u);
@@ -118,7 +118,7 @@ public class UserController {
 	@PutMapping("users/{userID}/{kitchenID}")
 	public Mono<User> updateUserKitchen(ServerWebExchange exchange, @PathVariable("userID") String userID,
 			@PathVariable("kitchenID") String kitchenID, @RequestBody User u) {
-		User user = authorize.UserAuth(exchange);
+		User user = authorize.userAuth(exchange);
 
 		if (user != null && u.getUserType() == 2 && user.getKitchenID() == UUID.fromString(kitchenID)) {
 			u.setKitchenID(UUID.fromString(kitchenID));
@@ -132,7 +132,7 @@ public class UserController {
 	@DeleteMapping("users/{userID}/{kitchenID}")
 	public Mono<User> removeUserKitchen(ServerWebExchange exchange, @PathVariable("kitchenID") String kitchenID,
 			@RequestBody User u) {
-		User user = authorize.UserAuth(exchange);
+		User user = authorize.userAuth(exchange);
 
 		if (user != null && user.getUserType() == 2 && user.getKitchenID() == UUID.fromString(kitchenID)) {
 			return userService.setKitchenNull(u);
@@ -143,7 +143,7 @@ public class UserController {
 
 	@DeleteMapping("users/{userID}")
 	public Mono<Void> removeUser(ServerWebExchange exchange, @PathVariable("userID") String userID) {
-		User user = authorize.UserAuth(exchange);
+		User user = authorize.userAuth(exchange);
 		if (user != null && user.getUserType() == 3) {
 			try {
 				return userService.removeUser(UUID.fromString(userID));
@@ -158,7 +158,7 @@ public class UserController {
 
 	@GetMapping("users/favorites")
 	public Mono<List<Recipe>> getFavorites(ServerWebExchange exchange, @RequestParam(name = "userid") UUID userId) {
-		User user = authorize.UserAuth(exchange);
+		User user = authorize.userAuth(exchange);
 		if ((user != null && user.getUserID().equals(userId)) || (user != null && user.getUserType() == 3))
 			try {
 				log.debug("Gathering list of favorites..");
@@ -175,7 +175,7 @@ public class UserController {
 	@PutMapping("users/favorites/update")
 	public Mono<User> addToFavorites(ServerWebExchange exchange, @RequestParam(name = "userId") UUID userId,
 			@RequestParam(name = "recipeId") UUID recipeId) {
-		User user = authorize.UserAuth(exchange);
+		User user = authorize.userAuth(exchange);
 		if ((user != null && user.getUserID().equals(userId)) || (user != null && user.getUserType() == 3))
 			try {
 				log.debug("Updating list of favorites for user id: " + userId);
@@ -192,7 +192,7 @@ public class UserController {
 	@DeleteMapping("users/favorites/update")
 	public Mono<User> removeFromFavorites(ServerWebExchange exchange, @RequestParam(name = "userId") UUID userId,
 			@RequestParam(name = "recipeId") UUID recipeId) {
-		User user = authorize.UserAuth(exchange);
+		User user = authorize.userAuth(exchange);
 		if ((user != null && user.getUserID().equals(userId)) || (user != null && user.getUserType() == 3))
 			try {
 				log.debug("Updating list of favorites for user id: " + userId);

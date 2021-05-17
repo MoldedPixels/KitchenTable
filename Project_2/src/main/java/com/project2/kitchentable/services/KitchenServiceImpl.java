@@ -1,8 +1,10 @@
 package com.project2.kitchentable.services;
 
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -72,24 +74,33 @@ public class KitchenServiceImpl implements KitchenService {
 			k.setInventory(list);
 		}
 		
-		return Mono.just(k);
+		return updateKitchen(k);
 	}
 
 	@Override
 	public Mono<Kitchen> addFood(String listname, Kitchen k, UUID ingredient, Double amt) {
 		Map<UUID, Double> list = null;
 		if (listname.equals("shopping")) {
-			list = k.getShoppingList();
+			if(k.getShoppingList() == null) {
+				list = new HashMap<UUID, Double>();
+			}
+			else {
+				list = k.getShoppingList();
+			}
 		} else if (listname.equals("inventory")) {
-			list = k.getInventory();
-		} else {
+			if(k.getInventory() == null) {
+				list = new HashMap<UUID, Double>();
+			}
+			else {
+				list = k.getInventory();
+			}
 		}
-		if (list.putIfAbsent(ingredient, amt) == null) {
+		if (list.putIfAbsent(ingredient, amt) != null) {
 			for (UUID iID : list.keySet()) {
 				if (iID.equals(ingredient)) {
 					double newAmt = list.get(iID) + amt;
 					list.replace(iID, newAmt);
-					log.trace("Successfully added " + amt + "to " + ingredient);
+					log.debug("Successfully added " + amt + "to " + ingredient);
 				}
 			}
 		}
@@ -99,7 +110,7 @@ public class KitchenServiceImpl implements KitchenService {
 			k.setInventory(list);
 		}
 
-		return Mono.just(k);
+		return updateKitchen(k);
 	}
 
 	@Override
@@ -110,7 +121,15 @@ public class KitchenServiceImpl implements KitchenService {
 		for (UUID iID : rIngredients.keySet()) {
 			if (kIngredients.containsKey(iID)) {
 				if (kIngredients.get(iID) - rIngredients.get(iID) >= 0) {
-					k = this.removeFood("inventory", k, iID, rIngredients.get(iID)).block();
+					try {
+						k = this.removeFood("inventory", k, iID, rIngredients.get(iID)).delayElement(Duration.ofSeconds(2)).toFuture().get();
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (ExecutionException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				} else {
 					log.trace("Unable to cook recipe: Insufficient amount of ingredient " + iID.toString());
 				}
