@@ -86,14 +86,10 @@ public class KitchenServiceImpl implements KitchenService {
 	@Override
 	public Mono<Kitchen> addFood(String listname, Kitchen k, UUID ingredient, Double amt) {
 		Map<UUID, Double> list = new HashMap<>();
-		if (listname.equals(shopping)) {
-			if(k.getShoppingList() != null) {
-				list = k.getShoppingList();
-			}
-		} else if (listname.equals(inventory)) {
-			if(k.getInventory() != null) {
-				list = k.getInventory();
-			}
+		if (listname.equals(shopping) && k.getShoppingList() != null) {
+			list = k.getShoppingList();
+		} else if (listname.equals(inventory) && k.getInventory() != null) {
+			list = k.getInventory();
 		}
 		if (list.putIfAbsent(ingredient, amt) != null) {
 			for (UUID iID : list.keySet()) {
