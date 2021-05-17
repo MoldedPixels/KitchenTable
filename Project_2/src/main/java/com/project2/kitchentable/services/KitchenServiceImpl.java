@@ -55,6 +55,7 @@ public class KitchenServiceImpl implements KitchenService {
 			list = k.getShoppingList();
 		} else if (listname.equals(inventory)) {
 			list = k.getInventory();
+		}
 		for (UUID iID : list.keySet()) {
 			if (iID.equals(ingredient)) {
 				double newAmt = list.get(iID) - amount;
