@@ -34,7 +34,7 @@ public class RequestController {
 		this.recipeService = recipeService;
 	}
 
-	@PostMapping("/new")
+	@PostMapping
 	public Mono<ResponseEntity<Requests>> addRequest(@RequestBody Requests q) {
 		q.setRequestId(Uuids.timeBased());
 		if (q.getRecipeId() == (null)) {
@@ -44,7 +44,7 @@ public class RequestController {
 				.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(q)));
 	}
 
-	@PutMapping("/approve")
+	@PutMapping
 	public Mono<ResponseEntity<Requests>> approveRequest(@RequestParam(name = "requestId", required = true) UUID qID) {
 		return requestService.getRequestById(qID).flatMap(q -> {
 			return recipeService.getRecipeById(q.getRecipeId()).flatMap(r -> {
@@ -60,7 +60,7 @@ public class RequestController {
 		
 	}
 
-	@DeleteMapping("/reject")
+	@DeleteMapping
 	public Mono<ResponseEntity<Requests>> rejectRequest(@RequestParam(name = "requestId", required = true) UUID qID) {
 		return requestService.getRequestById(qID).flatMap(q -> requestService.approveOrReject(q).map(request -> ResponseEntity.status(201).body(request))
 				.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(q))));

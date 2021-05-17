@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ServerWebExchange;
 
@@ -36,7 +37,7 @@ public class RecipeController {
 	private AuthController authorize;
 	private static Logger log = LogManager.getLogger(RecipeController.class);
 
-	@PostMapping("/add")
+	@PostMapping
 	public Mono<ResponseEntity<Recipe>> addRecipe(ServerWebExchange exchange, @RequestBody Recipe r) {
 		User user = authorize.userAuth(exchange);
 
@@ -94,9 +95,9 @@ public class RecipeController {
 		return null;
 	}
 
-	@GetMapping(value = "/name/{recipeName}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping
 	public Publisher<Recipe> getRecipeByName(ServerWebExchange exchange,
-			@PathVariable("recipeName") String recipeName) {
+			@RequestParam("name") String recipeName) {
 		User u = authorize.userAuth(exchange);
 		if (u != null) {
 			return recipeService.getRecipeByName(recipeName);
@@ -105,7 +106,7 @@ public class RecipeController {
 		return null;
 	}
 
-	@GetMapping(value = "/id/{recipeId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/{recipeId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Publisher<Recipe> getRecipeById(ServerWebExchange exchange, @PathVariable("recipeId") UUID recipeId) {
 		User u = authorize.userAuth(exchange);
 		if (u != null) {
