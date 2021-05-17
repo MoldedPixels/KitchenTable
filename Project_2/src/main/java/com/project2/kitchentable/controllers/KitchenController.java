@@ -87,7 +87,7 @@ public class KitchenController {
 	@GetMapping(value = "/removeFood")
 	public Mono<ResponseEntity<Kitchen>> removeFood(ServerWebExchange exchange, @RequestParam(name = "list", required = false) String listname,
 			@RequestParam(name = "ingredient", required = false) UUID iID,
-			@RequestParam(name = "amount", required = false) Double amt) throws Exception {
+			@RequestParam(name = "amount", required = false) Double amt) {
 		User user = authorize.userAuth(exchange);
 		if(user == null) {
 			exchange.getResponse().setStatusCode(HttpStatus.BAD_REQUEST);
@@ -140,7 +140,7 @@ public class KitchenController {
 		}
 
 		return kitchenService.getKitchenByID(user.getKitchenID()).flatMap(k -> {
-			if (k != null && k.getShoppingList().containsKey(iID)) {
+			if (k != null && k.getShoppingList() != null && k.getShoppingList().containsKey(iID)) {
 				return kitchenService.removeFood("shopping", k, iID, amt).flatMap(tempK -> kitchenService.addFood("inventory", tempK, iID, amt)
 							.map(kitchen -> ResponseEntity.status(201).body(kitchen))
 							.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(k)))

@@ -49,11 +49,15 @@ public class KitchenServiceImpl implements KitchenService {
 
 	@Override
 	public Mono<Kitchen> removeFood(String listname, Kitchen k, UUID ingredient, Double amount) {
-		Map<UUID, Double> list = null;
+		Map<UUID, Double> list = new HashMap<>();
 		if (listname.equals(shopping)) {
-			list = k.getShoppingList();
+			if(k.getShoppingList() != null) {
+				list = k.getShoppingList();
+			}
 		} else if (listname.equals(inventory)) {
-			list = k.getInventory();
+			if(k.getInventory() != null) {
+				list = k.getInventory();
+			}
 		}
 		for (UUID iID : list.keySet()) {
 			if (iID.equals(ingredient)) {
@@ -61,6 +65,8 @@ public class KitchenServiceImpl implements KitchenService {
 				if (newAmt > 0) {
 					list.replace(iID, newAmt);
 					log.trace("Successfully removed " + amount + "of " + ingredient);
+				} else if (newAmt == 0){
+					list.remove(iID);
 				} else {
 					log.trace("Failed to remove " + amount + "of " + ingredient
 							+ ". The requested amount was too large.");
@@ -79,19 +85,13 @@ public class KitchenServiceImpl implements KitchenService {
 
 	@Override
 	public Mono<Kitchen> addFood(String listname, Kitchen k, UUID ingredient, Double amt) {
-		Map<UUID, Double> list = null;
+		Map<UUID, Double> list = new HashMap<>();
 		if (listname.equals(shopping)) {
-			if(k.getShoppingList() == null) {
-				list = new HashMap<>();
-			}
-			else {
+			if(k.getShoppingList() != null) {
 				list = k.getShoppingList();
 			}
 		} else if (listname.equals(inventory)) {
-			if(k.getInventory() == null) {
-				list = new HashMap<>();
-			}
-			else {
+			if(k.getInventory() != null) {
 				list = k.getInventory();
 			}
 		}
@@ -120,11 +120,7 @@ public class KitchenServiceImpl implements KitchenService {
 		for (UUID iID : rIngredients.keySet()) {
 			if (kIngredients.containsKey(iID)) {
 				if (kIngredients.get(iID) - rIngredients.get(iID) >= 0) {
-					try {
-						k = this.removeFood(inventory, k, iID, rIngredients.get(iID)).delayElement(Duration.ofSeconds(2)).toFuture().get();
-					} catch (Exception e) {
-						e.printStackTrace();
-					} 
+					return this.removeFood(inventory, k, iID, rIngredients.get(iID)).delayElement(Duration.ofSeconds(2));
 				} else {
 					log.trace("Unable to cook recipe: Insufficient amount of ingredient " + iID.toString());
 				}
