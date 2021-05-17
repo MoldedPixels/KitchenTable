@@ -38,15 +38,21 @@ public class RecipeController {
 
 	@PostMapping("/add")
 	public Mono<ResponseEntity<Recipe>> addRecipe(ServerWebExchange exchange, @RequestBody Recipe r) {
-		try {
-			log.trace("Adding recipe");
-			r.setRecipeId(Uuids.timeBased());
-			return recipeService.addRecipe(r).map(recipe -> ResponseEntity.status(201).body(recipe))
-					.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(r)));
-		}catch(Exception e) {
-			for (StackTraceElement st : e.getStackTrace())
-				log.debug(st.toString());
+		User user = authorize.userAuth(exchange);
+
+		if (user != null && user.getUserType() == 3) {
+			try {
+				log.trace("Adding recipe");
+				r.setRecipeId(Uuids.timeBased());
+				return recipeService.addRecipe(r).map(recipe -> ResponseEntity.status(201).body(recipe))
+						.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(r)));
+			}catch(Exception e) {
+				for (StackTraceElement st : e.getStackTrace())
+					log.debug(st.toString());
+			}
+			
 		}
+
 		exchange.getResponse().setStatusCode(HttpStatus.BAD_REQUEST);
 		return null;
 	}

@@ -4,13 +4,14 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.datastax.oss.driver.api.core.uuid.Uuids;
-import com.project2.kitchentable.beans.Recipe;
 import com.project2.kitchentable.beans.Requests;
 import com.project2.kitchentable.services.RecipeService;
 import com.project2.kitchentable.services.RequestService;
@@ -43,28 +44,26 @@ public class RequestController {
 				.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(q)));
 	}
 
-	@GetMapping("/approve")
-	public Mono<ResponseEntity<Requests>> approveRequest(@RequestBody UUID qID) {
-		Requests q = requestService.getRequestById(qID).block();
-		if (q != null && recipeService.getRecipeById(q.getRecipeId()) != null) {
-			Recipe r = recipeService.getRecipeById(q.getRecipeId()).block();
-			if (r != null) {
-				r.setCuisine(q.getCuisine());
-				r.setRecipeName(q.getName());
-				r.setIngredients(q.getIngredients());
-				recipeService.updateRecipe(r);
-			}
+	@PutMapping("/approve")
+	public Mono<ResponseEntity<Requests>> approveRequest(@RequestParam(name = "requestId", required = true) UUID qID) {
+		return requestService.getRequestById(qID).flatMap(q -> {
+			return recipeService.getRecipeById(q.getRecipeId()).flatMap(r -> {
+					r.setCuisine(q.getCuisine());
+					r.setRecipeName(q.getName());
+					r.setIngredients(q.getIngredients());
+					recipeService.updateRecipe(r);
+				return requestService.approveOrReject(q).map(request -> ResponseEntity.status(201).body(request))
+						.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(q)));
+			});
 
-		}
-		return requestService.approveOrReject(q).map(request -> ResponseEntity.status(201).body(request))
-				.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(q)));
+		});
+		
 	}
 
-	@GetMapping("/reject")
-	public Mono<ResponseEntity<Requests>> rejectRequest(@RequestBody UUID qID) {
-		Requests q = requestService.getRequestById(qID).block();
-		return requestService.approveOrReject(q).map(request -> ResponseEntity.status(201).body(request))
-				.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(q)));
+	@DeleteMapping("/reject")
+	public Mono<ResponseEntity<Requests>> rejectRequest(@RequestParam(name = "requestId", required = true) UUID qID) {
+		return requestService.getRequestById(qID).flatMap(q -> requestService.approveOrReject(q).map(request -> ResponseEntity.status(201).body(request))
+				.onErrorResume(error -> Mono.just(ResponseEntity.badRequest().body(q))));
 	}
 
 }

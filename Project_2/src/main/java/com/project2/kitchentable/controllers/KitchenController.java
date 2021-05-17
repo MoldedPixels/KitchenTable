@@ -1,14 +1,10 @@
 package com.project2.kitchentable.controllers;
 
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,8 +32,6 @@ public class KitchenController {
 	private KitchenService kitchenService;
 	private RecipeService recipeService;
 	private ReviewService reviewService;
-
-	private static Logger log = LogManager.getLogger(KitchenController.class);
 
 	@Autowired
 	public void setKitchenService(KitchenService kitchenService) {
@@ -71,20 +65,17 @@ public class KitchenController {
 	@PostMapping("/addToList")
 	public Mono<ResponseEntity<Kitchen>> addToList(ServerWebExchange exchange, @RequestParam(name = "list", required = false) String listname,
 			@RequestParam(name = "ingredient", required = false) UUID iID,
-			@RequestParam(name = "amount", required = false) Double amt) throws InterruptedException, ExecutionException {
+			@RequestParam(name = "amount", required = false) Double amt) {
 		User user = authorize.userAuth(exchange);
 		if(user == null) {
 			exchange.getResponse().setStatusCode(HttpStatus.BAD_REQUEST);
 			return null;
 		}
-		log.debug(user.getKitchenID());
-		Kitchen k = kitchenService.getKitchenByID(user.getKitchenID()).toFuture().get();
-
-		return kitchenService.addFood(listname, k, iID, amt).map(kitchen -> ResponseEntity.status(201).body(kitchen)).onErrorStop();
+		return kitchenService.getKitchenByID(user.getKitchenID()).flatMap(k -> kitchenService.addFood(listname, k, iID, amt).map(kitchen -> ResponseEntity.status(201).body(kitchen)).onErrorStop());
 
 	}
 
-	@GetMapping(value = "/removeFood")
+	@DeleteMapping(value = "/removeFood")
 	public Mono<ResponseEntity<Kitchen>> removeFood(ServerWebExchange exchange, @RequestParam(name = "list", required = false) String listname,
 			@RequestParam(name = "ingredient", required = false) UUID iID,
 			@RequestParam(name = "amount", required = false) Double amt) {
@@ -98,7 +89,7 @@ public class KitchenController {
 
 	}
 
-	@GetMapping(value = "/cook")
+	@PostMapping(value = "/cook")
 	public Mono<ResponseEntity<String>> cook(ServerWebExchange exchange, @RequestParam(name = "recipe", required = true) UUID recipe,
 			@RequestParam(name = "review", required = false) String reviewBody,
 			@RequestParam(name = "score", required = false) Double score) {
@@ -129,7 +120,7 @@ public class KitchenController {
 
 	}
 
-	@GetMapping(value = "/buyFood")
+	@PostMapping(value = "/buyFood")
 	public Mono<ResponseEntity<Kitchen>> buyFood(ServerWebExchange exchange,
 			@RequestParam(name = "ingredient", required = false) UUID iID,
 			@RequestParam(name = "amount", required = false) Double amt) {		
