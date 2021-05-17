@@ -36,8 +36,9 @@ public class NotesController {
 	@PostMapping("/add")
 	public Mono<Notes> addNote(ServerWebExchange exchange, @RequestBody Notes n) {
 		User user = authorize.userAuth(exchange);
-		if(user != null && user.cooked(n.getRecipeId(), user)) {
+		if(user != null) {
 			log.trace("%s is trying to add a note", user.getFirstname());
+			n.setUserId(user.getUserID());
 			return noteService.addNotes(n);
 		}
 		exchange.getResponse().setStatusCode(HttpStatus.BAD_REQUEST);
@@ -64,7 +65,7 @@ public class NotesController {
 		return null;
 	}
 	
-	@DeleteMapping("/{recipeid}/{userid}")
+	@DeleteMapping("/{recipeid}")
 	public Mono<Void> removeNote(ServerWebExchange exchange, @PathVariable("recipeid") String recipeID, @PathVariable("userid") String userID){
 		User user = authorize.userAuth(exchange);
 		if(user != null && (user.getUserType() == 3 || UUID.fromString(userID) == user.getUserID())) {

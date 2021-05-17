@@ -37,10 +37,8 @@ public class RequestServiceImpl implements RequestService {
 	}
 	
 	@Override
-	public Mono<Requests> getRequestById(UUID id){
-		String requestId = id.toString();
-		
-		return requestRepo.findById(requestId);
+	public Mono<Requests> getRequestById(UUID id){		
+		return requestRepo.findByRequestId(id);
 	}
 	
 	@Override
